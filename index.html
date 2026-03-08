@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lightning Games ⚡</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+
+<body>
+  <div id="app" class="app-container">
+    <!-- Animated Background Canvas -->
+    <canvas id="bg-particles" class="bg-particles"></canvas>
+
+    <!-- Ambient Glow Orbs -->
+    <div class="ambient-orb orb-1"></div>
+    <div class="ambient-orb orb-2"></div>
+    <div class="ambient-orb orb-3"></div>
+
+    <!-- Title Bar -->
+    <div class="title-bar" style="-webkit-app-region: drag;">
+      <div class="title-left">
+        <div class="title-logo-wrap">
+          <span class="title-icon">⚡</span>
+          <div class="logo-ring"></div>
+        </div>
+        <span class="title-text">Lightning Games</span>
+        <span class="title-version">v2.1.1</span>
+      </div>
+      <div class="title-right" style="-webkit-app-region: no-drag;">
+        <!-- Ultra Upgrade: Volume & Settings -->
+        <div class="volume-control">
+          <span class="volume-icon">🔊</span>
+          <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="0.5">
+        </div>
+        <button id="btn-settings" class="btn-settings" title="Settings">
+          <span class="settings-icon">⚙️</span>
+        </button>
+        <div class="shortcut-badge">
+          <kbd>Ctrl</kbd><span class="kbd-plus">+</span><kbd>Alt</kbd><span class="kbd-plus">+</span><kbd>G</kbd>
+        </div>
+        <button id="btn-close" class="btn-close" title="Hide (Esc)">
+          <svg width="12" height="12" viewBox="0 0 12 12">
+            <path d="M1 1l10 10M11 1L1 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Ultra Upgrade: Achievement Overlay Container -->
+    <div id="achievement-container" class="achievement-container"></div>
+
+    <!-- Launcher View -->
+    <div id="launcher-view" class="launcher-view">
+      <div class="launcher-header">
+        <h1 class="launcher-title">
+          <span class="title-emoji">🎮</span> Quick Game Select
+        </h1>
+        <p class="launcher-subtitle">Click a game to start playing</p>
+      </div>
+
+      <!-- Category & Search Bar -->
+      <div class="launcher-controls">
+        <div class="category-tabs">
+          <button class="category-tab active" data-category="all">All</button>
+          <button class="category-tab" data-category="favorites">Favorites</button>
+          <button class="category-tab" data-category="arcade">Arcade</button>
+          <button class="category-tab" data-category="puzzle">Puzzle</button>
+          <button class="category-tab" data-category="classic">Classic</button>
+        </div>
+
+        <div class="search-wrap">
+          <div class="search-container">
+            <div class="search-wrapper">
+            <input type="text" id="game-search" placeholder="Search game..." spellcheck="false">
+            <button id="search-clear" class="search-clear hidden">✕</button>
+          </div>
+            <span class="search-icon">🔍</span>
+          </div>
+          <button id="btn-random" class="btn-random" title="Random Game">
+            🎲
+          </button>
+        </div>
+      </div>
+
+      <!-- Ultra Upgrade: Recently Played -->
+      <div id="recently-played-section" class="recently-played-section hidden">
+        <h2 class="section-title">🕒 Recently Played</h2>
+        <div id="recently-played-list" class="recently-played-list">
+          <!-- Recent games injected here -->
+        </div>
+      </div>
+
+      <div class="games-grid" id="games-grid">
+        <!-- Games will be injected by JS -->
+      </div>
+
+      <!-- Ultra Upgrade: Stats View -->
+      <div id="stats-view" class="stats-view hidden">
+        <h2 class="section-title">📊 Your Stats</h2>
+        <div class="stats-cards">
+          <div class="stat-card">
+            <span class="stat-value" id="stat-total-played">0</span>
+            <span class="stat-label">Total Games</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-value" id="stat-achievements">0/10</span>
+            <span class="stat-label">Achievements</span>
+          </div>
+        </div>
+        <div class="achievements-list" id="achievements-list">
+          <!-- Achievements will be listed here -->
+        </div>
+      </div>
+      <div class="launcher-footer">
+        <div class="footer-left">
+          <span class="footer-stat" id="total-playtime">🕐 Total: 0 games</span>
+        </div>
+        <div class="footer-center">
+          <!-- Ultra Upgrade: Tab Controls -->
+          <div class="tab-controls">
+            <button class="tab-btn active" data-tab="games">Games</button>
+            <button class="tab-btn" data-tab="stats">Stats</button>
+          </div>
+        </div>
+        <div class="footer-right">
+          <span class="footer-stat" id="favorite-count">★ 0</span>
+          <span class="footer-stat" id="best-score-display">🏆 Best: --</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Game View -->
+    <div id="game-view" class="game-view hidden">
+      <div class="game-header">
+        <button id="btn-back" class="btn-back">
+          <svg width="14" height="14" viewBox="0 0 14 14">
+            <path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+              stroke-linejoin="round" fill="none" />
+          </svg>
+          Back
+        </button>
+        <div class="game-info">
+          <span id="game-title" class="game-title-bar"></span>
+          <div class="score-container">
+            <span class="score-label">SCORE</span>
+            <span id="game-score" class="game-score-bar">0</span>
+          </div>
+          <div class="highscore-container">
+            <span class="highscore-label">BEST</span>
+            <span id="game-highscore" class="game-highscore-bar">0</span>
+          </div>
+        </div>
+        <span id="esc-hint" class="esc-hint hidden">ESC to exit</span>
+        <button id="btn-reset" class="btn-reset">
+          <svg width="14" height="14" viewBox="0 0 14 14">
+            <path d="M2 7a5 5 0 019.3-2.5M12 7a5 5 0 01-9.3 2.5" stroke="currentColor" stroke-width="1.5"
+              stroke-linecap="round" fill="none" />
+            <path d="M11 2v3h-3M3 12V9h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+              stroke-linejoin="round" fill="none" />
+          </svg>
+          Reset
+        </button>
+      </div>
+      <div class="game-canvas-container">
+        <canvas id="game-canvas"></canvas>
+        <!-- Pause overlay -->
+        <div id="pause-overlay" class="pause-overlay hidden">
+          <div class="pause-icon-wrap">
+            <svg width="40" height="40" viewBox="0 0 40 40">
+              <rect x="10" y="8" width="6" height="24" rx="2" fill="currentColor" />
+              <rect x="24" y="8" width="6" height="24" rx="2" fill="currentColor" />
+            </svg>
+          </div>
+          <span class="pause-text">PAUSED</span>
+          <span class="pause-hint">Press Ctrl+Alt+G to resume</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="settings-modal hidden">
+      <div class="settings-backdrop"></div>
+      <div class="settings-panel">
+        <div class="settings-header">
+          <h2 class="settings-title">Settings</h2>
+          <button id="settings-close" class="settings-close" title="Close">
+            ✕
+          </button>
+        </div>
+        <div class="settings-content">
+          <div class="settings-section">
+            <h3 class="settings-section-title">Visual Effects</h3>
+            <label class="settings-toggle">
+              <input type="checkbox" id="settings-reduced-motion">
+              <span class="settings-toggle-indicator"></span>
+              <span class="settings-toggle-label">Reduce motion (less animation, no shake)</span>
+            </label>
+          </div>
+          <div class="settings-section">
+            <h3 class="settings-section-title">Theme Selection</h3>
+            <div class="theme-grid">
+              <button class="theme-btn active" data-theme="default" title="Default Neon">
+                <span class="theme-preview" style="background: #050512; border: 1px solid #00d4ff;"></span>
+                <span class="theme-label">Neon</span>
+              </button>
+              <button class="theme-btn" data-theme="retro" title="Retro Amber">
+                <span class="theme-preview" style="background: #1a1a00; border: 1px solid #ffaa00;"></span>
+                <span class="theme-label">Retro</span>
+              </button>
+              <button class="theme-btn" data-theme="minimal" title="Minimalist">
+                <span class="theme-preview" style="background: #000000; border: 1px solid #ffffff;"></span>
+                <span class="theme-label">Minimal</span>
+              </button>
+              <button class="theme-btn" data-theme="forest" title="Forest">
+                <span class="theme-preview" style="background: #001a0a; border: 1px solid #00ff88;"></span>
+                <span class="theme-label">Forest</span>
+              </button>
+            </div>
+          </div>
+          <div class="settings-field">
+              <div class="settings-field-header">
+                <span class="settings-field-label">Screen shake intensity</span>
+                <span class="settings-field-value" id="settings-shake-value">100%</span>
+              </div>
+              <input type="range" id="settings-shake-intensity" min="0" max="1" step="0.1" value="1">
+            </div>
+            <div class="settings-field">
+              <div class="settings-field-header">
+                <span class="settings-field-label">Resolution scale (Performance)</span>
+                <span class="settings-field-value" id="settings-scale-value">90%</span>
+              </div>
+              <input type="range" id="settings-render-scale" min="0.7" max="1" step="0.05" value="0.9">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="renderer/gameManager.js"></script>
+  <script src="games/snake.js"></script>
+  <script src="games/tetris.js"></script>
+  <script src="games/game2048.js"></script>
+  <script src="games/flappy.js"></script>
+  <script src="games/minesweeper.js"></script>
+  <script src="games/pong.js"></script>
+  <script src="games/breakout.js"></script>
+  <script src="games/space.js"></script>
+
+  <!-- New Games -->
+  <script src="games/asteroids.js"></script>
+  <script src="games/frogger.js"></script>
+  <script src="games/memory.js"></script>
+  <script src="games/tictactoe.js"></script>
+  <script src="games/whackamole.js"></script>
+  <script src="games/doodlejump.js"></script>
+  <script src="games/simon.js"></script>
+  <script src="games/runner.js"></script>
+  <script src="games/orbcollector.js"></script>
+  <script src="games/skyfall.js"></script>
+  <script src="games/lasergrid.js"></script>
+  <script src="games/orbit.js"></script>
+  <script src="games/stacker.js"></script>
+  <script src="games/colorrush.js"></script>
+    <script src="games/cyberdash.js"></script>
+     <script src="games/neonduel.js"></script>
+  <script src="games/blaster.js"></script>
+  <script src="games/pixelquest.js"></script>
+  <script src="games/wordquest.js"></script>
+  <script src="games/bouncy.js"></script>
+  <script src="games/rhythmtap.js"></script>
+  <script src="games/jewels.js"></script>
+  <script src="games/ninja.js"></script>
+  <script src="games/piano.js"></script>
+  <script src="games/neondraw.js"></script>
+  <script src="games/colorswitch.js"></script>
+  <script src="games/orbitdefense.js"></script>
+  <script src="games/gravityflip.js"></script>
+  <script src="games/tapdash.js"></script>
+  <script src="games/towerdefense.js"></script>
+  <script src="renderer/soundManager.js"></script>
+  <script src="renderer/particles.js"></script>
+  <script src="renderer/launcher.js"></script>
+</body>
+
+</html>
