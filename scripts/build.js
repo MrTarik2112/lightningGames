@@ -24,7 +24,6 @@ const CONFIG = {
   wslDistro: 'Ubuntu',
   dockerImage: 'electronuserland/builder:wine',
   buildTimeout: 30 * 60 * 1000,
-  generateReleaseNotes: true,
   postBuildTest: true,
   artifactDir: 'dist',
   logDir: 'BuildLogs',
@@ -581,18 +580,6 @@ async function executeBuild(config, logStream) {
   return new ExecutorClass(config.platform, config, logStream).execute();
 }
 
-// ===================== RELEASE NOTES =====================
-function generateReleaseNotes(version, buildResults) {
-  const date = new Date().toISOString().split('T')[0];
-  let notes = `# ${CONFIG.displayName} v${version}\n\n**Release Date:** ${date}\n\n## Build Information\n\n| Platform | Status | Duration | Size |\n|----------|--------|----------|------|\n`;
-  buildResults.forEach(r => {
-    notes += `| ${r.platform} | ${r.success ? '✅ Success' : '❌ Failed'} | ${formatDuration(r.duration || 0)} | ${r.artifactSize ? formatBytes(r.artifactSize) : 'N/A'} |\n`;
-  });
-  notes += `\n## Downloads\n\n`;
-  buildResults.forEach(r => { if (r.success && r.artifactName) notes += `- **${r.platform}**: ${r.artifactName}\n`; });
-  return notes;
-}
-
 // ===================== ARTIFACT MANAGER =====================
 function collectArtifacts() {
   const distDir = path.join(projectRoot, 'dist');
@@ -896,4 +883,3 @@ if (args.includes('--help') || args.includes('-h')) {
 if (args.includes('--debug')) process.env.DEBUG = '1';
 
 main();
-                                                                        
