@@ -20,7 +20,7 @@
     "appId": "com.tarik.lightninggames",
     "productName": "Lightning Games",
     "asar": true,
-    "compression": "store",
+    "compression": "normal",
     "win": {
       "target": "portable",
       "icon": "assets/icon.ico"

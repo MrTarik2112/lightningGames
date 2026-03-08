@@ -628,6 +628,7 @@
             // Removed individual favoriteBtn.addEventListener
 
             cardContent.innerHTML = `
+                <span class="game-card-category">${config.category}</span>
                 <div class="game-card-status ${config.hasState ? 'active' : ''}"></div>
                 <span class="game-card-icon">${config.icon}</span>
                 <span class="game-card-name">${config.name}</span>
@@ -654,6 +655,19 @@
         const unlocked = gm.achievements || [];
         statTotalPlayed.textContent = gm.totalGamesPlayed;
         statAchievementsCount.textContent = `${unlocked.length}/${ALL_ACHIEVEMENTS.length}`;
+        
+        // Update new stat cards
+        const statFavorites = document.getElementById('stat-favorites');
+        const statPlaytime = document.getElementById('stat-playtime');
+        if (statFavorites) {
+            statFavorites.textContent = (gm.favorites || []).length;
+        }
+        if (statPlaytime) {
+            const totalMinutes = Math.floor((gm.totalPlayTime || 0) / 60);
+            const hours = Math.floor(totalMinutes / 60);
+            const mins = totalMinutes % 60;
+            statPlaytime.textContent = hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
+        }
 
         achievementsList.innerHTML = '';
         ALL_ACHIEVEMENTS.forEach(a => {
@@ -667,6 +681,7 @@
                 <span class="achievement-item-icon">${icon}</span>
                 <div class="achievement-item-text">
                     <span class="achievement-item-title">${title}</span>
+                    ${a.ultra ? '<span class="achievement-badge">ULTRA</span>' : ''}
                 </div>
             `;
             achievementsList.appendChild(item);

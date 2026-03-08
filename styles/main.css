@@ -1317,33 +1317,35 @@ body.theme-forest {
   padding: 20px 0;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
   animation: fadeIn 0.4s ease;
 }
 
 .stats-cards {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
 }
 
 .stat-card {
   background: var(--bg-card);
   border: 1px solid var(--border-glass);
   border-radius: 16px;
-  padding: 20px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+  transition: var(--transition-normal);
 }
 
 .stat-value {
-  font-size: 32px;
+  font-size: 26px;
   font-weight: 900;
   color: var(--accent-cyan);
   text-shadow: 0 0 20px rgba(0, 220, 255, 0.3);
   font-family: var(--font-mono);
+  transition: var(--transition-fast);
 }
 
 .stat-label {
@@ -2009,4 +2011,375 @@ body.theme-forest {
 .achievement-toast.ultra {
   border-color: var(--accent-yellow);
   box-shadow: 0 10px 40px rgba(255, 204, 0, 0.2);
+}
+
+/* ===========================
+   v2.2 UI Improvements
+   =========================== */
+
+/* Category Badge on Game Cards */
+.game-card-category {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  font-size: 7px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  padding: 3px 6px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-muted);
+  z-index: 3;
+  opacity: 0;
+  transform: translateY(-5px);
+  transition: var(--transition-fast);
+}
+
+.game-card:hover .game-card-category {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.game-card[data-game-id*="snake"] .game-card-category,
+.game-card[data-game-id*="tetris"] .game-card-category,
+.game-card[data-game-id*="arcade"] .game-card-category {
+  background: rgba(0, 220, 255, 0.15);
+  color: var(--accent-cyan);
+}
+
+/* Tab Icons */
+.tab-icon {
+  font-size: 11px;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+/* Improved Stats Cards */
+.stats-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.stat-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-icon {
+  font-size: 20px;
+  margin-bottom: 4px;
+  opacity: 0.8;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+  opacity: 0;
+  transition: var(--transition-normal);
+}
+
+.stat-card:hover::before {
+  opacity: 1;
+}
+
+.stat-card:hover .stat-value {
+  transform: scale(1.05);
+  text-shadow: 0 0 30px rgba(0, 220, 255, 0.5);
+}
+
+/* Achievements Title */
+.achievements-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin: 16px 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Achievement Badge for Ultra */
+.achievement-badge {
+  font-size: 7px;
+  font-weight: 800;
+  padding: 2px 5px;
+  border-radius: 3px;
+  background: linear-gradient(135deg, var(--accent-yellow), var(--accent-orange));
+  color: #000;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+  display: inline-block;
+}
+
+.achievement-item:not(.unlocked) .achievement-badge {
+  opacity: 0.3;
+}
+
+/* Focus States for Accessibility */
+.game-card:focus,
+.btn-settings:focus,
+.btn-close:focus,
+.btn-back:focus,
+.btn-reset:focus,
+.category-tab:focus,
+.tab-btn:focus,
+.theme-btn:focus {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 2px;
+}
+
+/* Improved Button Micro-interactions */
+.btn-settings:active,
+.btn-close:active {
+  transform: scale(0.92);
+}
+
+.btn-back:active,
+.btn-reset:active {
+  transform: translateY(0) scale(0.97);
+}
+
+/* Category Tab Improvements */
+.category-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.category-tab .tab-icon {
+  font-size: 12px;
+  transition: transform var(--transition-fast);
+}
+
+.category-tab:hover .tab-icon {
+  transform: scale(1.2);
+}
+
+.category-tab.active .tab-icon {
+  animation: tabIconBounce 0.4s ease;
+}
+
+@keyframes tabIconBounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+}
+
+/* Improved Game Card Hover */
+.game-card:hover .game-card-icon {
+  animation: cardIconFloat 0.6s ease;
+}
+
+@keyframes cardIconFloat {
+  0%, 100% { transform: scale(1.2) rotate(-5deg); }
+  50% { transform: scale(1.25) rotate(-8deg) translateY(-3px); }
+}
+
+/* Favorite Button Animation */
+.btn-favorite.active {
+  animation: favoritePop 0.4s ease;
+}
+
+@keyframes favoritePop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.4); }
+  100% { transform: scale(1); }
+}
+
+/* Improved Settings Toggle */
+.settings-toggle:hover .settings-toggle-indicator {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Volume Slider Improvements */
+#volume-slider:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Search Input Clear Button */
+.search-clear {
+  opacity: 0.6;
+  transition: var(--transition-fast);
+}
+
+.search-clear:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* Random Button Animation */
+.btn-random:active {
+  transform: translateY(0) rotate(0deg) scale(0.95);
+}
+
+/* Improved Launcher Subtitle */
+.launcher-subtitle {
+  position: relative;
+}
+
+.launcher-subtitle::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+  opacity: 0.3;
+}
+
+/* Achievement Item Hover */
+.achievement-item {
+  cursor: default;
+}
+
+.achievement-item.unlocked:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 204, 0, 0.1);
+}
+
+/* Ultra Achievement Glow */
+.achievement-item.unlocked.ultra {
+  position: relative;
+}
+
+.achievement-item.unlocked.ultra::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent-yellow), var(--accent-orange), var(--accent-yellow));
+  z-index: -1;
+  opacity: 0.5;
+  animation: ultraGlow 2s ease-in-out infinite;
+}
+
+@keyframes ultraGlow {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.6; }
+}
+
+/* Improved ESC Hint */
+.esc-hint {
+  animation: escHintPulse 2s ease-in-out infinite;
+}
+
+@keyframes escHintPulse {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 0.5; }
+}
+
+/* Footer Stats Improvement */
+.footer-stat {
+  transition: color var(--transition-fast);
+}
+
+.footer-stat:hover {
+  color: var(--text-secondary);
+}
+
+/* Theme Button Active Indicator */
+.theme-btn.active::after {
+  content: '✓';
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  font-size: 8px;
+  color: var(--accent-cyan);
+}
+
+/* Scroll to Top Button Area */
+.launcher-view::after {
+  content: '';
+  display: block;
+  height: 20px;
+}
+
+/* Better Game Over Overlay */
+.game-over-overlay {
+  animation: gameOverAppearEnhanced 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes gameOverAppearEnhanced {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0);
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(18px) saturate(1.8);
+    transform: scale(1);
+  }
+}
+
+/* Score Pop Enhancement */
+.score-pop {
+  animation: scorePopEnhanced 0.35s ease;
+}
+
+@keyframes scorePopEnhanced {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.25); color: var(--accent-green); }
+  60% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+/* Pause Overlay Enhancement */
+.pause-icon-wrap {
+  animation: pauseGlowEnhanced 2s ease-in-out infinite;
+}
+
+@keyframes pauseGlowEnhanced {
+  0%, 100% { 
+    box-shadow: 0 0 20px rgba(255, 204, 0, 0.1);
+    transform: scale(1);
+  }
+  50% { 
+    box-shadow: 0 0 40px rgba(255, 204, 0, 0.3);
+    transform: scale(1.05);
+  }
+}
+
+/* High Score Flash Enhancement */
+.new-highscore {
+  animation: newHighScoreEnhanced 0.8s ease;
+}
+
+@keyframes newHighScoreEnhanced {
+  0% { transform: scale(1); }
+  20% { transform: scale(1.2); color: var(--accent-yellow); text-shadow: 0 0 25px rgba(255, 204, 0, 0.8); }
+  40% { transform: scale(1.05); }
+  60% { transform: scale(1.15); }
+  80% { transform: scale(1.08); }
+  100% { transform: scale(1); text-shadow: 0 0 15px rgba(255, 204, 0, 0.5); }
+}
+
+/* Recently Played Item Hover */
+.recent-item:hover .recent-icon {
+  transform: scale(1.2);
+  transition: transform var(--transition-fast);
+}
+
+/* No Results Improvement */
+.no-results {
+  animation: fadeIn 0.4s ease;
+}
+
+/* Smooth Transitions for All Interactive Elements */
+button,
+input,
+.game-card,
+.achievement-item,
+.stat-card {
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }

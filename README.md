@@ -1,5 +1,5 @@
 <!-- ============================================ -->
-<!--        LIGHTNING GAMES - README v3.0        -->
+<!--     LIGHTNING GAMES - README v3.0          -->
 <!-- ============================================ -->
 
 <p align="center">
@@ -7,27 +7,29 @@
 </p>
 
 <h1 align="center">
-  <sup><sub>&#9889;</sub></sup> Lightning Games
+  ⚡ Lightning Games
 </h1>
 
 <p align="center">
   <b>A premium neon-themed game arcade that lives in your system tray.</b><br/>
-  <sub>40 handcrafted games. One global hotkey. Zero friction.</sub>
+  <sub>40 handcrafted games • One global hotkey • Zero friction • 100% offline</sub>
 </p>
 
 <br/>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-2.1.6-00d4ff?style=for-the-badge&logo=semver&logoColor=white" alt="Version" />
+  <img src="https://img.shields.io/badge/version-3.0-00d4ff?style=for-the-badge&logo=semver&logoColor=white" alt="Version" />
   <img src="https://img.shields.io/badge/games-40-ff00aa?style=for-the-badge&logoColor=white" alt="Games" />
   <img src="https://img.shields.io/badge/achievements-37-ffcc00?style=for-the-badge&logoColor=white" alt="Achievements" />
   <img src="https://img.shields.io/badge/themes-4-00ff88?style=for-the-badge&logoColor=white" alt="Themes" />
+  <img src="https://img.shields.io/badge/launch%20time-%3C200ms-00d4ff?style=for-the-badge&logoColor=white" alt="Launch Time" />
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/platform-Windows%2010%2F11-0078D6?style=flat-square&logo=windows&logoColor=white" alt="Platform" />
   <img src="https://img.shields.io/badge/electron-28.0-47848F?style=flat-square&logo=electron&logoColor=white" alt="Electron" />
   <img src="https://img.shields.io/badge/runtime%20deps-0-brightgreen?style=flat-square" alt="Zero Runtime Deps" />
+  <img src="https://img.shields.io/badge/size-%7E80MB-00d4ff?style=flat-square" alt="Size" />
   <img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="License" />
 </p>
 
@@ -37,364 +39,1429 @@
   <code>Press</code> <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>G</kbd> <code>from anywhere to summon the arcade.</code>
 </p>
 
+<p align="center">
+  <a href="#-why-lightning-games">Why?</a> •
+  <a href="#-quick-start">Quick Start</a> •
+  <a href="#-game-library">Games</a> •
+  <a href="#-features">Features</a> •
+  <a href="#-building-from-source">Build</a> •
+  <a href="#-technical-documentation">Docs</a>
+</p>
+
 ---
 
-<br/>
+## ⚡ Why Lightning Games?
 
-## Table of Contents
+### The Problem
+
+You're working. You need a 2-minute break. You want to play a quick game.
+
+**What happens next?**
+
+- **Steam/Epic**: Click icon → Wait 10 seconds → Update required → Wait 30 seconds → Login → Navigate UI → Finally play
+- **Browser games**: Open browser → Search → Click → Ads → Cookie consent → More ads → Tracking scripts → Finally play
+- **Mobile games**: Unlock phone → Find app → Wait for load → Notifications → In-app purchase popup → Battery drain → Finally play
+- **Lightning Games**: Press <kbd>Ctrl+Alt+G</kbd> → **Instantly play** → Press <kbd>Esc</kbd> → Back to work
+
+### The Solution
+
+**One hotkey. Zero friction. Instant gaming.**
 
 <table>
 <tr>
 <td width="50%" valign="top">
 
-**Getting Started**
-- [Why Lightning Games?](#-why-lightning-games)
-- [Quick Start](#-quick-start)
-- [Installation](#-installation)
+#### What You Get
 
-**The Games**
-- [Game Library (40 Games)](#-game-library)
-  - [Arcade (24)](#arcade-24-games) | [Puzzle (10)](#puzzle-10-games) | [Classic (3)](#classic-3-games) | [Strategy (1)](#strategy-1-game) | [Creative (2)](#creative-2-games)
-- [Tower Defense -- In Depth](#-tower-defense--in-depth)
-- [Game Difficulty Guide](#-game-difficulty-guide)
+✅ **< 200ms launch time** from anywhere  
+✅ **40 handcrafted games** with neon aesthetics  
+✅ **37 achievements** to unlock  
+✅ **4 complete themes** to customize  
+✅ **Zero installation** - portable executable  
+✅ **No internet required** - 100% offline  
+✅ **No accounts** - no login, no signup  
+✅ **No ads** - ever  
+✅ **No tracking** - 100% private  
+✅ **~80MB total** - smaller than most games  
+✅ **GPU accelerated** - smooth 60fps  
+✅ **Synthesized audio** - no audio files  
 
 </td>
 <td width="50%" valign="top">
 
-**Features & Systems**
-- [Achievement System (37 Achievements)](#-achievement-system)
-- [Theme Gallery](#-theme-gallery)
-- [Sound Engine](#-sound-engine)
-- [Keyboard & Mouse Reference](#-keyboard--mouse-reference)
+#### What You Don't Get
 
-**Technical**
-- [Architecture](#-architecture)
-- [Data & Storage](#-data--storage)
-- [Performance Tuning](#-performance-tuning)
-- [Building from Source](#-building-from-source)
-- [Adding a New Game](#-adding-a-new-game)
-- [License](#license)
-
-</td>
-</tr>
-</table>
-
-<br/>
-
----
-
-<br/>
-
-## &#9889; Why Lightning Games?
-
-<table>
-<tr>
-<td>
-
-**The problem:** You want a quick gaming break but don't want to open Steam, wait for updates, or deal with heavy launchers. Browser games are ad-ridden. Mobile games drain your phone.
-
-**The solution:** A single hotkey summons 40 polished games in under 200ms. No accounts. No internet. No installation. Press <kbd>Ctrl+Alt+G</kbd>, play for 2 minutes, press <kbd>Esc</kbd>, back to work.
+❌ No updates interrupting you  
+❌ No account creation  
+❌ No email verification  
+❌ No terms of service  
+❌ No privacy policy to read  
+❌ No data collection  
+❌ No cloud sync (intentional)  
+❌ No social features  
+❌ No microtransactions  
+❌ No DRM  
+❌ No always-online requirement  
+❌ No launcher bloat  
 
 </td>
 </tr>
 </table>
 
-| | Lightning Games | Browser Games | Steam / Epic |
-|---|:---:|:---:|:---:|
-| Launch time | **< 200ms** | 3--5s | 10--30s |
-| Internet required | **No** | Yes | Mostly |
-| Account required | **No** | Sometimes | Yes |
-| Ads | **None** | Everywhere | No |
-| Disk usage | **~80 MB** | N/A | 500 MB+ |
-| Privacy | **100% local** | Tracked | Tracked |
-| Global hotkey | **Yes** | No | No |
-| Runs in system tray | **Yes** | No | Partial |
+### The Comparison
 
-<br/>
+| Feature | Lightning Games | Browser Games | Steam/Epic | Mobile Games |
+|---------|:---------------:|:-------------:|:----------:|:------------:|
+| **Launch time** | **< 200ms** ⚡ | 3-5s | 10-30s | 5-10s |
+| **Internet required** | **No** ✅ | Yes ❌ | Mostly ⚠️ | Yes ❌ |
+| **Account required** | **No** ✅ | Sometimes ⚠️ | Yes ❌ | Yes ❌ |
+| **Advertisements** | **None** ✅ | Everywhere ❌ | No ✅ | Many ❌ |
+| **Disk usage** | **~80 MB** ✅ | N/A | 500 MB+ ❌ | Varies |
+| **Privacy** | **100% local** ✅ | Tracked ❌ | Tracked ❌ | Tracked ❌ |
+| **Global hotkey** | **Yes** ✅ | No ❌ | No ❌ | No ❌ |
+| **System tray** | **Yes** ✅ | No ❌ | Partial ⚠️ | No ❌ |
+| **Works offline** | **Yes** ✅ | No ❌ | Partial ⚠️ | No ❌ |
+| **Installation** | **None** ✅ | N/A | Required ❌ | Required ❌ |
+| **Updates** | **Manual** ✅ | Automatic ⚠️ | Forced ❌ | Forced ❌ |
+| **Data ownership** | **You** ✅ | Them ❌ | Them ❌ | Them ❌ |
+
+### The Result
+
+Press <kbd>Ctrl+Alt+G</kbd> → Play for 2 minutes → Press <kbd>Esc</kbd> → Back to work.
+
+Your scores, achievements, and settings are saved locally forever. No cloud. No sync. No tracking. Just you and your games.
 
 ---
 
-<br/>
+## 🚀 Quick Start
 
-## &#128640; Quick Start
+### 3-Step Installation
 
 ```
 1. Download "Lightning Games.exe"
-2. Double-click to run (no install needed)
-3. Lightning bolt icon appears in system tray
-4. Press Ctrl+Alt+G from anywhere to open
-5. Click a game card to play
-6. Press Esc to go back or hide the window
+2. Double-click to run
+3. Press Ctrl+Alt+G from anywhere
 ```
 
-That's it. Your scores, achievements, and settings auto-save locally.
+That's it. No installation wizard. No admin rights. No registry entries. Just run and play.
 
-<br/>
+### First Launch
 
----
+When you first open Lightning Games, you'll see:
 
-<br/>
+1. **Game Grid** - 40 game cards with neon glow effects
+2. **Search Bar** - Type to filter games instantly
+3. **Tabs** - Filter by category (All, Arcade, Puzzle, Classic, Strategy, Creative)
+4. **Settings Icon** (⚙️) - Customize theme, volume, and preferences
+5. **Stats Dashboard** - View your achievements and play time
 
-## &#128229; Installation
+### Essential Shortcuts
 
 <table>
 <tr>
-<td>
+<td width="50%" valign="top">
 
-### Option A: Portable Executable (Recommended)
+#### Global Shortcuts (Work Anywhere)
 
-Download `Lightning Games.exe` from the latest release.
-Double-click to run. No installer, no admin rights, no registry entries.
+| Shortcut | Action |
+|----------|--------|
+| <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>G</kbd> | Toggle window visibility |
 
-The app creates **no files** on disk -- everything lives in the Electron `localStorage`.
+This works even when Lightning Games is minimized to the system tray. Press it from any application to instantly summon the arcade.
 
 </td>
-</tr>
-<tr>
-<td>
+<td width="50%" valign="top">
 
-### Option B: Build from Source
+#### In-App Shortcuts
 
-```bash
-git clone https://github.com/tarikbc/lightning-games.git
-cd lightning-games
-npm install       # Install dev dependencies
-npm start         # Launch in dev mode
-```
-
-To create a distributable `.exe`:
-```bash
-npm run dist      # Interactive build wizard
-```
+| Shortcut | Action |
+|----------|--------|
+| <kbd>Esc</kbd> | Return to launcher / Hide window |
+| <kbd>Type</kbd> | Auto-focus search bar |
+| <kbd>Click card</kbd> | Launch game |
+| <kbd>Click ❤️</kbd> | Toggle favorite |
+| <kbd>Click ⚙️</kbd> | Open settings |
 
 </td>
 </tr>
 </table>
 
-<br/>
+### First Time Setup (Optional)
+
+**Choose Your Theme**
+1. Click the gear icon (⚙️) in the top-right
+2. Select from 4 themes: Neon, Retro, Minimal, Forest
+3. Theme applies instantly - no reload needed
+
+**Adjust Audio**
+1. Open settings (⚙️)
+2. Use the volume slider (0-100%)
+3. Volume persists across sessions
+
+**Mark Favorites**
+1. Hover over any game card
+2. Click the heart icon (❤️)
+3. Favorites appear at the top of the grid
+
+**Explore Games**
+1. Use the search bar to find games by name
+2. Use tabs to filter by category
+3. Click any card to start playing immediately
+
+### System Tray Integration
+
+Lightning Games lives in your system tray (bottom-right corner of Windows taskbar).
+
+**Tray Icon Actions:**
+- **Single-click**: Toggle window visibility
+- **Right-click**: Open context menu
+  - Open (Ctrl+Alt+G)
+  - Run at Startup (toggle)
+  - Quit Completely
+
+**Auto-Hide Behavior:**
+- Window hides when you click outside it (configurable)
+- Window hides when you press <kbd>Esc</kbd>
+- Window stays on top when visible (configurable)
+
+### Your First Game
+
+1. Press <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>G</kbd>
+2. Click **Snake** (🐍) - the easiest game to start with
+3. Use <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> or arrow keys to move
+4. Eat the food, grow longer, avoid walls and yourself
+5. Press <kbd>Esc</kbd> when done to return to launcher
+
+**Congratulations!** You've unlocked your first achievement: "Welcome!" 🎮
 
 ---
 
-<br/>
+## 📦 Installation Options
 
-## &#127918; Game Library
+### Option A: Portable Executable (Recommended) ⭐
 
-**40 games** across 5 categories. Every game runs on an 880x540 HTML5 Canvas with synthesized audio and neon visuals.
+**Download `Lightning Games.exe` from the latest release. Double-click to run.**
 
-<br/>
+<table>
+<tr>
+<td width="50%" valign="top">
+
+#### Advantages
+
+✅ **No installation** - Just download and run  
+✅ **No admin rights** - Works on restricted PCs  
+✅ **No registry entries** - Leaves no trace  
+✅ **Portable** - Run from USB drive  
+✅ **No dependencies** - Everything included  
+✅ **Single file** - Easy to manage  
+✅ **Instant updates** - Just replace the .exe  
+✅ **No uninstaller needed** - Just delete  
+
+</td>
+<td width="50%" valign="top">
+
+#### Technical Details
+
+- **File size**: ~80-150 MB (depending on compression)
+- **Format**: Windows Portable Executable (.exe)
+- **Architecture**: x64 (64-bit)
+- **Platform**: Windows 10/11
+- **Runtime**: Electron 28.0 (bundled)
+- **Storage**: localStorage (browser API)
+- **Location**: Runs from any folder
+
+</td>
+</tr>
+</table>
+
+**How to use:**
+1. Download `Lightning Games.exe`
+2. Move it to any folder (Desktop, Documents, USB drive, etc.)
+3. Double-click to run
+4. Lightning bolt icon appears in system tray
+5. Press <kbd>Ctrl+Alt+G</kbd> to open
+
+**Data storage:**
+- All data is stored in Electron's localStorage
+- No files created on disk (except the .exe itself)
+- Uninstall by simply deleting the .exe
+- Data persists even if you move the .exe to a different folder
+
+---
+
+### Option B: Build from Source 🛠️
+
+**For developers who want to customize or contribute.**
+
+#### Prerequisites
+
+```bash
+# Required software
+- Node.js 18 or later
+- npm (comes with Node.js)
+- Windows 10/11 (for building Windows executable)
+- Git (for cloning repository)
+```
+
+#### Step-by-Step Build Process
+
+**1. Clone the repository**
+```bash
+git clone https://github.com/tarikbc/lightning-games.git
+cd lightning-games
+```
+
+**2. Install dependencies**
+```bash
+npm install
+```
+
+This installs:
+- `electron` (^28.0.0) - Desktop runtime
+- `electron-builder` (^24.13.3) - Build tool
+- `canvas` (^3.2.1) - Icon generation
+- `png-to-ico` (^3.0.1) - Icon conversion
+
+**3. Development mode**
+```bash
+# Launch in development mode
+npm start
+
+# Launch with dev tools open
+npm run dev
+```
+
+**4. Build portable executable**
+```bash
+npm run dist
+```
+
+The interactive build wizard will guide you through:
+1. Version number selection
+2. Compression level (0-10)
+   - **0-3 (Fast)**: ~5 seconds, ~150 MB
+   - **4-7 (Normal)**: ~30 seconds, ~110 MB
+   - **8-10 (Maximum)**: ~2 minutes, ~80 MB
+3. Automatic package.json update
+4. Build execution with progress bar
+5. Log file generation in `BuildLogs/`
+
+**Output:** `dist/Lightning Games.exe`
+
+#### Build Configuration
+
+The build process is configured in `package.json`:
+
+```json
+{
+  "build": {
+    "appId": "com.lightninggames.app",
+    "productName": "Lightning Games",
+    "files": [
+      "main.js",
+      "preload.js",
+      "index.html",
+      "renderer/**/*",
+      "games/**/*",
+      "styles/**/*",
+      "assets/**/*"
+    ],
+    "win": {
+      "target": ["portable"]
+    },
+    "portable": {
+      "artifactName": "${productName}.exe"
+    }
+  }
+}
+```
+
+#### Development Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm start` | Launch app in development mode |
+| `npm run dev` | Launch with DevTools open |
+| `npm run dist` | Build portable executable (interactive) |
+| `npx electron-builder --win portable` | Direct build (no wizard) |
+
+#### Project Structure for Developers
+
+```
+lightningGames/
+├── main.js              # Electron main process (window, tray, shortcuts)
+├── preload.js           # IPC bridge (security layer)
+├── index.html           # Application shell
+├── package.json         # Dependencies & build config
+│
+├── renderer/            # UI & game management
+│   ├── launcher.js      # Game grid, search, settings
+│   ├── gameManager.js   # Game lifecycle & scoring
+│   ├── soundManager.js  # Procedural audio engine
+│   └── particles.js     # Background effects
+│
+├── games/               # 40 game implementations
+│   ├── snake.js
+│   ├── tetris.js
+│   ├── towerdefense.js  # Largest game (1,300+ lines)
+│   └── ...
+│
+├── styles/              # CSS design system
+│   └── main.css         # 1,200+ lines, 4 themes
+│
+├── scripts/             # Build utilities
+│   ├── build.js         # Interactive build wizard
+│   └── sync-icons.js    # Icon generation
+│
+└── assets/              # Icons & resources
+    └── icons/           # 10 sizes (16x16 to 1024x1024)
+```
+
+#### Customization Ideas
+
+- **Add new games**: See [Adding a New Game](#-adding-a-new-game)
+- **Create new themes**: Edit `styles/main.css` CSS variables
+- **Add achievements**: Modify `renderer/launcher.js`
+- **Change hotkey**: Edit `main.js` global shortcut registration
+- **Add sound effects**: Extend `renderer/soundManager.js`
+- **Modify UI**: Edit `renderer/launcher.js` and `styles/main.css`
+
+#### Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+See [AGENTS.md](AGENTS.md) for complete technical documentation.
+
+---
+
+## 🎮 Features
+
+### 🎯 Core Features at a Glance
+
+<table>
+<tr>
+<td width="33%" valign="top" align="center">
+
+### 🎮 40 Games
+24 Arcade • 10 Puzzle  
+3 Classic • 1 Strategy • 2 Creative
+
+Every game runs on 880x540 canvas  
+with neon visuals and synthesized audio
+
+</td>
+<td width="33%" valign="top" align="center">
+
+### 🏆 37 Achievements
+11 Normal • 15 Ultra  
+3 Time-Based • 1 Hidden • 1 Godly
+
+Toast notifications with fanfare  
+Persistent tracking across sessions
+
+</td>
+<td width="33%" valign="top" align="center">
+
+### 🌓 4 Themes
+Neon • Retro • Minimal • Forest
+
+Instant switching via CSS variables  
+Complete UI transformation
+
+</td>
+</tr>
+</table>
+
+---
+
+### 🎮 Game Collection (40 Total)
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+#### Arcade Games (24)
+Fast-paced, reflex-based gameplay
+
+- 🐍 **Snake** - Classic eat and grow
+- ⚡ **Cyber Dash** - Obstacle dodging
+- 🧱 **Tetris** - Block stacking
+- ☄️ **Asteroids** - Space survival
+- 🐸 **Frogger** - Road crossing
+- 🔨 **Whack-A-Mole** - Click speed
+- 🎈 **Neon Jump** - Vertical platformer
+- 🦖 **Neon Runner** - Auto-runner
+- 🐦 **Flappy Bird** - Pipe navigation
+- 🚀 **Space Shooter** - Top-down shooter
+- 🟡 **Orb Collector** - Collection game
+- ⭐ **SkyFall** - Catch and dodge
+- 🧊 **Laser Grid** - Pattern dodging
+- 🛰️ **Orbit** - Orbital survival
+- 🏗️ **Stacker** - Tower building
+- 🎨 **Color Rush** - Color matching
+- 🔫 **Blaster** - Wave defense
+- 🏰 **Pixel Quest** - Dungeon crawler
+- ⚽ **Bouncy Ball** - Physics game
+- 🎵 **Rhythm Tap** - Music rhythm
+- 🥷 **Ninja Slice** - Target slicing
+- 🛡️ **Orbit Defense** - Defense game
+- 🔄 **Gravity Flip** - Gravity mechanics
+- 👆 **Tap Dash** - Quick taps
+
+</td>
+<td width="50%" valign="top">
+
+#### Puzzle Games (10)
+Strategic, thinking-based gameplay
+
+- ✨ **2048** - Tile merging
+- 🧠 **Memory Match** - Card matching
+- ❌ **Tic-Tac-Toe** - Classic grid
+- 💣 **Minesweeper** - Logic deduction
+- 🎛️ **Memotron** - Sequence memory
+- 📝 **Word Quest** - Typing challenge
+- 💎 **Jewel Match** - Match-3
+- 🔶 **Hex Puzzle** - Tile placement
+- 🔺 **Shape Shifter** - Shape matching
+- 〰️ **Zig Zag** - Path navigation
+
+#### Classic Games (3)
+Timeless arcade favorites
+
+- 🏓 **Squash Pong** - Solo paddle
+- ⚔️ **Neon Duel** - 2-player pong
+- 🧱 **Breakout** - Brick breaker
+
+#### Strategy (1)
+Deep, tactical gameplay
+
+- 🗼 **Tower Defense** - 8 towers, 6 enemies, 50+ waves, endless mode (1,300+ lines of code)
+
+#### Creative (2)
+No score, pure expression
+
+- 🎹 **Neon Piano** - Playable synthesizer
+- ✏️ **Neon Draw** - Freeform painting
+
+</td>
+</tr>
+</table>
+
+---
+
+### 🏆 Achievement System (37 Total)
+
+Unlock achievements through gameplay, skill, and dedication. Each unlock triggers a neon toast notification with synthesized fanfare.
+
+<table>
+<tr>
+<td width="25%" valign="top">
+
+#### Normal (11)
+Regular gameplay
+
+- 🎮 Welcome!
+- 🏆 Record Breaker
+- 🔥 Master Player
+- 🐍 Snake Tamer
+- 🧱 Architect
+- 🧠 Memory Apprentice
+- 💣 Mine Expert
+- 🦖 Fast Runner
+- 👑 Frogger Master
+- 🔥 Warmup Done
+- 🪨 First Rock
+
+</td>
+<td width="25%" valign="top">
+
+#### Ultra - Dedication (7)
+Time investment
+
+- 🏃 Marathon Runner
+- ⚡ Non-Stop
+- 💊 Addict
+- 🔄 Persistent
+- 🗺️ Explorer
+- 📱 Socialite
+- 👑 Collector
+
+</td>
+<td width="25%" valign="top">
+
+#### Ultra - Skill (15)
+High scores & speed
+
+- 🐍 Snake Charmer
+- 🧱 Pentominium
+- 🛡️ Safe Stepper
+- ☄️ Asteroid Annihilator
+- 🌌 Space Ace
+- ⚡ Memory God
+- 💨 Reflex Master
+- 🌟 2048 Master
+- 🚀 High Jumper
+- 🧠 Simon's Rival
+- 🔨 Mole Slayer
+- 💎 Indestructible
+- 🎯 Precision
+- 🔥 Triple Threat
+- 🏎️ Speedrunner
+
+</td>
+<td width="25%" valign="top">
+
+#### Special (4)
+Unique conditions
+
+**Time-Based (3)**
+- 🦉 Night Owl
+- 🐤 Early Bird
+- ⚔️ Weekend Warrior
+
+**Hidden (1)**
+- 🧥 Bulletproof
+
+**Godly (1)**
+- ⛩️ Godly (unlock all)
+
+</td>
+</tr>
+</table>
+
+---
+
+### 🌓 Theme System
+
+Four complete visual themes with instant switching. No reload required.
+
+<table>
+<tr>
+<td width="25%" align="center">
+
+#### Neon (Default)
+![#00d4ff](https://via.placeholder.com/15/00d4ff/00d4ff.png) ![#ff00aa](https://via.placeholder.com/15/ff00aa/ff00aa.png) ![#00ff88](https://via.placeholder.com/15/00ff88/00ff88.png)
+
+**Cyberpunk vibes**  
+Bright cyan, magenta, green  
+Deep dark blue background  
+Glowing neon effects
+
+Perfect for: Gaming, night sessions
+
+</td>
+<td width="25%" align="center">
+
+#### Retro
+![#ffaa00](https://via.placeholder.com/15/ffaa00/ffaa00.png) ![#ff6600](https://via.placeholder.com/15/ff6600/ff6600.png) ![#ffff00](https://via.placeholder.com/15/ffff00/ffff00.png)
+
+**CRT nostalgia**  
+Warm amber tones  
+Sepia filter overlay  
+Increased contrast
+
+Perfect for: Retro lovers, warm feel
+
+</td>
+<td width="25%" align="center">
+
+#### Minimal
+![#ffffff](https://via.placeholder.com/15/ffffff/ffffff.png) ![#000000](https://via.placeholder.com/15/000000/000000.png)
+
+**Pure focus**  
+Monochrome black & white  
+No distractions  
+Clean lines
+
+Perfect for: Productivity, clarity
+
+</td>
+<td width="25%" align="center">
+
+#### Forest
+![#00ff88](https://via.placeholder.com/15/00ff88/00ff88.png) ![#00cc66](https://via.placeholder.com/15/00cc66/00cc66.png)
+
+**Nature palette**  
+Cool greens  
+Organic tones  
+Calm atmosphere
+
+Perfect for: Relaxation, eye comfort
+
+</td>
+</tr>
+</table>
+
+**How to switch:**
+1. Click settings icon (⚙️)
+2. Select theme from dropdown
+3. Theme applies instantly
+
+All UI elements adapt automatically through CSS custom properties.
+
+---
+
+### 🔊 Sound System
+
+**100% procedurally generated audio.** Zero audio files in the project.
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+#### Sound Effects (25+)
+
+**UI Sounds**
+- Click, Hover, Select
+
+**Game Events**
+- Jump, Hit, Score, Death
+- Shoot, Explosion, Level Up
+- Eat, Match, Win, Bounce, Slice
+
+**Ambient**
+- Laser, Flip, Whoosh, Tick
+- Ding, Buzz, Land, Swing
+- Countdown, Power Up, Place, Move
+- Line Clear
+
+</td>
+<td width="50%" valign="top">
+
+#### 8-Bit Music Engine
+
+**Per-Game Background Tracks**
+- Procedurally generated melodies
+- Note frequency mapping
+- 150 BPM tempo
+- Looping patterns
+- Volume-controlled
+
+**Technical Details**
+- Web Audio API synthesis
+- Oscillator-based waveforms
+- Triangle, Sine, Square, Sawtooth
+- Frequency sweeps
+- White noise bursts
+- Multi-tone chords
+
+</td>
+</tr>
+</table>
+
+**Master Volume Control:**
+- Adjustable 0-100% via settings
+- Persists across sessions
+- Affects all sounds globally
+- Real-time adjustment
+
+---
+
+### ⚡ Performance & Optimization
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+#### GPU Acceleration
+
+**Enabled Flags:**
+- GPU rasterization
+- OOP (off-main-thread) rasterization
+- GPU compositing
+- Accelerated video decode
+- Disabled background throttling
+- Disabled renderer backgrounding
+- sRGB color profile
+
+**Result:** Smooth 60fps on all games
+
+</td>
+<td width="50%" valign="top">
+
+#### Runtime Optimizations
+
+- **Frame timing**: requestAnimationFrame with dt cap
+- **Canvas scaling**: Configurable 0.7x-1.0x resolution
+- **Event delegation**: Single listener on grid
+- **Debounced writes**: 250ms localStorage delay
+- **Smooth scrolling**: Custom lerp animation
+- **Single instance**: Prevents duplicate processes
+- **Selective bundling**: Excludes node_modules
+
+**Result:** < 200ms launch time
+
+</td>
+</tr>
+</table>
+
+#### Settings for Low-End Hardware
+
+Adjust in Settings panel (⚙️):
+
+| Setting | Options | Effect |
+|---------|---------|--------|
+| **Render Scale** | 0.7x - 1.0x | Lower = better FPS, slightly blurrier |
+| **Reduced Motion** | On / Off | Disables particles and smooth scroll |
+| **Shake Intensity** | 0 - 10 | Reduces or disables screen shake |
+
+---
+
+### 🔐 Privacy & Security
+
+**100% offline. 100% local. 100% yours.**
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+#### What We Collect
+**Nothing.**
+
+- ❌ No telemetry
+- ❌ No analytics
+- ❌ No crash reports
+- ❌ No usage statistics
+- ❌ No personal information
+- ❌ No IP addresses
+- ❌ No device fingerprinting
+
+</td>
+<td width="50%" valign="top">
+
+#### Where Your Data Lives
+**On your computer only.**
+
+- ✅ localStorage (browser API)
+- ✅ Never leaves your machine
+- ✅ No cloud sync
+- ✅ No external connections
+- ✅ No servers
+- ✅ No databases
+- ✅ You own your data
+
+</td>
+</tr>
+</table>
+
+**Security Model:**
+- Context isolation enabled
+- Node integration disabled
+- Remote module disabled
+- Preload script sandboxing
+- IPC channel whitelisting
+- No arbitrary code execution
+
+---
+
+### 📊 Stats Tracking (Local Only)
+
+Track your gaming journey with comprehensive statistics.
+
+**Global Stats:**
+- Total games played
+- Total play time (seconds)
+- Unique games played
+- Consecutive game streaks
+- Achievement unlock count
+- Favorite games list
+
+**Per-Game Stats:**
+- High score
+- Last played timestamp
+- Total plays
+- Game-specific metrics (e.g., asteroids destroyed)
+
+**View Stats:**
+1. Open launcher
+2. Click stats icon or tab
+3. See lifetime statistics
+4. Filter by game or category
+
+All stats persist in localStorage and never leave your machine.
+
+---
+
+## 🎮 Game Library - Complete Catalog
+
+**40 handcrafted games** across 5 categories. Every game runs on an **880x540 HTML5 Canvas** with synthesized audio and neon visuals.
+
+### 🎯 Quick Navigation
+
+[Arcade (24)](#arcade-24-games) • [Puzzle (10)](#puzzle-10-games) • [Classic (3)](#classic-3-games) • [Strategy (1)](#strategy-1-game) • [Creative (2)](#creative-2-games)
+
+---
 
 ### Arcade (24 games)
 
 Fast-paced games that test your reflexes, timing, and survival skills.
 
-| # | Game | | Description | Controls | Difficulty |
-|--:|------|:---:|-------------|----------|:----------:|
-| 1 | **Snake** | &#x1F40D; | Classic snake -- eat, grow, survive | WASD / Arrows | &#11088;&#11088; |
-| 2 | **Cyber Dash** | &#9889; | Side-scrolling obstacle dodger with energy pickups | WASD / Arrows | &#11088;&#11088;&#11088; |
-| 3 | **Tetris** | &#129521; | Block stacking with particle effects and line combos | Arrows, Space | &#11088;&#11088;&#11088; |
-| 4 | **Asteroids** | &#9732;&#65039; | Thrust-physics space survival -- rotate, thrust, shoot | WASD, Space | &#11088;&#11088;&#11088;&#11088; |
-| 5 | **Frogger** | &#128056; | Cross roads and rivers without getting hit | WASD / Arrows | &#11088;&#11088;&#11088; |
-| 6 | **Whack-A-Mole** | &#128296; | Click moles before they hide, speed ramps up | Mouse | &#11088;&#11088; |
-| 7 | **Neon Jump** | &#127880; | Infinite vertical platformer -- aim for the sky | Arrows / Space | &#11088;&#11088; |
-| 8 | **Neon Runner** | &#129430; | Auto-runner with increasing obstacle density | Space | &#11088;&#11088;&#11088; |
-| 9 | **Flappy Bird** | &#128038; | Tap to navigate through neon pipe gaps | Space | &#11088;&#11088;&#11088; |
-| 10 | **Space Shooter** | &#128640; | Top-down shoot-em-up with enemy waves | WASD / Arrows | &#11088;&#11088;&#11088; |
-| 11 | **Orb Collector** | &#128993; | Collect glowing orbs, dodge mines on the field | Mouse | &#11088;&#11088;&#11088; |
-| 12 | **SkyFall** | &#11088; | Catch falling stars, dodge incoming meteors | WASD | &#11088;&#11088; |
-| 13 | **Laser Grid** | &#129482; | Survive scanning laser beam patterns | WASD | &#11088;&#11088;&#11088;&#11088; |
-| 14 | **Orbit** | &#128752;&#65039; | Stay alive in an orbital path, avoid debris | WASD | &#11088;&#11088;&#11088; |
-| 15 | **Stacker** | &#127959;&#65039; | Time your drops to build the perfect tower | Space | &#11088;&#11088;&#11088; |
-| 16 | **Color Rush** | &#127912; | Sprint to the matching color zone before time | WASD | &#11088;&#11088;&#11088; |
-| 17 | **Blaster** | &#128299; | Defend against waves of alien invaders | Mouse | &#11088;&#11088;&#11088; |
-| 18 | **Pixel Quest** | &#127984; | Dungeon crawl with enemies, loot, and exploration | WASD | &#11088;&#11088;&#11088; |
-| 19 | **Bouncy Ball** | &#9917; | Physics-based bounce game with trick shots | Mouse | &#11088;&#11088; |
-| 20 | **Rhythm Tap** | &#127925; | Hit falling notes on beat for combos | ASDF | &#11088;&#11088;&#11088; |
-| 21 | **Ninja Slice** | &#129399; | Slice flying targets before they fall off screen | Mouse | &#11088;&#11088; |
-| 22 | **Orbit Defense** | &#128737;&#65039; | Protect your orbital center from incoming threats | Mouse | &#11088;&#11088;&#11088; |
-| 23 | **Gravity Flip** | &#11014;&#65039; | Flip gravity on/off to navigate obstacle corridors | Space | &#11088;&#11088;&#11088; |
-| 24 | **Tap Dash** | &#127925; | Quick-tap rhythm runner with escalating tempo | Space | &#11088;&#11088; |
+<table>
+<tr>
+<th width="5%">Icon</th>
+<th width="15%">Game</th>
+<th width="10%">Difficulty</th>
+<th width="35%">Description</th>
+<th width="20%">Controls</th>
+<th width="15%">Best For</th>
+</tr>
 
-<br/>
+<tr>
+<td align="center">🐍</td>
+<td><b>Snake</b></td>
+<td align="center">⭐⭐</td>
+<td>Classic snake -- eat, grow, survive. Avoid walls and yourself.</td>
+<td>WASD / Arrows</td>
+<td>Quick sessions</td>
+</tr>
+
+<tr>
+<td align="center">⚡</td>
+<td><b>Cyber Dash</b></td>
+<td align="center">⭐⭐⭐</td>
+<td>Side-scrolling obstacle dodger with energy pickups and increasing speed.</td>
+<td>WASD / Arrows</td>
+<td>Reflexes</td>
+</tr>
+
+<tr>
+<td align="center">🧱</td>
+<td><b>Tetris</b></td>
+<td align="center">⭐⭐⭐</td>
+<td>Block stacking with particle effects, line combos, and increasing difficulty.</td>
+<td>Arrows, Space</td>
+<td>Spatial reasoning</td>
+</tr>
+
+<tr>
+<td align="center">☄️</td>
+<td><b>Asteroids</b></td>
+<td align="center">⭐⭐⭐⭐</td>
+<td>Thrust-physics space survival -- rotate, thrust, shoot. Momentum-based.</td>
+<td>WASD, Space</td>
+<td>Physics mastery</td>
+</tr>
+
+<tr>
+<td align="center">🐸</td>
+<td><b>Frogger</b></td>
+<td align="center">⭐⭐⭐</td>
+<td>Cross roads and rivers without getting hit. Timing is everything.</td>
+<td>WASD / Arrows</td>
+<td>Precision timing</td>
+</tr>
+
+<tr>
+<td align="center">🔨</td>
+<td><b>Whack-A-Mole</b></td>
+<td align="center">⭐⭐</td>
+<td>Click moles before they hide. Speed ramps up progressively.</td>
+<td>Mouse</td>
+<td>Mouse control</td>
+</tr>
+
+<tr>
+<td align="center">🎈</td>
+<td><b>Neon Jump</b></td>
+<td align="center">⭐⭐</td>
+<td>Infinite vertical platformer -- aim for the sky. Momentum-based jumping.</td>
+<td>Arrows / Space</td>
+<td>Relaxation</td>
+</tr>
+
+<tr>
+<td align="center">🦖</td>
+<td><b>Neon Runner</b></td>
+<td align="center">⭐⭐⭐</td>
+<td>Auto-runner with increasing obstacle density. Jump and duck to survive.</td>
+<td>Space</td>
+<td>Endurance</td>
+</tr>
+
+<tr>
+<td align="center">🐦</td>
+<td><b>Flappy Bird</b></td>
+<td align="center">⭐⭐⭐</td>
+<td>Tap to navigate through neon pipe gaps. Gravity-based physics.</td>
+<td>Space</td>
+<td>Frustration tolerance</td>
+</tr>
+
+<tr>
+<td align="center">🚀</td>
+<td><b>Space Shooter</b></td>
+<td align="center">⭐⭐⭐</td>
+<td>Top-down shoot-em-up with enemy waves. Dodge bullets, shoot back.</td>
+<td>WASD / Arrows</td>
+<td>Bullet hell fans</td>
+</tr>
+
+<tr>
+<td align="center">🟡</td>
+<td><b>Orb Collector</b></td>
+<td align="center">⭐⭐⭐</td>
+<td>Collect glowing orbs, dodge mines on the field. Risk vs reward.</td>
+<td>Mouse</td>
+<td>Risk/reward balance</td>
+</tr>
+
+<tr>
+<td align="center">⭐</td>
+<td><b>SkyFall</b></td>
+<td align="center">⭐⭐</td>
+<td>Catch falling stars, dodge incoming meteors. Simple but addictive.</td>
+<td>WASD</td>
+<td>Casual play</td>
+</tr>
+
+<tr>
+<td align="center">🧊</td>
+<td><b>Laser Grid</b></td>
+<td align="center">⭐⭐⭐⭐</td>
+<td>Survive scanning laser beam patterns. Extreme difficulty, precise movement.</td>
+<td>WASD</td>
+<td>Hardcore players</td>
+</tr>
+
+<tr>
+<td align="center">🛰️</td>
+<td><b>Orbit</b></td>
+<td align="center">⭐⭐⭐</td>
+<td>Stay alive in an orbital path, avoid debris. Circular movement mechanics.</td>
+<td>WASD</td>
+<td>Physics lovers</td>
+</tr>
+
+<tr>
+<td align="center">🏗️</td>
+<td><b>Stacker</b></td>
+<td align="center">⭐⭐⭐</td>
+<td>Time your drops to build the perfect tower. Precision timing required.</td>
+<td>Space</td>
+<td>Precision</td>
+</tr>
+
+<tr>
+<td align="center">🎨</td>
+<td><b>Color Rush</b></td>
+<td align="center">⭐⭐⭐</td>
+<td>Sprint to the matching color zone before time runs out. Fast perception.</td>
+<td>WASD</td>
+<td>Color perception</td>
+</tr>
+
+<tr>
+<td align="center">🔫</td>
+<td><b>Blaster</b></td>
+<td align="center">⭐⭐⭐</td>
+<td>Defend against waves of alien invaders. Strategic positioning matters.</td>
+<td>Mouse</td>
+<td>Strategy + action</td>
+</tr>
+
+<tr>
+<td align="center">🏰</td>
+<td><b>Pixel Quest</b></td>
+<td align="center">⭐⭐⭐</td>
+<td>Dungeon crawl with enemies, loot, and exploration. Mini RPG experience.</td>
+<td>WASD</td>
+<td>Adventure lovers</td>
+</tr>
+
+<tr>
+<td align="center">⚽</td>
+<td><b>Bouncy Ball</b></td>
+<td align="center">⭐⭐</td>
+<td>Physics-based bounce game with trick shots. Satisfying physics.</td>
+<td>Mouse</td>
+<td>Relaxation</td>
+</tr>
+
+<tr>
+<td align="center">🎵</td>
+<td><b>Rhythm Tap</b></td>
+<td align="center">⭐⭐⭐</td>
+<td>Hit falling notes on beat for combos. Music rhythm game.</td>
+<td>ASDF</td>
+<td>Music lovers</td>
+</tr>
+
+<tr>
+<td align="center">🥷</td>
+<td><b>Ninja Slice</b></td>
+<td align="center">⭐⭐</td>
+<td>Slice flying targets before they fall off screen. Satisfying slicing.</td>
+<td>Mouse</td>
+<td>Casual fun</td>
+</tr>
+
+<tr>
+<td align="center">🛡️</td>
+<td><b>Orbit Defense</b></td>
+<td align="center">⭐⭐⭐</td>
+<td>Protect your orbital center from incoming threats. 360° defense.</td>
+<td>Mouse</td>
+<td>Strategy</td>
+</tr>
+
+<tr>
+<td align="center">🔄</td>
+<td><b>Gravity Flip</b></td>
+<td align="center">⭐⭐⭐</td>
+<td>Flip gravity on/off to navigate obstacle corridors. Unique mechanic.</td>
+<td>Space</td>
+<td>Puzzle-action hybrid</td>
+</tr>
+
+<tr>
+<td align="center">👆</td>
+<td><b>Tap Dash</b></td>
+<td align="center">⭐⭐</td>
+<td>Quick-tap rhythm runner with escalating tempo. Simple but challenging.</td>
+<td>Space</td>
+<td>Casual play</td>
+</tr>
+
+</table>
+
+---
 
 ### Puzzle (10 games)
 
 Think, plan, and solve. No time pressure (mostly).
 
-| # | Game | | Description | Controls | Difficulty |
-|--:|------|:---:|-------------|----------|:----------:|
-| 1 | **2048** | &#10024; | Slide and merge tiles to reach 2048 (and beyond) | WASD / Arrows | &#11088;&#11088;&#11088; |
-| 2 | **Memory Match** | &#129504; | Flip cards and match pairs -- speed matters | Mouse | &#11088;&#11088; |
-| 3 | **Tic-Tac-Toe** | &#10060; | Classic 3x3 grid against a competent AI | Mouse | &#11088; |
-| 4 | **Minesweeper** | &#128163; | Logic deduction -- clear the field without detonating | L/R Click | &#11088;&#11088;&#11088;&#11088; |
-| 5 | **Memotron** | &#127902;&#65039; | Simon-style -- repeat increasingly long sequences | Mouse | &#11088;&#11088;&#11088; |
-| 6 | **Word Quest** | &#128221; | Type the displayed word before time expires | Keyboard | &#11088;&#11088;&#11088; |
-| 7 | **Jewel Match** | &#128142; | Swap adjacent gems to create matches of 3+ | Mouse | &#11088;&#11088; |
-| 8 | **Hex Puzzle** | &#128310; | Place hexagonal tiles to clear lines | Mouse | &#11088;&#11088;&#11088; |
-| 9 | **Shape Shifter** | &#128314; | Match the displayed shape before it changes | Mouse | &#11088;&#11088; |
-| 10 | **Zig Zag** | &#12336;&#65039; | Navigate a zig-zag path collecting stars | Arrows | &#11088;&#11088; |
+<table>
+<tr>
+<th width="5%">Icon</th>
+<th width="15%">Game</th>
+<th width="10%">Difficulty</th>
+<th width="35%">Description</th>
+<th width="20%">Controls</th>
+<th width="15%">Best For</th>
+</tr>
 
-<br/>
+<tr>
+<td align="center">✨</td>
+<td><b>2048</b></td>
+<td align="center">⭐⭐⭐</td>
+<td>Slide and merge tiles to reach 2048 (and beyond). Strategic planning required.</td>
+<td>WASD / Arrows</td>
+<td>Math lovers</td>
+</tr>
+
+<tr>
+<td align="center">🧠</td>
+<td><b>Memory Match</b></td>
+<td align="center">⭐⭐</td>
+<td>Flip cards and match pairs -- speed matters. Classic memory game.</td>
+<td>Mouse</td>
+<td>Concentration</td>
+</tr>
+
+<tr>
+<td align="center">❌</td>
+<td><b>Tic-Tac-Toe</b></td>
+<td align="center">⭐</td>
+<td>Classic 3x3 grid against a competent AI. Perfect for beginners.</td>
+<td>Mouse</td>
+<td>Beginners</td>
+</tr>
+
+<tr>
+<td align="center">💣</td>
+<td><b>Minesweeper</b></td>
+<td align="center">⭐⭐⭐⭐</td>
+<td>Logic deduction -- clear the field without detonating. Classic puzzle.</td>
+<td>L/R Click</td>
+<td>Logic puzzles</td>
+</tr>
+
+<tr>
+<td align="center">🎛️</td>
+<td><b>Memotron</b></td>
+<td align="center">⭐⭐⭐</td>
+<td>Simon-style -- repeat increasingly long sequences. Memory training.</td>
+<td>Mouse</td>
+<td>Memory training</td>
+</tr>
+
+<tr>
+<td align="center">📝</td>
+<td><b>Word Quest</b></td>
+<td align="center">⭐⭐⭐</td>
+<td>Type the displayed word before time expires. Typing speed challenge.</td>
+<td>Keyboard</td>
+<td>Word lovers</td>
+</tr>
+
+<tr>
+<td align="center">💎</td>
+<td><b>Jewel Match</b></td>
+<td align="center">⭐⭐</td>
+<td>Swap adjacent gems to create matches of 3+. Classic match-3 puzzle.</td>
+<td>Mouse</td>
+<td>Casual puzzle</td>
+</tr>
+
+<tr>
+<td align="center">🔶</td>
+<td><b>Hex Puzzle</b></td>
+<td align="center">⭐⭐⭐</td>
+<td>Place hexagonal tiles to clear lines. Unique hexagonal grid.</td>
+<td>Mouse</td>
+<td>Spatial reasoning</td>
+</tr>
+
+<tr>
+<td align="center">🔺</td>
+<td><b>Shape Shifter</b></td>
+<td align="center">⭐⭐</td>
+<td>Match the displayed shape before it changes. Quick perception.</td>
+<td>Mouse</td>
+<td>Perception</td>
+</tr>
+
+<tr>
+<td align="center">〰️</td>
+<td><b>Zig Zag</b></td>
+<td align="center">⭐⭐</td>
+<td>Navigate a zig-zag path collecting stars. Simple but addictive.</td>
+<td>Arrows</td>
+<td>Casual play</td>
+</tr>
+
+</table>
+
+---
 
 ### Classic (3 games)
 
-Timeless games, neon-ified.
+Timeless arcade classics, neon-ified.
 
-| # | Game | | Description | Controls | Players |
-|--:|------|:---:|-------------|----------|:-------:|
-| 1 | **Squash Pong** | &#127955; | Solo paddle ball with increasing speed | A/D or Arrows | 1 |
-| 2 | **Neon Duel** | &#9876;&#65039; | Head-to-head local 2-player pong | P1: W/S &bull; P2: &uarr;/&darr; | **2** |
-| 3 | **Breakout** | &#129521; | Smash bricks with a bouncing ball | A/D or Mouse | 1 |
+<table>
+<tr>
+<th width="5%">Icon</th>
+<th width="15%">Game</th>
+<th width="10%">Players</th>
+<th width="35%">Description</th>
+<th width="20%">Controls</th>
+<th width="15%">Best For</th>
+</tr>
 
-<br/>
+<tr>
+<td align="center">🏓</td>
+<td><b>Squash Pong</b></td>
+<td align="center">1</td>
+<td>Solo paddle ball with increasing speed. Classic arcade feel.</td>
+<td>A/D or Arrows</td>
+<td>Solo play</td>
+</tr>
+
+<tr>
+<td align="center">⚔️</td>
+<td><b>Neon Duel</b></td>
+<td align="center"><b>2</b></td>
+<td>Head-to-head local 2-player pong. Competitive multiplayer.</td>
+<td>P1: W/S • P2: ↑/↓</td>
+<td>Couch gaming</td>
+</tr>
+
+<tr>
+<td align="center">🧱</td>
+<td><b>Breakout</b></td>
+<td align="center">1</td>
+<td>Smash bricks with a bouncing ball. Nostalgic brick breaker.</td>
+<td>A/D or Mouse</td>
+<td>Nostalgia</td>
+</tr>
+
+</table>
+
+---
 
 ### Strategy (1 game)
 
-Deep gameplay with resource management and tactical decisions.
+Deep, long-session gameplay with resource management and tactical decisions.
 
-| # | Game | | Description | Controls | Depth |
-|--:|------|:---:|-------------|----------|:-----:|
-| 1 | **Tower Defense** | &#128508; | 8 tower types, 6 enemy types, 50+ waves, endless mode | Mouse, `T` for speed | &#11088;&#11088;&#11088;&#11088;&#11088; |
+<table>
+<tr>
+<th width="5%">Icon</th>
+<th width="15%">Game</th>
+<th width="10%">Depth</th>
+<th width="35%">Description</th>
+<th width="20%">Controls</th>
+<th width="15%">Complexity</th>
+</tr>
 
-> *Tower Defense is the most complex game in the collection (1,300+ lines). It gets its own section below.*
+<tr>
+<td align="center">🗼</td>
+<td><b>Tower Defense</b></td>
+<td align="center">⭐⭐⭐⭐⭐</td>
+<td>8 tower types, 6 enemy types, 50+ waves, endless mode. The crown jewel of Lightning Games with 1,300+ lines of code.</td>
+<td>Mouse, T for speed</td>
+<td>Strategic thinkers</td>
+</tr>
 
-<br/>
+</table>
+
+**Tower Defense Features:**
+- 8 unique tower types with special abilities
+- 6 enemy types with different behaviors
+- 3 super abilities (Nuke, Slow, Boost)
+- 50 waves + endless mode
+- Fast forward (1x/2x/3x speed)
+- Dynamic health bars
+- Strategic depth
+
+See [Tower Defense -- In Depth](#-tower-defense----in-depth) for complete guide.
+
+---
 
 ### Creative (2 games)
 
 No score. No pressure. Just vibes.
 
-| # | Game | | Description | Controls |
-|--:|------|:---:|-------------|----------|
-| 1 | **Neon Piano** | &#127929; | Fully playable synthesizer with keyboard mapping | Keyboard / Mouse |
-| 2 | **Neon Draw** | &#9999;&#65039; | Freeform neon light painting canvas | Mouse |
+<table>
+<tr>
+<th width="5%">Icon</th>
+<th width="15%">Game</th>
+<th width="45%">Description</th>
+<th width="20%">Controls</th>
+<th width="15%">Best For</th>
+</tr>
 
-<br/>
+<tr>
+<td align="center">🎹</td>
+<td><b>Neon Piano</b></td>
+<td>Fully playable synthesizer with keyboard mapping. Create music with neon visuals.</td>
+<td>Keyboard / Mouse</td>
+<td>Musicians</td>
+</tr>
+
+<tr>
+<td align="center">✏️</td>
+<td><b>Neon Draw</b></td>
+<td>Freeform neon light painting canvas. Draw, relax, create art.</td>
+<td>Mouse</td>
+<td>Artists</td>
+</tr>
+
+</table>
 
 ---
 
-<br/>
+### 🎯 Game Difficulty Guide
 
-## &#128508; Tower Defense -- In Depth
+Pick a game based on how hard you want to be challenged.
 
-The crown jewel of Lightning Games. A complete tower defense experience with strategic depth, 8 unique tower types, 6 enemy classes, 3 super abilities, and an endless mode.
+| Difficulty | Meaning | Count | Games |
+|:----------:|---------|:-----:|-------|
+| ⭐ | **Chill** -- Nearly impossible to lose | 1 | Tic-Tac-Toe |
+| ⭐⭐ | **Easy** -- Great for a quick break | 11 | Snake, Whack-A-Mole, Neon Jump, SkyFall, Bouncy Ball, Ninja Slice, Tap Dash, Memory Match, Jewel Match, Shape Shifter, Zig Zag |
+| ⭐⭐⭐ | **Medium** -- Requires focus and practice | 19 | Cyber Dash, Tetris, Frogger, Neon Runner, Flappy Bird, Space Shooter, Orb Collector, Orbit, Stacker, Color Rush, Blaster, Pixel Quest, Rhythm Tap, Orbit Defense, Gravity Flip, 2048, Memotron, Word Quest, Hex Puzzle |
+| ⭐⭐⭐⭐ | **Hard** -- You will lose. A lot. | 3 | Asteroids, Laser Grid, Minesweeper |
+| ⭐⭐⭐⭐⭐ | **Strategic** -- Deep, long-session gameplay | 1 | Tower Defense |
+| **Creative** | **No difficulty** -- Pure expression | 2 | Neon Piano, Neon Draw |
 
-<br/>
+---
 
-### Towers
+### 🎮 Common Game Controls
+
+Most games use these standard controls:
 
 <table>
 <tr>
-<td align="center" width="12.5%">
+<td width="50%" valign="top">
 
-**Laser**<br/>&#9889;<br/>`$75`
-<br/><sub>DMG 25 &bull; RNG 140<br/>RATE 3/s</sub>
+#### Movement
+- <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> - Move up/left/down/right
+- <kbd>↑</kbd><kbd>←</kbd><kbd>↓</kbd><kbd>→</kbd> - Arrow keys (alternative)
+- <kbd>Mouse</kbd> - Move cursor / aim
 
-</td>
-<td align="center" width="12.5%">
-
-**Cannon**<br/>&#128165;<br/>`$125`
-<br/><sub>DMG 60 &bull; RNG 120<br/>RATE 1/s</sub>
-
-</td>
-<td align="center" width="12.5%">
-
-**Cryo**<br/>&#10052;&#65039;<br/>`$100`
-<br/><sub>DMG 15 &bull; RNG 100<br/>RATE 2/s</sub>
+#### Actions
+- <kbd>Space</kbd> - Jump / Action / Drop
+- <kbd>Left Click</kbd> - Shoot / Select / Interact
+- <kbd>Right Click</kbd> - Secondary action (Minesweeper flag)
 
 </td>
-<td align="center" width="12.5%">
+<td width="50%" valign="top">
 
-**Sniper**<br/>&#127919;<br/>`$200`
-<br/><sub>DMG 150 &bull; RNG 250<br/>RATE 0.5/s</sub>
+#### Special
+- <kbd>Esc</kbd> - Return to launcher (all games)
+- <kbd>T</kbd> - Toggle speed (Tower Defense only)
+- <kbd>A</kbd><kbd>S</kbd><kbd>D</kbd><kbd>F</kbd> - Hit notes (Rhythm Tap)
+- <kbd>Keyboard</kbd> - Play notes (Neon Piano)
 
-</td>
-<td align="center" width="12.5%">
-
-**Tesla**<br/>&#128311;<br/>`$175`
-<br/><sub>DMG 35 &bull; RNG 110<br/>RATE 4/s</sub>
-
-</td>
-<td align="center" width="12.5%">
-
-**Missile**<br/>&#128640;<br/>`$300`
-<br/><sub>DMG 120 &bull; RNG 180<br/>RATE 0.7/s</sub>
+#### Tips
+- Most games support both WASD and arrow keys
+- Mouse games work best with precise movements
+- Press Esc anytime to return to launcher
 
 </td>
-<td align="center" width="12.5%">
-
-**Aura**<br/>&#10024;<br/>`$150`
-<br/><sub>BUFF +30%<br/>RNG 100</sub>
-
-</td>
-<td align="center" width="12.5%">
-
-**Venom**<br/>&#128013;<br/>`$160`
-<br/><sub>DMG 10 &bull; RNG 130<br/>RATE 1.5/s</sub>
-
-</td>
-</tr>
-<tr>
-<td align="center"><sub>Single<br/>target</sub></td>
-<td align="center"><sub>60px AoE<br/>splash</sub></td>
-<td align="center"><sub>50% slow<br/>for 3s</sub></td>
-<td align="center"><sub>Pierces<br/>3 enemies</sub></td>
-<td align="center"><sub>Chain to<br/>3 targets</sub></td>
-<td align="center"><sub>Homing +<br/>80px splash</sub></td>
-<td align="center"><sub>Buffs nearby<br/>tower DMG</sub></td>
-<td align="center"><sub>Poison<br/>over time</sub></td>
 </tr>
 </table>
 
-<br/>
+---
 
-### Enemies
+## 🏰 Tower Defense -- In Depth
 
-| Type | Icon | HP | Speed | Reward | Behavior |
-|------|:----:|---:|------:|-------:|----------|
-| **Normal** | &#128308; | 40 | 50 | $8 | Standard path follower |
-| **Fast** | &#128993; | 25 | 90 | $6 | Low HP but nearly double speed |
-| **Tank** | &#128995; | 150 | 30 | $20 | Slow-moving HP sponge |
-| **Boss** | &#128081; | 500 | 25 | $100 | Appears every 10 waves |
-| **Healer** | &#128994; | 60 | 40 | $15 | Regenerates HP of nearby allies |
-| **Flying** | &#128309; | 35 | 70 | $10 | Ignores ground path, takes shortcuts |
+The crown jewel of Lightning Games. A complete tower defense experience with strategic depth, 8 unique tower types, 6 enemy classes, 3 super abilities, and an endless mode.
 
-> Enemy HP and speed scale with wave number. By wave 50, even normal enemies are formidable.
+### Towers (8 Total)
 
-<br/>
+| Tower | Icon | Cost | Range | DPS | Fire Rate | Special Ability |
+|-------|------|------|-------|-----|-----------|-----------------|
+| **Laser** | ⚡ | $75 | 140px | 75 | 3/sec | Single target |
+| **Cannon** | 💥 | $125 | 120px | 60 | 1/sec | 60px AoE splash |
+| **Cryo** | ❄️ | $100 | 100px | 30 | 2/sec | 50% slow for 3s |
+| **Sniper** | 🎯 | $200 | 250px | 75 | 0.5/sec | Pierces 3 enemies |
+| **Tesla** | 🔷 | $175 | 110px | 140 | 4/sec | Chain to 3 targets |
+| **Missile** | 🚀 | $300 | 180px | 84 | 0.7/sec | Homing + 80px splash |
+| **Aura** | ✨ | $150 | 100px | 0 | - | +30% damage to nearby |
+| **Venom** | 🐍 | $160 | 130px | 15 | 1.5/sec | Poison over time |
 
-### Super Abilities
+### Enemies (6 Total)
 
-| Ability | Key | Cooldown | Effect |
-|---------|:---:|:--------:|--------|
-| **Nuke** &#128165; | Click | 60s | 200 damage to **every** enemy on the map |
-| **Slow Field** &#10052;&#65039; | Click | 30s | All enemies move at 30% speed for 5 seconds |
-| **Damage Boost** &#9889; | Click | 45s | All towers deal **2x damage** for 10 seconds |
+| Enemy | Icon | HP | Speed | Reward | Behavior |
+|-------|------|-----|-------|--------|----------|
+| **Normal** | 🔴 | 40 | 50 | $8 | Standard path follower |
+| **Fast** | 🟡 | 25 | 90 | $6 | Nearly 2x speed |
+| **Tank** | 🟣 | 150 | 30 | $20 | Slow-moving HP sponge |
+| **Boss** | 👑 | 500 | 25 | $100 | Appears every 10 waves |
+| **Healer** | 🟢 | 60 | 40 | $15 | Regenerates nearby allies |
+| **Flying** | 🔵 | 35 | 70 | $10 | Ignores ground path |
 
-<br/>
+### Super Abilities (3 Total)
+
+| Ability | Icon | Cooldown | Effect |
+|---------|------|----------|--------|
+| **Nuke** | 💥 | 60s | 200 damage to **every** enemy on the map |
+| **Slow Field** | ❄️ | 30s | All enemies move at 30% speed for 5 seconds |
+| **Damage Boost** | ⚡ | 45s | All towers deal **2x damage** for 10 seconds |
 
 ### Strategy Tips
 
-<table>
-<tr>
-<td width="50%">
-
-**Early Game (Waves 1--15)**
-- Start with 2--3 Laser towers at the first bend
+**Early Game (Waves 1-15)**
+- Start with 2-3 Laser towers at the first bend
 - Add a Cryo tower at the second chokepoint
 - Save money -- don't overbuild
+- Use Nuke on first Boss (wave 10)
 
-**Mid Game (Waves 16--35)**
+**Mid Game (Waves 16-35)**
 - Introduce Sniper towers for long-range boss damage
 - Place an Aura tower between your Laser cluster
-- Start saving Nuke for boss waves (10, 20, 30...)
+- Start saving Nuke for boss waves
+- Add Tesla for Fast enemy swarms
 
-</td>
-<td width="50%">
-
-**Late Game (Waves 36--50)**
+**Late Game (Waves 36-50)**
 - Tesla towers handle swarms of Fast enemies
 - Missile towers for Tank/Boss combos
 - Venom for sustained damage on high-HP targets
+- Combine Slow + Nuke on bosses
 
 **Endless Mode (Wave 50+)**
 - All stats scale infinitely
@@ -402,195 +1469,59 @@ The crown jewel of Lightning Games. A complete tower defense experience with str
 - Use Slow Field + Nuke together on boss waves
 - Press `T` for 3x speed between waves
 
-</td>
-</tr>
-</table>
+### Game Features
 
-<br/>
-
----
-
-<br/>
-
-## &#127942; Achievement System
-
-**37 achievements** across two rarity tiers. Achievements trigger neon toast popups with a synthesized fanfare sound.
-
-<br/>
-
-### Normal Achievements
-
-Unlock these through regular gameplay.
-
-| | Achievement | How to Unlock |
-|:---:|-------------|---------------|
-| &#127918; | **Welcome!** | Start any game for the first time |
-| &#127942; | **Record Breaker!** | Beat any of your previous high scores |
-| &#128293; | **Master Player** | Reach 1,000 points in any single game |
-| &#128013; | **Snake Tamer** | Score 100 in Snake |
-| &#129521; | **Architect** | Score 500 in Tetris |
-| &#129504; | **Memory Apprentice** | Score 10 in Memotron |
-| &#128163; | **Mine Expert** | Successfully clear a Minesweeper board |
-| &#129430; | **Fast Runner** | Score 500 in Neon Runner |
-| &#128081; | **Frogger Master** | Successfully cross in Frogger |
-| &#128293; | **Warmup Done** | Play 10 games total |
-
-<br/>
-
-### Ultra Achievements -- *Rare*
-
-These require serious dedication, skill, or creative play.
-
-<table>
-<tr>
-<th colspan="3" align="left">&#127939; Dedication</th>
-</tr>
-<tr><td>&#127939;</td><td><b>Marathon Runner</b></td><td>Play 50 total games</td></tr>
-<tr><td>&#9889;</td><td><b>Non-Stop</b></td><td>Play 100 total games</td></tr>
-<tr><td>&#128138;</td><td><b>Addict</b></td><td>Accumulate over 1 hour of total playtime</td></tr>
-<tr><td>&#128260;</td><td><b>Persistent</b></td><td>Play the same game 5 times in a row</td></tr>
-<tr><td>&#128506;&#65039;</td><td><b>Explorer</b></td><td>Play 10 different games</td></tr>
-<tr><td>&#128241;</td><td><b>Socialite</b></td><td>Switch launcher tabs 10 times</td></tr>
-<tr>
-<th colspan="3" align="left">&#9200; Time-Based</th>
-</tr>
-<tr><td>&#129417;</td><td><b>Night Owl</b></td><td>Play a game after 10 PM</td></tr>
-<tr><td>&#128036;</td><td><b>Early Bird</b></td><td>Play a game before 8 AM</td></tr>
-<tr><td>&#9876;&#65039;</td><td><b>Weekend Warrior</b></td><td>Play on Saturday or Sunday</td></tr>
-<tr>
-<th colspan="3" align="left">&#127919; Skill-Based</th>
-</tr>
-<tr><td>&#128013;</td><td><b>Snake Charmer</b></td><td>Score 250 in Snake</td></tr>
-<tr><td>&#128168;</td><td><b>Reflex Master</b></td><td>Achieve a 10x combo in Snake</td></tr>
-<tr><td>&#129521;</td><td><b>Pentominium</b></td><td>Score 1,000 in Tetris</td></tr>
-<tr><td>&#128737;&#65039;</td><td><b>Safe Stepper</b></td><td>Flag 20 mines correctly in one Minesweeper game</td></tr>
-<tr><td>&#9889;</td><td><b>Memory God</b></td><td>Complete Memory Match in under 30 seconds</td></tr>
-<tr><td>&#127775;</td><td><b>2048 Master</b></td><td>Reach the 4096 tile in 2048</td></tr>
-<tr><td>&#128640;</td><td><b>High Jumper</b></td><td>Reach 10,000 height in Neon Jump</td></tr>
-<tr><td>&#129504;</td><td><b>Simon's Rival</b></td><td>Score 20 in Memotron</td></tr>
-<tr><td>&#128296;</td><td><b>Mole Slayer</b></td><td>Score 200 in Whack-A-Mole</td></tr>
-<tr><td>&#128142;</td><td><b>Indestructible</b></td><td>Survive 3 minutes in Asteroids</td></tr>
-<tr><td>&#127919;</td><td><b>Precision</b></td><td>Score 50 in Breakout without losing a ball</td></tr>
-<tr><td>&#128293;</td><td><b>Triple Threat</b></td><td>Win Tic-Tac-Toe in under 10 seconds</td></tr>
-<tr><td>&#127950;&#65039;</td><td><b>Speedrunner</b></td><td>Score 500 in Neon Runner within 1 minute</td></tr>
-<tr><td>&#129509;</td><td><b>Bulletproof</b></td><td>Survive 1 min in Space Shooter without damage</td></tr>
-<tr>
-<th colspan="3" align="left">&#129418; Hidden</th>
-</tr>
-<tr><td>&#129704;</td><td><b>First Rock</b></td><td><i>Destroy your first asteroid</i></td></tr>
-<tr>
-<th colspan="3" align="left">&#128081; Meta</th>
-</tr>
-<tr><td>&#128081;</td><td><b>Collector</b></td><td>Unlock 15 achievements</td></tr>
-<tr><td>&#9961;&#65039;</td><td><b>Godly</b></td><td>Unlock <b>every single achievement</b></td></tr>
-</table>
-
-<br/>
+- **Fast Forward**: Press `T` to toggle game speed (1x, 2x, 3x)
+- **Endless Mode**: Reach wave 50 to unlock infinite scaling waves
+- **Dynamic Health Bars**: Visible on all enemies, turn green when poisoned
 
 ---
 
-<br/>
+## 🏅 Achievement System
 
-## &#127912; Theme Gallery
+**37 achievements** across multiple rarity tiers. Achievements trigger neon toast popups with a synthesized fanfare sound.
+
+### Achievement Tiers
+
+- **Normal** (11) - Unlock through regular gameplay
+- **Ultra** (15) - Require skill and dedication
+- **Time-Based** (3) - Play at specific times
+- **Hidden** (1) - Secret unlock conditions
+- **Godly** (1) - Unlock all others
+
+See [AGENTS.md](AGENTS.md) for the complete achievement list with unlock conditions.
+
+---
+
+## 🌓 Theme Gallery
 
 Four complete color themes, switchable instantly from the settings panel (gear icon).
 
-<table>
-<tr>
-<td align="center" width="25%">
+| Theme | Vibe | Colors | Best For |
+|-------|------|--------|----------|
+| **Neon** | Cyberpunk | Cyan, magenta, green | Default, gaming |
+| **Retro** | Nostalgia | Warm amber, sepia | Retro lovers |
+| **Minimal** | Focus | Pure black & white | Distraction-free |
+| **Forest** | Calm | Cool greens, organic | Relaxation |
 
-### Neon
-&#128309;&#128995;&#128310;
-<br/><br/>
-**Default theme.**<br/>
-Cyan, magenta, and green<br/>
-neon glows on deep dark blue.
-<br/><br/>
-`--bg: #06060f`<br/>
-`--accent: #00dcff`
-
-</td>
-<td align="center" width="25%">
-
-### Retro
-&#128992;&#128993;
-<br/><br/>
-**CRT nostalgia.**<br/>
-Warm amber tones with<br/>
-a sepia + contrast filter.
-<br/><br/>
-`--bg: #1a1a00`<br/>
-`--accent: #ffaa00`
-
-</td>
-<td align="center" width="25%">
-
-### Minimal
-&#11035;&#11036;
-<br/><br/>
-**Clean & focused.**<br/>
-Pure monochrome black<br/>
-and white. No distractions.
-<br/><br/>
-`--bg: #000000`<br/>
-`--accent: #ffffff`
-
-</td>
-<td align="center" width="25%">
-
-### Forest
-&#128994;&#127794;
-<br/><br/>
-**Nature palette.**<br/>
-Cool greens and organic<br/>
-tones for a calm feel.
-<br/><br/>
-`--bg: #001a0a`<br/>
-`--accent: #00ff88`
-
-</td>
-</tr>
-</table>
-
-All themes work through CSS custom properties, which means every UI element -- game cards, backgrounds, glows, text -- adapts automatically.
-
-<br/>
+All themes work through CSS custom properties, which means every UI element adapts automatically.
 
 ---
 
-<br/>
+## 🔊 Sound Engine
 
-## &#128266; Sound Engine
+All audio is **procedurally synthesized** using the Web Audio API. There are **zero audio files** in the project.
 
-All audio is **procedurally synthesized** using the Web Audio API. There are **zero audio files** in the project. The `SoundManager` generates waveforms in real time:
+The `SoundManager` generates waveforms in real time:
 
-| Sound Effect | Waveform | Technique | Used In |
-|-------------|----------|-----------|---------|
-| `playClick()` | Triangle 440Hz | Single tone | UI clicks |
-| `playHover()` | Sine 880Hz | Short blip | Card hover |
-| `playJump()` | Square 200-600Hz | Frequency sweep up | Platformers |
-| `playDeath()` | Sawtooth 400-80Hz | Frequency sweep down | Game over |
-| `playShoot()` | Square 900-200Hz | Fast sweep down | Shooters |
-| `playExplosion()` | White noise | Noise burst 250ms | Asteroid/TD |
-| `playAchievement()` | Square chord | Multi-tone arpeggio | Achievement popup |
-| `playEat()` | Multi-tone | Quick ascending pair | Snake |
-| `playLineClear()` | Square sweep | Ascending sweep | Tetris |
-| `playSlice()` | Sawtooth 1200-300Hz | Sharp sweep down | Ninja Slice |
-| `playBounce()` | Triangle 300-600Hz | Gentle sweep up | Physics games |
-| `playLaser()` | Sawtooth 1500-200Hz | Sci-fi sweep | Tower Defense |
-| `playLevelUp()` | Square 400-1200Hz | Long sweep up | Level transitions |
-
-The sound engine also includes a **procedural 8-bit music system** that generates looping background tracks per-game using note frequency maps and scheduled oscillators.
-
-Volume is adjustable via the launcher's volume slider and persists across sessions.
-
-<br/>
+- **25+ sound effects** - UI clicks, game events, achievements
+- **8-bit music engine** - Per-game background tracks
+- **Master volume control** - Adjustable and persistent
+- **No external dependencies** - Pure Web Audio API
 
 ---
 
-<br/>
-
-## &#9000;&#65039; Keyboard & Mouse Reference
+## ⌨️ Keyboard & Mouse Reference
 
 ### Global (Works from any application)
 
@@ -605,14 +1536,14 @@ Volume is adjustable via the launcher's volume slider and persists across sessio
 | <kbd>Esc</kbd> | Hide the window (or return from game) |
 | Start typing | Auto-focuses the search bar |
 | Click game card | Launch that game |
-| Click &#9829; on card | Toggle favorite |
-| Click &#9881; | Open settings |
+| Click ❤️ on card | Toggle favorite |
+| Click ⚙️ | Open settings |
 
 ### Common In-Game Controls
 
 | Input | Action | Games |
 |-------|--------|-------|
-| <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> or <kbd>&uarr;</kbd><kbd>&larr;</kbd><kbd>&darr;</kbd><kbd>&rarr;</kbd> | Movement | Most games |
+| <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> or <kbd>↑↓←→</kbd> | Movement | Most games |
 | <kbd>Space</kbd> | Jump / Action / Drop | Platformers, Tetris, Stacker |
 | Mouse click | Interact / Shoot | Whack-A-Mole, Blaster, Minesweeper |
 | <kbd>A</kbd><kbd>S</kbd><kbd>D</kbd><kbd>F</kbd> | Hit notes | Rhythm Tap |
@@ -620,15 +1551,11 @@ Volume is adjustable via the launcher's volume slider and persists across sessio
 | Right-click | Flag mine | Minesweeper |
 | <kbd>Esc</kbd> | Return to launcher | All games |
 
-<br/>
-
 ---
 
-<br/>
+## 🏗️ Architecture
 
-## &#127959; Architecture
-
-### System Diagram
+### System Overview
 
 ```
  +-----------------------+          +---------------------------+
@@ -660,146 +1587,20 @@ Volume is adjustable via the launcher's volume slider and persists across sessio
                                     +---------------------------+
 ```
 
-### File Map
+### File Structure
 
-```
-lightningGames/
- |
- |-- main.js                  Electron main process (173 lines)
- |-- preload.js               Secure IPC bridge via contextBridge
- |-- index.html               Single-page application shell
- |-- package.json             Config, scripts, electron-builder settings
- |
- |-- renderer/
- |   |-- launcher.js          UI engine: cards, tabs, search, settings, achievements
- |   |-- gameManager.js       Game lifecycle, loop, scores, stats, achievement checks
- |   |-- soundManager.js      Procedural audio synth + 8-bit music engine
- |   +-- particles.js         Animated neon particle background
- |
- |-- games/
- |   |-- snake.js             (40 game files, each a self-contained class)
- |   |-- tetris.js
- |   |-- towerdefense.js      (largest: 1,300+ lines)
- |   +-- ...
- |
- |-- styles/
- |   +-- main.css             Full design system: variables, themes, animations
- |
- |-- scripts/
- |   |-- build.js             Interactive build wizard with progress bar
- |   +-- sync-icons.js        Multi-resolution icon generator
- |
- +-- assets/
-     +-- icons/               10 sizes: 16x16 through 1024x1024 + .ico + .icns
-```
-
-### Game Interface Contract
-
-Every game is a standalone class that implements exactly 6 methods:
-
-```javascript
-class GameName {
-    constructor() {
-        this.score = 0;
-        this.gameOver = false;
-    }
-
-    init(canvas, ctx) { }    // Called once. Canvas is 880x540.
-    update(dt) { }           // Called every frame. dt = seconds since last frame.
-    draw() { }               // Called every frame after update().
-    getScore() { }           // Return current score as a number.
-    isGameOver() { }         // Return true when the game ends.
-    destroy() { }            // Clean up event listeners and timers.
-}
-```
-
-The `GameManager` handles registration, instantiation, the `requestAnimationFrame` loop, and cleanup. Games never touch the DOM outside their canvas.
-
-### IPC Channels
-
-Communication between main and renderer is minimal by design:
-
-| Channel | Direction | Payload | Purpose |
-|---------|:---------:|---------|---------|
-| `close-window` | Renderer &#8594; Main | -- | Trigger hide animation + hide |
-| `quit-app` | Renderer &#8594; Main | -- | Destroy window + quit process |
-| `window-hiding` | Main &#8594; Renderer | -- | Let renderer run exit animation |
-| `window-showing` | Main &#8594; Renderer | -- | Let renderer run enter animation |
-
-<br/>
+See [AGENTS.md](AGENTS.md) for complete technical documentation including:
+- Detailed architecture breakdown
+- Game interface contract
+- Data persistence schema
+- CSS design system
+- Build & deployment process
+- Performance optimizations
+- How to add new games
 
 ---
 
-<br/>
-
-## &#128451; Data & Storage
-
-All persistence uses `localStorage` with a `lg_` prefix. No external databases, no cloud sync, no files on disk.
-
-| Key | Format | Example | Purpose |
-|-----|--------|---------|---------|
-| `lg_highscores` | `{ id: number }` | `{"snake":142,"tetris":890}` | Per-game best scores |
-| `lg_achievements` | `string[]` | `["first_game","warmup"]` | Unlocked achievement IDs |
-| `lg_favorites` | `string[]` | `["snake","tetris"]` | Pinned game IDs |
-| `lg_settings` | `object` | `{"reducedMotion":false,"shakeIntensity":5,"renderScale":1}` | User preferences |
-| `lg_theme` | `string` | `"retro"` | Active theme name |
-| `lg_volume` | `float string` | `"0.7"` | Master volume (0.0--1.0) |
-| `lg_totalGames` | `int string` | `"47"` | Lifetime games played |
-| `lg_totalPlayTime` | `float string` | `"3842.5"` | Lifetime seconds played |
-| `lg_lastPlayed` | `{ id: timestamp }` | `{"snake":1709856000}` | Per-game last-played time |
-| `lg_uniqueGames` | `string[]` | `["snake","tetris","pong"]` | Distinct games ever played |
-| `lg_consecutiveGames` | `int string` | `"3"` | Current same-game streak |
-| `lg_lastGameId` | `string` | `"snake"` | Most recently played game |
-| `lg_totalAsteroids` | `int string` | `"73"` | Lifetime asteroids destroyed |
-
-> Writes are **debounced at 250ms** to prevent excessive I/O during rapid score changes.
-
-<br/>
-
----
-
-<br/>
-
-## &#9889; Performance Tuning
-
-### GPU Flags (set before app ready)
-
-```
---enable-gpu-rasterization          Hardware-accelerated tile rasterization
---enable-oop-rasterization          Off-main-thread painting
---enable-accelerated-video-decode   GPU video decode
---enable-gpu-compositing            GPU layer compositing
---disable-background-timer-throttle Consistent timers when backgrounded
---disable-renderer-backgrounding    Prevent renderer throttling
---force-color-profile srgb          Consistent color rendering
-```
-
-### Runtime Optimizations
-
-| Optimization | Technique | Impact |
-|-------------|-----------|--------|
-| **Frame timing** | `requestAnimationFrame` with dt cap at 50ms | Prevents physics explosions on lag spikes |
-| **Canvas scaling** | Configurable 0.7x -- 1.0x render resolution | Lower-end GPUs can trade quality for FPS |
-| **Event delegation** | Single listener on game grid, not per-card | Fewer DOM listeners, faster GC |
-| **Debounced writes** | 250ms delay on localStorage operations | Prevents I/O thrashing during gameplay |
-| **Smooth scrolling** | Custom lerp-based scroll with `requestAnimationFrame` | 60fps launcher scrolling |
-| **Single instance** | `app.requestSingleInstanceLock()` | Prevents duplicate processes |
-| **Selective build** | Only bundles JS/HTML/CSS, excludes `node_modules` | Reduces package from ~500MB to ~80MB |
-
-### Settings for Low-End Hardware
-
-Open Settings (gear icon) and adjust:
-- **Render Scale**: Lower to 0.7x for better FPS on integrated GPUs
-- **Reduced Motion**: Disables particle background and smooth scroll
-- **Shake Intensity**: Reduce or disable screen shake effects
-
-<br/>
-
----
-
-<br/>
-
-## &#128230; Building from Source
+## 🛠️ Building from Source
 
 ### Prerequisites
 
@@ -822,20 +1623,16 @@ npm run dist
 
 The interactive build wizard will:
 
-```
 1. Display current version (from package.json)
 2. Prompt for new version number
 3. Ask compression level (0-10):
-   |  Level  |  Time   |  Size   |
-   |---------|---------|---------|
-   |  0 - 3  |  ~5 sec | ~150 MB |
-   |  4 - 7  | ~30 sec | ~110 MB |
-   |  8 - 10 |  ~2 min |  ~80 MB |
+   - 0-3 (Fast): ~5 sec, ~150 MB
+   - 4-7 (Normal): ~30 sec, ~110 MB
+   - 8-10 (Max): ~2 min, ~80 MB
 4. Update package.json with new version
 5. Run electron-builder --win portable
 6. Save build log to BuildLogs/build-{timestamp}.log
 7. Show live progress bar in terminal
-```
 
 Output: `dist/Lightning Games.exe` -- a single portable executable.
 
@@ -850,17 +1647,9 @@ Output: `dist/Lightning Games.exe` -- a single portable executable.
 
 **Zero runtime dependencies.** The shipped application is pure vanilla JavaScript, HTML, and CSS.
 
-<br/>
-
 ---
 
-<br/>
-
-## &#127918; Adding a New Game
-
-<table>
-<tr>
-<td>
+## 🎮 Adding a New Game
 
 ### Step 1: Create the game file
 
@@ -899,21 +1688,11 @@ class MyGame {
 }
 ```
 
-</td>
-</tr>
-<tr>
-<td>
-
 ### Step 2: Register in index.html
 
 ```html
 <script src="games/mygame.js"></script>
 ```
-
-</td>
-</tr>
-<tr>
-<td>
 
 ### Step 3: Add to the launcher
 
@@ -933,11 +1712,6 @@ In `renderer/launcher.js`, add to the `GAME_CARDS_CONFIG` array:
 }
 ```
 
-</td>
-</tr>
-<tr>
-<td>
-
 ### Step 4 (Optional): Add achievements
 
 In the `ALL_ACHIEVEMENTS` array in the same file:
@@ -947,10 +1721,6 @@ In the `ALL_ACHIEVEMENTS` array in the same file:
 ```
 
 Then add the unlock logic in `gameManager.js` where scores are checked.
-
-</td>
-</tr>
-</table>
 
 ### Sound Effects Available
 
@@ -972,34 +1742,44 @@ playCountdown() playPowerUp() playPlace()     playMove()
 playLineClear()
 ```
 
-<br/>
-
 ---
 
-<br/>
-
-## &#127775; Game Difficulty Guide
+## 📊 Game Difficulty Guide
 
 A quick reference for picking a game based on how hard you want to be challenged.
 
 | Difficulty | Meaning | Games |
 |:----------:|---------|-------|
-| &#11088; | **Chill** -- Nearly impossible to lose | Tic-Tac-Toe |
-| &#11088;&#11088; | **Easy** -- Great for a quick break | Snake, Whack-A-Mole, Neon Jump, SkyFall, Bouncy Ball, Ninja Slice, Tap Dash, Memory Match, Jewel Match, Shape Shifter, Zig Zag |
-| &#11088;&#11088;&#11088; | **Medium** -- Requires focus and practice | Cyber Dash, Tetris, Frogger, Neon Runner, Flappy Bird, Space Shooter, Orb Collector, Orbit, Stacker, Color Rush, Blaster, Pixel Quest, Rhythm Tap, Orbit Defense, Gravity Flip, 2048, Memotron, Word Quest, Hex Puzzle |
-| &#11088;&#11088;&#11088;&#11088; | **Hard** -- You will lose. A lot. | Asteroids, Laser Grid, Minesweeper |
-| &#11088;&#11088;&#11088;&#11088;&#11088; | **Strategic** -- Deep, long-session gameplay | Tower Defense |
-
-<br/>
+| ⭐ | **Chill** -- Nearly impossible to lose | Tic-Tac-Toe |
+| ⭐⭐ | **Easy** -- Great for a quick break | Snake, Whack-A-Mole, Neon Jump, SkyFall, Bouncy Ball, Ninja Slice, Tap Dash, Memory Match, Jewel Match, Shape Shifter, Zig Zag |
+| ⭐⭐⭐ | **Medium** -- Requires focus and practice | Cyber Dash, Tetris, Frogger, Neon Runner, Flappy Bird, Space Shooter, Orb Collector, Orbit, Stacker, Color Rush, Blaster, Pixel Quest, Rhythm Tap, Orbit Defense, Gravity Flip, 2048, Memotron, Word Quest, Hex Puzzle |
+| ⭐⭐⭐⭐ | **Hard** -- You will lose. A lot. | Asteroids, Laser Grid, Minesweeper |
+| ⭐⭐⭐⭐⭐ | **Strategic** -- Deep, long-session gameplay | Tower Defense |
 
 ---
 
-<br/>
+## 📄 Technical Documentation
+
+For complete technical documentation, architecture details, and developer guides, see [AGENTS.md](AGENTS.md).
+
+Topics covered:
+- Complete file structure with line counts
+- Detailed architecture breakdown
+- Game interface contract & examples
+- Data persistence schema
+- CSS design system & themes
+- IPC communication protocol
+- Sound system & procedural audio
+- Build & deployment process
+- Performance optimizations
+- How to add new games
+
+---
 
 ## License
 
 [MIT](LICENSE)
 
 <p align="center">
-  <sub>Built with &#9889; by <b>Tarik</b></sub>
+  <sub>Built with ⚡ by Tarik</sub>
 </p>

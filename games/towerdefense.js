@@ -730,12 +730,12 @@ class TowerDefense {
         const x = (e.clientX - rect.left) * scaleX;
         const y = (e.clientY - rect.top) * scaleY;
 
-        // Start wave button (bottom-left)
+        // Start wave button (now on right side, below tower panel)
         if (!this.waveInProgress && !this.victory) {
-            const btnX = 20;
             const btnW = 200;
-            const btnH = 38;
-            const btnY = this.canvas.height - 20 - btnH;
+            const btnH = 45;
+            const btnX = this.canvas.width - 20 - btnW - 230;
+            const btnY = this.canvas.height - 25 - btnH;
             if (x >= btnX && x <= btnX + btnW && y >= btnY && y <= btnY + btnH) {
                 this.startNextWave();
                 return;
@@ -766,32 +766,32 @@ class TowerDefense {
             }
         }
 
-        // 2. Check Abilities
-        const abX = this.canvas.width - 230;
-        const abY = 460;
-        if (x >= abX && x <= abX + 220 && y >= abY && y <= abY + 80) {
-            // Nuke (40px wide)
-            if (x >= abX + 8 && x <= abX + 48 && y >= abY + 25 && y <= abY + 70) {
+        // 2. Check Abilities (now on bottom left)
+        const abX = 20;
+        const abY = this.canvas.height - 95;
+        if (x >= abX && x <= abX + 220 && y >= abY && y <= abY + 75) {
+            // Nuke (38px wide)
+            if (x >= abX + 8 && x <= abX + 46 && y >= abY + 20 && y <= abY + 68) {
                 this._activateNuke();
                 return;
             }
             // Freeze
-            if (x >= abX + 52 && x <= abX + 92 && y >= abY + 25 && y <= abY + 70) {
+            if (x >= abX + 50 && x <= abX + 88 && y >= abY + 20 && y <= abY + 68) {
                 this._activateFreeze();
                 return;
             }
             // Boost
-            if (x >= abX + 96 && x <= abX + 136 && y >= abY + 25 && y <= abY + 70) {
+            if (x >= abX + 92 && x <= abX + 130 && y >= abY + 20 && y <= abY + 68) {
                 this._activateBoost();
                 return;
             }
             // Repair
-            if (x >= abX + 140 && x <= abX + 180 && y >= abY + 25 && y <= abY + 70) {
+            if (x >= abX + 134 && x <= abX + 172 && y >= abY + 20 && y <= abY + 68) {
                 this._activateRepair();
                 return;
             }
             // Time Warp
-            if (x >= abX + 184 && x <= abX + 224 && y >= abY + 25 && y <= abY + 70) {
+            if (x >= abX + 176 && x <= abX + 214 && y >= abY + 20 && y <= abY + 68) {
                 this._activateTimeWarp();
                 return;
             }
@@ -2691,9 +2691,22 @@ class TowerDefense {
             ctx.translate(shakeX, shakeY);
         }
 
-        // Clear
-        ctx.fillStyle = '#050512';
+        // Clear with gradient background
+        const bgGradient = ctx.createRadialGradient(
+            canvas.width / 2, canvas.height / 2, 0,
+            canvas.width / 2, canvas.height / 2, canvas.width * 0.7
+        );
+        bgGradient.addColorStop(0, '#0a0a1a');
+        bgGradient.addColorStop(0.5, '#050510');
+        bgGradient.addColorStop(1, '#020208');
+        ctx.fillStyle = bgGradient;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Draw background grid
+        this._drawBackgroundGrid(ctx);
+
+        // Draw ambient particles
+        this._drawAmbientParticles(ctx);
 
         // Draw path
         this._drawPath(ctx);
@@ -2742,12 +2755,98 @@ class TowerDefense {
         ctx.restore();
     }
 
+    _drawBackgroundGrid(ctx) {
+        const gridSize = 40;
+        ctx.strokeStyle = 'rgba(0, 212, 255, 0.03)';
+        ctx.lineWidth = 1;
+
+        // Vertical lines
+        for (let x = 0; x < ctx.canvas.width; x += gridSize) {
+            ctx.beginPath();
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x, ctx.canvas.height);
+            ctx.stroke();
+        }
+
+        // Horizontal lines
+        for (let y = 0; y < ctx.canvas.height; y += gridSize) {
+            ctx.beginPath();
+            ctx.moveTo(0, y);
+            ctx.lineTo(ctx.canvas.width, y);
+            ctx.stroke();
+        }
+
+        // Accent points at intersections
+        for (let x = 0; x < ctx.canvas.width; x += gridSize * 2) {
+            for (let y = 0; y < ctx.canvas.height; y += gridSize * 2) {
+                const pulse = Math.sin(this.time * 2 + x * 0.01 + y * 0.01) * 0.5 + 0.5;
+                ctx.beginPath();
+                ctx.arc(x, y, 1.5, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(0, 212, 255, ${0.1 + pulse * 0.1})`;
+                ctx.fill();
+            }
+        }
+    }
+
+    _drawAmbientParticles(ctx) {
+        // Initialize ambient particles if needed
+        this.ambientParticles = this.ambientParticles || [];
+        
+        // Spawn new particles
+        if (this.ambientParticles.length < 30 && Math.random() < 0.05) {
+            this.ambientParticles.push({
+                x: Math.random() * ctx.canvas.width,
+                y: Math.random() * ctx.canvas.height,
+                vx: (Math.random() - 0.5) * 10,
+                vy: (Math.random() - 0.5) * 10,
+                size: 1 + Math.random() * 2,
+                alpha: Math.random() * 0.5,
+                life: 5 + Math.random() * 10,
+                maxLife: 5 + Math.random() * 10
+            });
+        }
+
+        // Update and draw particles
+        for (let i = this.ambientParticles.length - 1; i >= 0; i--) {
+            const p = this.ambientParticles[i];
+            p.x += p.vx * 0.016;
+            p.y += p.vy * 0.016;
+            p.life -= 0.016;
+
+            // Wrap around screen
+            if (p.x < 0) p.x = ctx.canvas.width;
+            if (p.x > ctx.canvas.width) p.x = 0;
+            if (p.y < 0) p.y = ctx.canvas.height;
+            if (p.y > ctx.canvas.height) p.y = 0;
+
+            if (p.life <= 0) {
+                this.ambientParticles.splice(i, 1);
+                continue;
+            }
+
+            const alpha = p.alpha * (p.life / p.maxLife);
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(0, 212, 255, ${alpha})`;
+            ctx.fill();
+
+            // Subtle glow
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(0, 212, 255, ${alpha * 0.2})`;
+            ctx.fill();
+        }
+    }
+
     _drawPath(ctx) {
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
-        ctx.lineWidth = 40;
+        // Animated background glow
+        const glowIntensity = 0.15 + Math.sin(this.time * 2) * 0.05;
+        
+        // Outer glow (widest)
+        ctx.strokeStyle = `rgba(0, 212, 255, ${glowIntensity * 0.3})`;
+        ctx.lineWidth = 60;
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
-
         ctx.beginPath();
         ctx.moveTo(this.path[0].x, this.path[0].y);
         for (let i = 1; i < this.path.length; i++) {
@@ -2755,17 +2854,85 @@ class TowerDefense {
         }
         ctx.stroke();
 
-        // Glow
-        ctx.strokeStyle = 'rgba(0, 212, 255, 0.15)';
-        ctx.lineWidth = 30;
+        // Middle glow
+        ctx.strokeStyle = `rgba(0, 212, 255, ${glowIntensity * 0.6})`;
+        ctx.lineWidth = 45;
         ctx.stroke();
 
-        // Center line
-        ctx.strokeStyle = 'rgba(0, 212, 255, 0.3)';
+        // Path base
+        ctx.strokeStyle = 'rgba(15, 15, 35, 0.95)';
+        ctx.lineWidth = 40;
+        ctx.stroke();
+
+        // Inner glow edge
+        const gradient = ctx.createLinearGradient(0, 0, ctx.canvas.width, ctx.canvas.height);
+        gradient.addColorStop(0, 'rgba(0, 212, 255, 0.4)');
+        gradient.addColorStop(0.5, 'rgba(255, 0, 170, 0.3)');
+        gradient.addColorStop(1, 'rgba(0, 212, 255, 0.4)');
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = 36;
+        ctx.stroke();
+
+        // Path surface
+        ctx.strokeStyle = 'rgba(10, 10, 30, 0.9)';
+        ctx.lineWidth = 32;
+        ctx.stroke();
+
+        // Animated center line
+        ctx.strokeStyle = `rgba(0, 255, 200, ${0.4 + Math.sin(this.time * 3) * 0.2})`;
         ctx.lineWidth = 2;
-        ctx.setLineDash([10, 10]);
+        ctx.setLineDash([15, 15]);
+        ctx.lineDashOffset = -this.time * 30;
         ctx.stroke();
         ctx.setLineDash([]);
+
+        // Animated particles along path
+        this._drawPathParticles(ctx);
+    }
+
+    _drawPathParticles(ctx) {
+        // Spawn particles along path at intervals
+        if (Math.random() < 0.1) {
+            const progress = Math.random();
+            const pos = this.getPositionOnPath(progress);
+            this.pathParticles = this.pathParticles || [];
+            this.pathParticles.push({
+                x: pos.x + (Math.random() - 0.5) * 25,
+                y: pos.y + (Math.random() - 0.5) * 25,
+                vx: (Math.random() - 0.5) * 20,
+                vy: -Math.random() * 30 - 10,
+                life: 1.5,
+                maxLife: 1.5,
+                size: 2 + Math.random() * 2
+            });
+        }
+
+        // Update and draw path particles
+        this.pathParticles = this.pathParticles || [];
+        for (let i = this.pathParticles.length - 1; i >= 0; i--) {
+            const p = this.pathParticles[i];
+            p.x += p.vx * 0.016;
+            p.y += p.vy * 0.016;
+            p.vy += 20 * 0.016;
+            p.life -= 0.016;
+
+            if (p.life <= 0) {
+                this.pathParticles.splice(i, 1);
+                continue;
+            }
+
+            const alpha = p.life / p.maxLife;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size * alpha, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(0, 255, 200, ${alpha * 0.6})`;
+            ctx.fill();
+            
+            // Glow
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size * alpha * 2, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(0, 255, 200, ${alpha * 0.2})`;
+            ctx.fill();
+        }
     }
 
     _drawBuildArea(ctx) {
@@ -2816,48 +2983,161 @@ class TowerDefense {
     _drawTowers(ctx) {
         for (const tower of this.towers) {
             const isSelected = this.selectedTowerInstance === tower;
+            const pulsePhase = (this.time * 3 + tower.x * 0.1) % (Math.PI * 2);
+            const pulseScale = 1 + Math.sin(pulsePhase) * 0.05;
 
-            // Base
+            // Outer glow ring (always visible, pulsing)
+            ctx.beginPath();
+            ctx.arc(tower.x, tower.y, 28 * pulseScale, 0, Math.PI * 2);
+            ctx.fillStyle = tower.color + '15';
+            ctx.fill();
+
+            // Tower shadow
+            ctx.beginPath();
+            ctx.arc(tower.x + 2, tower.y + 2, 22, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+            ctx.fill();
+
+            // Tower base (gradient)
+            const baseGradient = ctx.createRadialGradient(tower.x - 5, tower.y - 5, 0, tower.x, tower.y, 22);
+            baseGradient.addColorStop(0, tower.color + '60');
+            baseGradient.addColorStop(0.7, tower.color + '30');
+            baseGradient.addColorStop(1, tower.color + '15');
+            
             ctx.beginPath();
             ctx.arc(tower.x, tower.y, 22, 0, Math.PI * 2);
-            ctx.fillStyle = tower.color + '40';
+            ctx.fillStyle = baseGradient;
             ctx.fill();
+            
+            // Tower border with glow
             ctx.strokeStyle = tower.color;
             ctx.lineWidth = isSelected ? 3 : 2;
+            ctx.shadowColor = tower.color;
+            ctx.shadowBlur = isSelected ? 15 : 8;
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            // Inner ring
+            ctx.beginPath();
+            ctx.arc(tower.x, tower.y, 16, 0, Math.PI * 2);
+            ctx.strokeStyle = tower.color + '80';
+            ctx.lineWidth = 1;
             ctx.stroke();
 
-            // Level indicator
+            // Level indicator (enhanced)
             if (tower.level > 1) {
-                ctx.fillStyle = '#ffffff';
-                ctx.font = 'bold 12px Inter';
+                const levelColors = ['#ffffff', '#00ff88', '#ffaa00', '#ff66aa', '#aa88ff'];
+                const levelColor = levelColors[Math.min(tower.level - 1, 4)];
+                
+                // Level ring
+                ctx.beginPath();
+                ctx.arc(tower.x, tower.y, 19, 0, Math.PI * 2);
+                ctx.strokeStyle = levelColor;
+                ctx.lineWidth = 2;
+                ctx.setLineDash([3, 3]);
+                ctx.lineDashOffset = this.time * 20;
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // Level number with glow
+                ctx.shadowColor = levelColor;
+                ctx.shadowBlur = 5;
+                ctx.font = 'bold 11px Inter';
+                ctx.fillStyle = levelColor;
                 ctx.textAlign = 'center';
-                ctx.fillText(tower.level, tower.x, tower.y + 4);
+                ctx.textBaseline = 'middle';
+                ctx.fillText(tower.level, tower.x, tower.y + 5);
+                ctx.shadowBlur = 0;
             }
 
-            // Icon
+            // Icon with shadow
             ctx.font = '16px Arial';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText(tower.icon, tower.x, tower.y);
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+            ctx.shadowBlur = 2;
+            ctx.shadowOffsetY = 1;
+            ctx.fillText(tower.icon, tower.x, tower.y - (tower.level > 1 ? 3 : 0));
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetY = 0;
 
-            // Aura glow
-            if (tower.type === 'aura') {
+            // Aura glow for aura towers
+            if (tower.type === 'aura' && tower.auraRadius) {
+                const auraGradient = ctx.createRadialGradient(tower.x, tower.y, 0, tower.x, tower.y, tower.auraRadius);
+                auraGradient.addColorStop(0, tower.color + '25');
+                auraGradient.addColorStop(0.5, tower.color + '15');
+                auraGradient.addColorStop(1, 'transparent');
+                
                 ctx.beginPath();
-                ctx.arc(tower.x, tower.y, tower.auraRadius * 0.8, 0, Math.PI * 2);
-                const gradient = ctx.createRadialGradient(tower.x, tower.y, 0, tower.x, tower.y, tower.auraRadius * 0.8);
-                gradient.addColorStop(0, tower.color + '30');
-                gradient.addColorStop(1, 'transparent');
-                ctx.fillStyle = gradient;
+                ctx.arc(tower.x, tower.y, tower.auraRadius * (0.8 + Math.sin(this.time * 2) * 0.1), 0, Math.PI * 2);
+                ctx.fillStyle = auraGradient;
+                ctx.fill();
+
+                // Animated particles in aura
+                for (let i = 0; i < 3; i++) {
+                    const angle = this.time * 1.5 + (i * Math.PI * 2 / 3);
+                    const radius = tower.auraRadius * 0.6;
+                    const px = tower.x + Math.cos(angle) * radius;
+                    const py = tower.y + Math.sin(angle) * radius;
+                    
+                    ctx.beginPath();
+                    ctx.arc(px, py, 3, 0, Math.PI * 2);
+                    ctx.fillStyle = tower.color + '80';
+                    ctx.fill();
+                }
+            }
+
+            // Support tower aura
+            if (tower.type === 'support' && tower.auraRadius) {
+                const supportGradient = ctx.createRadialGradient(tower.x, tower.y, 0, tower.x, tower.y, tower.auraRadius);
+                supportGradient.addColorStop(0, 'rgba(0, 255, 170, 0.15)');
+                supportGradient.addColorStop(1, 'transparent');
+                
+                ctx.beginPath();
+                ctx.arc(tower.x, tower.y, tower.auraRadius, 0, Math.PI * 2);
+                ctx.fillStyle = supportGradient;
                 ctx.fill();
             }
 
-            // Boost effect
-            if (this.boostActive && tower.type !== 'aura') {
+            // Boost effect (enhanced)
+            if (this.boostActive && tower.type !== 'aura' && tower.type !== 'support') {
                 ctx.beginPath();
-                ctx.arc(tower.x, tower.y, 28, 0, Math.PI * 2);
+                ctx.arc(tower.x, tower.y, 30 + Math.sin(this.time * 8) * 3, 0, Math.PI * 2);
                 ctx.strokeStyle = '#ffaa00';
                 ctx.lineWidth = 2;
+                ctx.setLineDash([4, 4]);
+                ctx.lineDashOffset = -this.time * 30;
                 ctx.stroke();
+                ctx.setLineDash([]);
+
+                // Power particles
+                for (let i = 0; i < 2; i++) {
+                    const angle = this.time * 5 + i * Math.PI;
+                    ctx.beginPath();
+                    ctx.arc(
+                        tower.x + Math.cos(angle) * 25,
+                        tower.y + Math.sin(angle) * 25,
+                        2, 0, Math.PI * 2
+                    );
+                    ctx.fillStyle = '#ffaa00';
+                    ctx.fill();
+                }
+            }
+
+            // Range indicator when selected (enhanced)
+            if (isSelected && tower.range > 0) {
+                ctx.beginPath();
+                ctx.arc(tower.x, tower.y, tower.range, 0, Math.PI * 2);
+                ctx.strokeStyle = tower.color + '60';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([8, 8]);
+                ctx.lineDashOffset = -this.time * 20;
+                ctx.stroke();
+                ctx.setLineDash([]);
+                
+                // Range fill
+                ctx.fillStyle = tower.color + '08';
+                ctx.fill();
             }
         }
     }
@@ -2865,77 +3145,259 @@ class TowerDefense {
     _drawEnemies(ctx) {
         for (const enemy of this.enemies) {
             const frozen = enemy.frozen || this.freezeActive;
+            const pulsePhase = (this.time * 4 + enemy.x * 0.2) % (Math.PI * 2);
+            
+            // Trail effect for fast enemies
+            if (enemy.speed > 70 || enemy.special === 'dash') {
+                const trailLength = enemy.special === 'dash' && enemy.dashTimer > 0 ? 5 : 3;
+                for (let i = trailLength; i > 0; i--) {
+                    const trailProgress = Math.max(0, enemy.progress - i * 0.008);
+                    const trailPos = this.getPositionOnPath(trailProgress);
+                    const trailAlpha = (1 - i / trailLength) * 0.3;
+                    
+                    ctx.beginPath();
+                    ctx.arc(trailPos.x, trailPos.y, enemy.size * (1 - i * 0.15), 0, Math.PI * 2);
+                    ctx.fillStyle = enemy.color + Math.floor(trailAlpha * 255).toString(16).padStart(2, '0');
+                    ctx.fill();
+                }
+            }
 
-            // Shadow/glow
+            // Outer glow
             ctx.beginPath();
-            ctx.arc(enemy.x, enemy.y, enemy.size + 3, 0, Math.PI * 2);
-            ctx.fillStyle = enemy.color + '30';
+            ctx.arc(enemy.x, enemy.y, enemy.size + 6 + Math.sin(pulsePhase) * 2, 0, Math.PI * 2);
+            ctx.fillStyle = enemy.color + '25';
             ctx.fill();
 
-            // Body
+            // Shadow
+            ctx.beginPath();
+            ctx.arc(enemy.x + 1, enemy.y + 1, enemy.size, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+            ctx.fill();
+
+            // Body gradient
+            const bodyGradient = ctx.createRadialGradient(
+                enemy.x - enemy.size * 0.3, enemy.y - enemy.size * 0.3, 0,
+                enemy.x, enemy.y, enemy.size
+            );
+            const baseColor = frozen ? '#88ddff' : enemy.color;
+            bodyGradient.addColorStop(0, '#ffffff40');
+            bodyGradient.addColorStop(0.3, baseColor);
+            bodyGradient.addColorStop(1, frozen ? '#4488aa' : this._darkenColor(enemy.color, 30));
+
             ctx.beginPath();
             ctx.arc(enemy.x, enemy.y, enemy.size, 0, Math.PI * 2);
-            ctx.fillStyle = frozen ? '#88ddff' : enemy.color;
+            ctx.fillStyle = bodyGradient;
             ctx.fill();
 
-            // Border
+            // Border with glow
             ctx.strokeStyle = frozen ? '#ffffff' : '#ffffff';
             ctx.lineWidth = 2;
+            ctx.shadowColor = frozen ? '#88ddff' : enemy.color;
+            ctx.shadowBlur = frozen ? 10 : 5;
             ctx.stroke();
+            ctx.shadowBlur = 0;
 
-            // Icon
-            ctx.font = (enemy.size * 1.2) + 'px Arial';
+            // Icon with shadow
+            ctx.font = (enemy.size * 1.1) + 'px Arial';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+            ctx.shadowBlur = 2;
+            ctx.shadowOffsetY = 1;
             ctx.fillText(enemy.icon, enemy.x, enemy.y);
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetY = 0;
 
-            // Health bar (always show)
-            const barWidth = enemy.size * 2;
-            const barHeight = 4;
+            // Health bar (enhanced)
+            const barWidth = enemy.size * 2.2;
+            const barHeight = 5;
             const barX = enemy.x - barWidth / 2;
-            const barY = enemy.y - enemy.size - 10;
+            const barY = enemy.y - enemy.size - 12;
 
-            ctx.fillStyle = '#333';
+            // Health bar background
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+            ctx.fillRect(barX - 1, barY - 1, barWidth + 2, barHeight + 2);
+
+            // Health bar background
+            ctx.fillStyle = '#222';
             ctx.fillRect(barX, barY, barWidth, barHeight);
 
             const hpPercent = enemy.hp / enemy.maxHP;
+            let hpColor = hpPercent > 0.6 ? '#00ff88' : (hpPercent > 0.3 ? '#ffcc00' : '#ff4466');
+            if (enemy.poisonTimer > 0) hpColor = '#22ff22';
+            if (frozen) hpColor = '#88ddff';
 
-            let hpColor = hpPercent > 0.5 ? '#00ff88' : (hpPercent > 0.25 ? '#ffcc00' : '#ff4466');
-            if (enemy.poisonTimer > 0) {
-                hpColor = '#22ff22'; // Venom turns health bar green
-            }
-
-            ctx.fillStyle = hpColor;
+            // Health bar fill with gradient
+            const hpGradient = ctx.createLinearGradient(barX, barY, barX + barWidth * hpPercent, barY);
+            hpGradient.addColorStop(0, hpColor);
+            hpGradient.addColorStop(1, this._darkenColor(hpColor, 20));
+            ctx.fillStyle = hpGradient;
             ctx.fillRect(barX, barY, barWidth * hpPercent, barHeight);
+
+            // Health bar shine
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+            ctx.fillRect(barX, barY, barWidth * hpPercent, barHeight / 2);
+
+            // Boss/Elite indicator
+            if (enemy.type === 'boss' || enemy.type === 'megaboss' || enemy.isBoss) {
+                ctx.beginPath();
+                ctx.arc(enemy.x, enemy.y, enemy.size + 10 + Math.sin(this.time * 5) * 3, 0, Math.PI * 2);
+                ctx.strokeStyle = '#ff00aa80';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([5, 5]);
+                ctx.lineDashOffset = -this.time * 20;
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
 
             // Special indicators
             if (enemy.special === 'shield') {
+                const shieldPhase = this.time * 3;
                 ctx.beginPath();
-                ctx.arc(enemy.x, enemy.y, enemy.size + 5, 0, Math.PI * 2);
+                ctx.arc(enemy.x, enemy.y, enemy.size + 7 + Math.sin(shieldPhase) * 2, 0, Math.PI * 2);
                 ctx.strokeStyle = '#88ffff';
-                ctx.lineWidth = 2;
+                ctx.lineWidth = 3;
+                ctx.shadowColor = '#88ffff';
+                ctx.shadowBlur = 8;
                 ctx.stroke();
+                ctx.shadowBlur = 0;
             }
 
-            if (enemy.special === 'phase') {
-                ctx.globalAlpha = 0.7;
-                ctx.globalAlpha = 1;
+            if (enemy.special === 'phase' && enemy.phaseActive) {
+                ctx.globalAlpha = 0.4;
             }
+
+            // Flying enemy effect
+            if (enemy.special === 'flying') {
+                // Wing particles
+                for (let i = 0; i < 2; i++) {
+                    const wingAngle = this.time * 8 + i * Math.PI;
+                    ctx.beginPath();
+                    ctx.arc(
+                        enemy.x + Math.cos(wingAngle) * enemy.size * 0.8,
+                        enemy.y + Math.sin(wingAngle) * enemy.size * 0.3,
+                        2, 0, Math.PI * 2
+                    );
+                    ctx.fillStyle = enemy.color + '60';
+                    ctx.fill();
+                }
+            }
+
+            // Healer glow
+            if (enemy.special === 'heal') {
+                ctx.beginPath();
+                ctx.arc(enemy.x, enemy.y, enemy.size + 15 + Math.sin(this.time * 4) * 5, 0, Math.PI * 2);
+                ctx.fillStyle = '#44ff8810';
+                ctx.fill();
+            }
+
+            ctx.globalAlpha = 1;
         }
+    }
+
+    _darkenColor(hex, percent) {
+        const num = parseInt(hex.replace('#', ''), 16);
+        const amt = Math.round(2.55 * percent);
+        const R = Math.max(0, (num >> 16) - amt);
+        const G = Math.max(0, ((num >> 8) & 0x00FF) - amt);
+        const B = Math.max(0, (num & 0x0000FF) - amt);
+        return '#' + (0x1000000 + R * 0x10000 + G * 0x100 + B).toString(16).slice(1);
     }
 
     _drawProjectiles(ctx) {
         for (const proj of this.projectiles) {
+            // Trail effect
+            const trailLength = proj.splashRadius > 0 ? 25 : 15;
+            const trailAngle = proj.angle + Math.PI;
+            
+            for (let i = 0; i < 5; i++) {
+                const trailDist = i * (trailLength / 5);
+                const tx = proj.x + Math.cos(trailAngle) * trailDist;
+                const ty = proj.y + Math.sin(trailAngle) * trailDist;
+                const trailAlpha = 1 - (i / 5);
+                const trailSize = (proj.splashRadius > 0 ? 4 : 3) * (1 - i * 0.15);
+                
+                ctx.beginPath();
+                ctx.arc(tx, ty, trailSize, 0, Math.PI * 2);
+                ctx.fillStyle = proj.color + Math.floor(trailAlpha * 80).toString(16).padStart(2, '0');
+                ctx.fill();
+            }
+
+            // Outer glow
             ctx.beginPath();
-            ctx.arc(proj.x, proj.y, 5, 0, Math.PI * 2);
-            ctx.fillStyle = proj.color;
+            ctx.arc(proj.x, proj.y, proj.splashRadius > 0 ? 12 : 9, 0, Math.PI * 2);
+            ctx.fillStyle = proj.color + '30';
             ctx.fill();
 
-            // Glow
+            // Main projectile with gradient
+            const projGradient = ctx.createRadialGradient(
+                proj.x - 2, proj.y - 2, 0,
+                proj.x, proj.y, proj.splashRadius > 0 ? 6 : 5
+            );
+            projGradient.addColorStop(0, '#ffffff');
+            projGradient.addColorStop(0.3, proj.color);
+            projGradient.addColorStop(1, proj.color + 'aa');
+
             ctx.beginPath();
-            ctx.arc(proj.x, proj.y, 8, 0, Math.PI * 2);
-            ctx.fillStyle = proj.color + '40';
+            ctx.arc(proj.x, proj.y, proj.splashRadius > 0 ? 6 : 5, 0, Math.PI * 2);
+            ctx.fillStyle = projGradient;
             ctx.fill();
+
+            // Core glow
+            ctx.shadowColor = proj.color;
+            ctx.shadowBlur = 10;
+            ctx.beginPath();
+            ctx.arc(proj.x, proj.y, 3, 0, Math.PI * 2);
+            ctx.fillStyle = '#ffffff';
+            ctx.fill();
+            ctx.shadowBlur = 0;
+
+            // Special projectile effects
+            if (proj.splashRadius > 0) {
+                // Explosive projectile indicator
+                ctx.beginPath();
+                ctx.arc(proj.x, proj.y, 8 + Math.sin(this.time * 10) * 2, 0, Math.PI * 2);
+                ctx.strokeStyle = '#ff884480';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            }
+
+            if (proj.chainCount > 0) {
+                // Tesla chain indicator
+                ctx.beginPath();
+                ctx.arc(proj.x, proj.y, 10, 0, Math.PI * 2);
+                ctx.strokeStyle = '#aa88ff80';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([3, 3]);
+                ctx.lineDashOffset = -this.time * 30;
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+
+            if (proj.slowAmount > 0) {
+                // Cryo freeze effect
+                ctx.beginPath();
+                ctx.arc(proj.x, proj.y, 8, 0, Math.PI * 2);
+                ctx.strokeStyle = '#88ddff60';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            }
+
+            if (proj.poisonDamage > 0) {
+                // Venom trail particles
+                if (Math.random() < 0.3) {
+                    this.particles.push({
+                        x: proj.x + (Math.random() - 0.5) * 10,
+                        y: proj.y + (Math.random() - 0.5) * 10,
+                        vx: (Math.random() - 0.5) * 30,
+                        vy: (Math.random() - 0.5) * 30,
+                        color: '#22ff22',
+                        size: 2 + Math.random() * 2,
+                        life: 0.3,
+                        maxLife: 0.3
+                    });
+                }
+            }
         }
     }
 
@@ -2996,41 +3458,67 @@ class TowerDefense {
     }
 
     _drawUI(ctx) {
-        // Stats bar background
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+        // Stats bar background with gradient
+        const statsGradient = ctx.createLinearGradient(0, 0, 0, 60);
+        statsGradient.addColorStop(0, 'rgba(5, 5, 18, 0.95)');
+        statsGradient.addColorStop(1, 'rgba(10, 10, 25, 0.9)');
+        ctx.fillStyle = statsGradient;
         ctx.fillRect(0, 0, ctx.canvas.width, 60);
 
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+        // Stats bar border with glow
+        ctx.strokeStyle = 'rgba(0, 212, 255, 0.3)';
         ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.moveTo(0, 60);
         ctx.lineTo(ctx.canvas.width, 60);
         ctx.stroke();
 
-        // Money
+        // Animated underline
+        const underlineX = (this.time * 100) % ctx.canvas.width;
+        ctx.strokeStyle = 'rgba(0, 212, 255, 0.5)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(underlineX, 60);
+        ctx.lineTo(Math.min(underlineX + 100, ctx.canvas.width), 60);
+        ctx.stroke();
+
+        // Money with icon glow
         ctx.font = 'bold 22px Inter';
         ctx.fillStyle = '#00ff88';
+        ctx.shadowColor = '#00ff88';
+        ctx.shadowBlur = 8;
         ctx.textAlign = 'left';
         ctx.fillText('$' + this.money, 20, 38);
+        ctx.shadowBlur = 0;
 
-        // Lives
+        // Lives with icon
         ctx.fillStyle = '#ff4466';
-        ctx.fillText('❤ ' + this.lives, 120, 38);
+        ctx.shadowColor = '#ff4466';
+        ctx.shadowBlur = 5;
+        ctx.fillText('❤ ' + this.lives, 130, 38);
+        ctx.shadowBlur = 0;
 
-        // Wave
+        // Wave with animated glow
         ctx.fillStyle = '#00d4ff';
         ctx.textAlign = 'center';
+        ctx.shadowColor = '#00d4ff';
+        ctx.shadowBlur = 6;
         if (this.wave > this.maxWave) {
             ctx.fillText('Wave ' + this.wave + ' (Endless)', ctx.canvas.width / 2, 38);
         } else {
             ctx.fillText('Wave ' + this.wave + '/' + this.maxWave, ctx.canvas.width / 2, 38);
         }
+        ctx.shadowBlur = 0;
 
+        // Wave modifier with pulsing
         if (this.waveModifier) {
             ctx.font = '11px Inter';
             ctx.fillStyle = this.waveModifier === 'armored' ? '#ffcc00' : '#ff4466';
+            ctx.shadowColor = ctx.fillStyle;
+            ctx.shadowBlur = 4;
             ctx.textAlign = 'center';
-            ctx.fillText(this.waveModifier === 'armored' ? 'ARMORED' : 'FRENZY', ctx.canvas.width / 2, 55);
+            ctx.fillText(this.waveModifier === 'armored' ? '⬆ ARMORED' : '⚡ FRENZY', ctx.canvas.width / 2, 55);
+            ctx.shadowBlur = 0;
             ctx.font = 'bold 22px Inter';
         }
 
@@ -3039,12 +3527,24 @@ class TowerDefense {
         ctx.textAlign = 'right';
         ctx.fillText('Score: ' + this.score, ctx.canvas.width - 20, 40);
 
-        // Combo (separate line to avoid overlap)
+        // Combo with animation
         if (this.combo >= 3) {
-            ctx.font = 'bold 12px Inter';
+            const comboScale = 1 + Math.sin(this.time * 8) * 0.1;
+            ctx.font = `bold ${12 * comboScale}px Inter`;
             ctx.fillStyle = '#ffcc00';
+            ctx.shadowColor = '#ffcc00';
+            ctx.shadowBlur = 6;
             ctx.fillText('x' + this.combo + ' COMBO!', ctx.canvas.width - 20, 22);
+            ctx.shadowBlur = 0;
             ctx.font = 'bold 22px Inter';
+        }
+
+        // Speed indicator
+        if (this.gameSpeed > 1) {
+            ctx.font = 'bold 12px Inter';
+            ctx.fillStyle = '#ffaa00';
+            ctx.textAlign = 'left';
+            ctx.fillText('⏩ ' + this.gameSpeed + 'x', 230, 38);
         }
 
         // Tower shop
@@ -3055,28 +3555,105 @@ class TowerDefense {
 
         // Start wave button
         this._drawStartWaveButton(ctx);
+
+        // Wave progress bar
+        this._drawWaveProgress(ctx);
+    }
+
+    _drawWaveProgress(ctx) {
+        if (!this.waveInProgress) return;
+
+        const barWidth = 200;
+        const barHeight = 6;
+        const barX = ctx.canvas.width / 2 - barWidth / 2;
+        const barY = 12;
+
+        // Progress calculation
+        const totalEnemies = this.spawnQueue.length + this.enemies.length;
+        const progress = totalEnemies > 0 ? 0 : 1;
+
+        // Background
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+        ctx.fillRect(barX, barY, barWidth, barHeight);
+
+        // Progress fill
+        if (totalEnemies === 0) {
+            ctx.fillStyle = '#00ff88';
+        } else {
+            ctx.fillStyle = '#00d4ff';
+        }
+        ctx.fillRect(barX, barY, barWidth * progress, barHeight);
+
+        // Enemies remaining
+        if (totalEnemies > 0) {
+            ctx.font = '10px Inter';
+            ctx.fillStyle = '#888';
+            ctx.textAlign = 'center';
+            ctx.fillText(totalEnemies + ' enemies', ctx.canvas.width / 2, barY + barHeight + 10);
+        }
     }
 
     _drawTowerShop(ctx) {
         const shopX = ctx.canvas.width - 230;
         const shopY = 80;
+        const shopHeight = 380;
 
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-        ctx.fillRect(shopX, shopY, 220, 360); // Height for 12 towers
+        // Shop background with gradient
+        const shopGradient = ctx.createLinearGradient(shopX, shopY, shopX, shopY + shopHeight);
+        shopGradient.addColorStop(0, 'rgba(5, 5, 18, 0.95)');
+        shopGradient.addColorStop(0.5, 'rgba(10, 10, 30, 0.9)');
+        shopGradient.addColorStop(1, 'rgba(5, 5, 18, 0.95)');
+        ctx.fillStyle = shopGradient;
+        ctx.fillRect(shopX, shopY, 220, shopHeight);
 
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
-        ctx.strokeRect(shopX, shopY, 220, 360);
+        // Shop border with glow
+        ctx.strokeStyle = 'rgba(0, 212, 255, 0.3)';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(shopX, shopY, 220, shopHeight);
 
+        // Animated corner accents
+        ctx.strokeStyle = 'rgba(0, 212, 255, 0.6)';
+        ctx.lineWidth = 2;
+        const cornerSize = 15;
+        // Top left
+        ctx.beginPath();
+        ctx.moveTo(shopX, shopY + cornerSize);
+        ctx.lineTo(shopX, shopY);
+        ctx.lineTo(shopX + cornerSize, shopY);
+        ctx.stroke();
+        // Top right
+        ctx.beginPath();
+        ctx.moveTo(shopX + 220 - cornerSize, shopY);
+        ctx.lineTo(shopX + 220, shopY);
+        ctx.lineTo(shopX + 220, shopY + cornerSize);
+        ctx.stroke();
+        // Bottom left
+        ctx.beginPath();
+        ctx.moveTo(shopX, shopY + shopHeight - cornerSize);
+        ctx.lineTo(shopX, shopY + shopHeight);
+        ctx.lineTo(shopX + cornerSize, shopY + shopHeight);
+        ctx.stroke();
+        // Bottom right
+        ctx.beginPath();
+        ctx.moveTo(shopX + 220 - cornerSize, shopY + shopHeight);
+        ctx.lineTo(shopX + 220, shopY + shopHeight);
+        ctx.lineTo(shopX + 220, shopY + shopHeight - cornerSize);
+        ctx.stroke();
+
+        // Header with glow
         ctx.font = 'bold 14px Inter';
         ctx.fillStyle = '#ffffff';
         ctx.textAlign = 'center';
-        ctx.fillText('TOWERS', shopX + 110, shopY + 20);
+        ctx.shadowColor = '#00d4ff';
+        ctx.shadowBlur = 5;
+        ctx.fillText('⚔️ TOWERS', shopX + 110, shopY + 20);
+        ctx.shadowBlur = 0;
 
         const towerTypes = Object.keys(this.TOWER_TYPES);
         const buttonsPerRow = 2;
-        const buttonWidth = 90;
-        const buttonHeight = 42;
-        const spacing = 8;
+        const buttonWidth = 95;
+        const buttonHeight = 44;
+        const spacing = 6;
 
         for (let i = 0; i < towerTypes.length; i++) {
             const type = towerTypes[i];
@@ -3085,104 +3662,222 @@ class TowerDefense {
             const col = i % buttonsPerRow;
             const row = Math.floor(i / buttonsPerRow);
 
-            const bx = shopX + 10 + col * (buttonWidth + spacing);
+            const bx = shopX + 8 + col * (buttonWidth + spacing);
             const by = shopY + 35 + row * (buttonHeight + spacing);
 
             const isSelected = this.selectedTowerType === type;
             const canAfford = this.money >= towerData.cost;
 
-            ctx.fillStyle = isSelected ? towerData.color + '40' : (canAfford ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 0, 0, 0.1)');
+            // Button background
+            if (isSelected) {
+                const selectedGradient = ctx.createLinearGradient(bx, by, bx, by + buttonHeight);
+                selectedGradient.addColorStop(0, towerData.color + '50');
+                selectedGradient.addColorStop(1, towerData.color + '30');
+                ctx.fillStyle = selectedGradient;
+            } else if (canAfford) {
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
+            } else {
+                ctx.fillStyle = 'rgba(255, 50, 50, 0.08)';
+            }
             ctx.fillRect(bx, by, buttonWidth, buttonHeight);
 
-            ctx.strokeStyle = isSelected ? towerData.color : (canAfford ? 'rgba(255, 255, 255, 0.3)' : 'rgba(255, 0, 0, 0.3)');
+            // Button border
+            ctx.strokeStyle = isSelected ? towerData.color : (canAfford ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 50, 50, 0.3)');
             ctx.lineWidth = isSelected ? 2 : 1;
             ctx.strokeRect(bx, by, buttonWidth, buttonHeight);
 
-            ctx.font = '14px Arial';
-            ctx.fillStyle = canAfford ? '#ffffff' : 'rgba(255, 255, 255, 0.75)';
+            // Hover glow for selected
+            if (isSelected) {
+                ctx.shadowColor = towerData.color;
+                ctx.shadowBlur = 10;
+                ctx.strokeRect(bx, by, buttonWidth, buttonHeight);
+                ctx.shadowBlur = 0;
+            }
+
+            // Tower icon and name
+            ctx.font = '13px Arial';
+            ctx.fillStyle = canAfford ? '#ffffff' : 'rgba(255, 255, 255, 0.5)';
+            ctx.textAlign = 'center';
             ctx.fillText(towerData.icon + ' ' + towerData.name, bx + buttonWidth / 2, by + 16);
 
-            ctx.font = '11px Inter';
+            // Cost
+            ctx.font = 'bold 11px Inter';
             ctx.fillStyle = canAfford ? '#00ff88' : '#ff4466';
             ctx.fillText('$' + towerData.cost, bx + buttonWidth / 2, by + 32);
 
-            // Hotkey
+            // Hotkey badge
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+            ctx.fillRect(bx + 2, by + 2, 16, 12);
             ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-            ctx.font = '9px Inter';
-            ctx.fillText('[' + (i + 1 > 9 ? (i === 9 ? '0' : (i === 10 ? '-' : '=')) : (i + 1)) + ']', bx + 10, by + 11);
+            ctx.font = '8px Inter';
+            ctx.textAlign = 'left';
+            ctx.fillText(i < 9 ? (i + 1).toString() : (i === 9 ? '0' : (i === 10 ? '-' : '=')), bx + 5, by + 10);
         }
     }
 
     _drawStartWaveButton(ctx) {
         if (this.waveInProgress || this.victory) return;
 
-        const btnX = 20;
         const btnW = 200;
-        const btnH = 38;
-        const btnY = ctx.canvas.height - 20 - btnH;
+        const btnH = 45;
+        const btnX = ctx.canvas.width - 20 - btnW - 230; // Right side, accounting for tower panel
+        const btnY = ctx.canvas.height - 25 - btnH;
 
-        ctx.fillStyle = this.wave === 0 ? 'rgba(0, 212, 255, 0.35)' : 'rgba(0, 255, 136, 0.30)';
+        // Pulse animation
+        const pulse = Math.sin(this.time * 4) * 0.1 + 1;
+
+        // Button shadow
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+        ctx.fillRect(btnX + 2, btnY + 2, btnW, btnH);
+
+        // Button gradient
+        const btnGradient = ctx.createLinearGradient(btnX, btnY, btnX, btnY + btnH);
+        if (this.wave === 0) {
+            btnGradient.addColorStop(0, 'rgba(0, 212, 255, 0.4)');
+            btnGradient.addColorStop(1, 'rgba(0, 150, 200, 0.3)');
+        } else {
+            btnGradient.addColorStop(0, 'rgba(0, 255, 136, 0.35)');
+            btnGradient.addColorStop(1, 'rgba(0, 180, 100, 0.25)');
+        }
+        ctx.fillStyle = btnGradient;
         ctx.fillRect(btnX, btnY, btnW, btnH);
 
+        // Animated border
         ctx.strokeStyle = this.wave === 0 ? '#00d4ff' : '#00ff88';
         ctx.lineWidth = 2;
+        ctx.shadowColor = this.wave === 0 ? '#00d4ff' : '#00ff88';
+        ctx.shadowBlur = 10 * pulse;
         ctx.strokeRect(btnX, btnY, btnW, btnH);
+        ctx.shadowBlur = 0;
 
-        ctx.font = 'bold 14px Inter';
+        // Animated particles around button
+        for (let i = 0; i < 3; i++) {
+            const angle = this.time * 3 + i * (Math.PI * 2 / 3);
+            const px = btnX + btnW / 2 + Math.cos(angle) * (btnW / 2 + 10);
+            const py = btnY + btnH / 2 + Math.sin(angle) * (btnH / 2 + 10);
+            ctx.beginPath();
+            ctx.arc(px, py, 2, 0, Math.PI * 2);
+            ctx.fillStyle = this.wave === 0 ? '#00d4ff80' : '#00ff8880';
+            ctx.fill();
+        }
+
+        // Button text
+        ctx.font = 'bold 15px Inter';
         ctx.fillStyle = '#ffffff';
         ctx.textAlign = 'center';
-        ctx.fillText(this.wave === 0 ? 'START GAME' : 'NEXT WAVE', btnX + btnW / 2, btnY + 24);
+        ctx.shadowColor = '#000000';
+        ctx.shadowBlur = 3;
+        ctx.fillText(this.wave === 0 ? '▶ START GAME' : '▶ NEXT WAVE', btnX + btnW / 2, btnY + 28);
+        ctx.shadowBlur = 0;
+
+        // Wave info
+        if (this.wave > 0) {
+            ctx.font = '10px Inter';
+            ctx.fillStyle = '#888';
+            ctx.fillText('Wave ' + (this.wave + 1) + ' awaits', btnX + btnW / 2, btnY + btnH - 5);
+        }
     }
 
     _drawAbilities(ctx) {
-        const abX = ctx.canvas.width - 230;
-        const abY = 460;
+        // Move to bottom left to avoid conflict with start wave button
+        const abX = 20;
+        const abY = ctx.canvas.height - 95;
+        const abWidth = 220;
+        const abHeight = 75;
 
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-        ctx.fillRect(abX, abY, 220, 80);
+        // Background with gradient
+        const abGradient = ctx.createLinearGradient(abX, abY, abX, abY + abHeight);
+        abGradient.addColorStop(0, 'rgba(5, 5, 18, 0.95)');
+        abGradient.addColorStop(1, 'rgba(10, 10, 30, 0.9)');
+        ctx.fillStyle = abGradient;
+        ctx.fillRect(abX, abY, abWidth, abHeight);
 
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
-        ctx.strokeRect(abX, abY, 220, 80);
+        // Border
+        ctx.strokeStyle = 'rgba(0, 212, 255, 0.3)';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(abX, abY, abWidth, abHeight);
 
-        ctx.font = 'bold 12px Inter';
+        // Header
+        ctx.font = 'bold 11px Inter';
         ctx.fillStyle = '#ffffff';
         ctx.textAlign = 'center';
-        ctx.fillText('ABILITIES', abX + 110, abY + 15);
+        ctx.shadowColor = '#00d4ff';
+        ctx.shadowBlur = 4;
+        ctx.fillText('✨ ABILITIES', abX + abWidth / 2, abY + 12);
+        ctx.shadowBlur = 0;
 
-        // Nuke, Freeze, Boost, Repair, TimeWarp - 5 buttons
-        this._drawAbilityButton(ctx, abX + 8, abY + 25, 'Nuke', '💥', 'N', this.nukeCooldown, 60, 40);
-        this._drawAbilityButton(ctx, abX + 52, abY + 25, 'Freeze', '❄️', 'F', this.freezeCooldown, 30, 40);
-        this._drawAbilityButton(ctx, abX + 96, abY + 25, 'Boost', '⚡', 'B', this.boostCooldown, 45, 40);
-        this._drawAbilityButton(ctx, abX + 140, abY + 25, 'Repair', '💚', 'R', this.repairCooldown, 90, 40);
-        this._drawAbilityButton(ctx, abX + 184, abY + 25, 'Warp', '🌀', 'T', this.timeWarpCooldown, 75, 40);
-    }
+        // Ability buttons - 5 buttons
+        const abilityData = [
+            { name: 'Nuke', icon: '💥', key: 'N', cooldown: this.nukeCooldown, maxCooldown: 60, color: '#ff4400' },
+            { name: 'Freeze', icon: '❄️', key: 'F', cooldown: this.freezeCooldown, maxCooldown: 30, color: '#88ddff' },
+            { name: 'Boost', icon: '⚡', key: 'B', cooldown: this.boostCooldown, maxCooldown: 45, color: '#ffaa00' },
+            { name: 'Repair', icon: '💚', key: 'R', cooldown: this.repairCooldown, maxCooldown: 90, color: '#00ff88' },
+            { name: 'Warp', icon: '🌀', key: 'T', cooldown: this.timeWarpCooldown, maxCooldown: 75, color: '#aa88ff' }
+        ];
 
-    _drawAbilityButton(ctx, x, y, name, icon, key, cooldown, maxCooldown, width = 60) {
-        const ready = cooldown <= 0;
+        const btnWidth = 38;
+        const btnHeight = 48;
+        const spacing = 4;
 
-        ctx.fillStyle = ready ? 'rgba(255, 255, 255, 0.15)' : 'rgba(255, 0, 0, 0.15)';
-        ctx.fillRect(x, y, width, 45);
+        for (let i = 0; i < abilityData.length; i++) {
+            const ab = abilityData[i];
+            const bx = abX + 8 + i * (btnWidth + spacing);
+            const by = abY + 20;
+            const ready = ab.cooldown <= 0;
 
-        ctx.strokeStyle = ready ? 'rgba(255, 255, 255, 0.5)' : 'rgba(255, 0, 0, 0.3)';
-        ctx.lineWidth = 1;
-        ctx.strokeRect(x, y, width, 45);
+            // Button background
+            if (ready) {
+                const btnGradient = ctx.createLinearGradient(bx, by, bx, by + btnHeight);
+                btnGradient.addColorStop(0, ab.color + '30');
+                btnGradient.addColorStop(1, ab.color + '15');
+                ctx.fillStyle = btnGradient;
+            } else {
+                ctx.fillStyle = 'rgba(50, 50, 50, 0.5)';
+            }
+            ctx.fillRect(bx, by, btnWidth, btnHeight);
 
-        ctx.font = '16px Arial';
-        ctx.fillStyle = ready ? '#ffffff' : '#666';
-        ctx.textAlign = 'center';
-        ctx.fillText(icon, x + width / 2, y + 18);
+            // Border
+            ctx.strokeStyle = ready ? ab.color + '80' : 'rgba(255, 255, 255, 0.15)';
+            ctx.lineWidth = ready ? 2 : 1;
+            ctx.strokeRect(bx, by, btnWidth, btnHeight);
 
-        ctx.font = '9px Inter';
-        ctx.fillText(name, x + width / 2, y + 32);
+            // Glow when ready
+            if (ready) {
+                ctx.shadowColor = ab.color;
+                ctx.shadowBlur = 8;
+                ctx.strokeRect(bx, by, btnWidth, btnHeight);
+                ctx.shadowBlur = 0;
+            }
 
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-        ctx.font = '8px Inter';
-        ctx.fillText('[' + key + ']', x + 8, y + 10);
+            // Icon
+            ctx.font = '16px Arial';
+            ctx.fillStyle = ready ? '#ffffff' : '#555';
+            ctx.textAlign = 'center';
+            ctx.fillText(ab.icon, bx + btnWidth / 2, by + 18);
 
-        if (!ready) {
-            const progress = cooldown / maxCooldown;
-            ctx.fillStyle = 'rgba(255, 0, 0, 0.5)';
-            ctx.fillRect(x, y + 45 - 4, width * (1 - progress), 4);
+            // Name
+            ctx.font = '7px Inter';
+            ctx.fillStyle = ready ? '#ffffff' : '#555';
+            ctx.fillText(ab.name, bx + btnWidth / 2, by + 32);
+
+            // Key badge
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+            ctx.fillRect(bx + 2, by + 2, 10, 9);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+            ctx.font = '6px Inter';
+            ctx.fillText(ab.key, bx + 7, by + 8);
+
+            // Cooldown overlay
+            if (!ready) {
+                const progress = ab.cooldown / ab.maxCooldown;
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+                ctx.fillRect(bx, by + btnHeight * (1 - progress), btnWidth, btnHeight * progress);
+
+                // Cooldown text
+                ctx.font = 'bold 9px Inter';
+                ctx.fillStyle = '#ff6666';
+                ctx.fillText(Math.ceil(ab.cooldown) + 's', bx + btnWidth / 2, by + btnHeight - 6);
+            }
         }
     }
 
@@ -3323,50 +4018,206 @@ class TowerDefense {
     }
 
     _drawPauseOverlay(ctx) {
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+        // Dark overlay with animation
+        const pulseAlpha = 0.7 + Math.sin(this.time * 2) * 0.05;
+        ctx.fillStyle = `rgba(0, 0, 0, ${pulseAlpha})`;
         ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
+        // Center glow
+        const centerGradient = ctx.createRadialGradient(
+            ctx.canvas.width / 2, ctx.canvas.height / 2, 0,
+            ctx.canvas.width / 2, ctx.canvas.height / 2, 200
+        );
+        centerGradient.addColorStop(0, 'rgba(0, 212, 255, 0.1)');
+        centerGradient.addColorStop(1, 'transparent');
+        ctx.fillStyle = centerGradient;
+        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+        // Animated border
+        ctx.strokeStyle = 'rgba(0, 212, 255, 0.3)';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([20, 10]);
+        ctx.lineDashOffset = -this.time * 50;
+        ctx.strokeRect(50, 50, ctx.canvas.width - 100, ctx.canvas.height - 100);
+        ctx.setLineDash([]);
+
+        // Pause icon
+        ctx.font = '60px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#ffffff';
+        ctx.shadowColor = '#00d4ff';
+        ctx.shadowBlur = 20;
+        ctx.fillText('⏸️', ctx.canvas.width / 2, ctx.canvas.height / 2 - 60);
+        ctx.shadowBlur = 0;
+
+        // Main text
         ctx.font = 'bold 48px Inter';
         ctx.fillStyle = '#ffffff';
-        ctx.textAlign = 'center';
-        ctx.fillText('PAUSED', ctx.canvas.width / 2, ctx.canvas.height / 2);
+        ctx.shadowColor = '#00d4ff';
+        ctx.shadowBlur = 15;
+        ctx.fillText('PAUSED', ctx.canvas.width / 2, ctx.canvas.height / 2 + 10);
+        ctx.shadowBlur = 0;
 
+        // Subtitle with pulse
+        const subAlpha = 0.5 + Math.sin(this.time * 3) * 0.3;
         ctx.font = '18px Inter';
-        ctx.fillStyle = '#888';
-        ctx.fillText('Press SPACE to resume', ctx.canvas.width / 2, ctx.canvas.height / 2 + 40);
+        ctx.fillStyle = `rgba(255, 255, 255, ${subAlpha})`;
+        ctx.fillText('Press SPACE to resume', ctx.canvas.width / 2, ctx.canvas.height / 2 + 50);
+
+        // Game stats in corner
+        ctx.font = '14px Inter';
+        ctx.fillStyle = '#666';
+        ctx.textAlign = 'left';
+        ctx.fillText('Wave: ' + this.wave, 70, ctx.canvas.height - 70);
+        ctx.fillText('Score: ' + this.score, 70, ctx.canvas.height - 50);
+        ctx.fillText('Lives: ' + this.lives, 70, ctx.canvas.height - 30);
+
+        // Controls reminder
+        ctx.textAlign = 'right';
+        ctx.fillText('[T] Speed: ' + this.gameSpeed + 'x', ctx.canvas.width - 70, ctx.canvas.height - 70);
+        ctx.fillText('[ESC] Deselect', ctx.canvas.width - 70, ctx.canvas.height - 50);
+        ctx.fillText('[1-0] Towers', ctx.canvas.width - 70, ctx.canvas.height - 30);
     }
 
     _drawEndScreen(ctx) {
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+        // Animated background
+        const bgAlpha = 0.85 + Math.sin(this.time * 2) * 0.05;
+        ctx.fillStyle = `rgba(0, 0, 0, ${bgAlpha})`;
         ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-        ctx.font = 'bold 48px Inter';
-        ctx.textAlign = 'center';
-
+        // Radial gradient overlay
+        const centerGradient = ctx.createRadialGradient(
+            ctx.canvas.width / 2, ctx.canvas.height / 2, 0,
+            ctx.canvas.width / 2, ctx.canvas.height / 2, 300
+        );
         if (this.victory) {
-            ctx.fillStyle = '#00ff88';
-            ctx.fillText('VICTORY!', ctx.canvas.width / 2, ctx.canvas.height / 2 - 80);
+            centerGradient.addColorStop(0, 'rgba(0, 255, 136, 0.15)');
+            centerGradient.addColorStop(1, 'transparent');
         } else {
-            ctx.fillStyle = '#ff4466';
-            ctx.fillText('GAME OVER', ctx.canvas.width / 2, ctx.canvas.height / 2 - 80);
+            centerGradient.addColorStop(0, 'rgba(255, 68, 102, 0.15)');
+            centerGradient.addColorStop(1, 'transparent');
         }
+        ctx.fillStyle = centerGradient;
+        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+        // Animated particles
+        for (let i = 0; i < 20; i++) {
+            const angle = this.time * 0.5 + i * (Math.PI * 2 / 20);
+            const radius = 150 + Math.sin(this.time * 2 + i) * 30;
+            const px = ctx.canvas.width / 2 + Math.cos(angle) * radius;
+            const py = ctx.canvas.height / 2 + Math.sin(angle) * radius;
+            
+            ctx.beginPath();
+            ctx.arc(px, py, 2 + Math.sin(this.time * 3 + i) * 1, 0, Math.PI * 2);
+            ctx.fillStyle = this.victory ? 'rgba(0, 255, 136, 0.5)' : 'rgba(255, 68, 102, 0.5)';
+            ctx.fill();
+        }
+
+        // Main title with glow
+        ctx.font = 'bold 56px Inter';
+        ctx.textAlign = 'center';
+        ctx.shadowColor = this.victory ? '#00ff88' : '#ff4466';
+        ctx.shadowBlur = 30;
+        ctx.fillStyle = this.victory ? '#00ff88' : '#ff4466';
+        ctx.fillText(this.victory ? '🎉 VICTORY! 🎉' : '💀 GAME OVER', ctx.canvas.width / 2, ctx.canvas.height / 2 - 90);
+        ctx.shadowBlur = 0;
+
+        // Subtitle
+        ctx.font = '18px Inter';
+        ctx.fillStyle = '#888';
+        ctx.fillText(this.victory ? 'You defended against all waves!' : 'The enemies broke through...', ctx.canvas.width / 2, ctx.canvas.height / 2 - 55);
+
+        // Stats panel background
+        const panelX = ctx.canvas.width / 2 - 180;
+        const panelY = ctx.canvas.height / 2 - 30;
+        const panelW = 360;
+        const panelH = 160;
+        
+        ctx.fillStyle = 'rgba(10, 10, 30, 0.8)';
+        ctx.fillRect(panelX, panelY, panelW, panelH);
+        ctx.strokeStyle = this.victory ? 'rgba(0, 255, 136, 0.5)' : 'rgba(255, 68, 102, 0.5)';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(panelX, panelY, panelW, panelH);
 
         // Stats
         ctx.fillStyle = '#ffffff';
-        ctx.font = '22px Inter';
-        ctx.fillText('Wave: ' + this.wave + '  |  Score: ' + this.score, ctx.canvas.width / 2, ctx.canvas.height / 2 - 40);
-        ctx.fillText('Kills: ' + this.totalKills + '  |  Towers Built: ' + this.towersBuilt, ctx.canvas.width / 2, ctx.canvas.height / 2 - 10);
-        ctx.fillText('Total Earned: $' + this.totalEarned + '  |  Abilities Used: ' + this.abilitiesUsed, ctx.canvas.width / 2, ctx.canvas.height / 2 + 20);
+        ctx.font = '20px Inter';
+        
+        const stats = [
+            { label: 'Wave', value: this.wave, icon: '🌊' },
+            { label: 'Score', value: this.score.toLocaleString(), icon: '🏆' },
+            { label: 'Kills', value: this.totalKills, icon: '💀' },
+            { label: 'Towers Built', value: this.towersBuilt, icon: '🗼' },
+            { label: 'Money Earned', value: '$' + this.totalEarned.toLocaleString(), icon: '💰' },
+            { label: 'Abilities Used', value: this.abilitiesUsed, icon: '✨' }
+        ];
 
-        if (this.maxCombo > 1) {
-            ctx.fillStyle = '#ffcc00';
-            ctx.fillText('Max Combo: x' + this.maxCombo, ctx.canvas.width / 2, ctx.canvas.height / 2 + 50);
+        for (let i = 0; i < stats.length; i++) {
+            const col = i % 2;
+            const row = Math.floor(i / 2);
+            const x = panelX + 20 + col * 175;
+            const y = panelY + 35 + row * 40;
+
+            ctx.font = '12px Inter';
+            ctx.fillStyle = '#666';
+            ctx.textAlign = 'left';
+            ctx.fillText(stats[i].icon + ' ' + stats[i].label, x, y);
+
+            ctx.font = 'bold 18px Inter';
+            ctx.fillStyle = '#ffffff';
+            ctx.fillText(stats[i].value.toString(), x, y + 18);
         }
 
-        // Restart prompt
+        // Max combo (if achieved)
+        if (this.maxCombo > 1) {
+            ctx.font = 'bold 16px Inter';
+            ctx.fillStyle = '#ffcc00';
+            ctx.textAlign = 'center';
+            ctx.shadowColor = '#ffcc00';
+            ctx.shadowBlur = 5;
+            ctx.fillText('🔥 Max Combo: x' + this.maxCombo, ctx.canvas.width / 2, panelY + panelH + 30);
+            ctx.shadowBlur = 0;
+        }
+
+        // Restart prompt with animation
+        const promptAlpha = 0.5 + Math.sin(this.time * 3) * 0.3;
         ctx.font = '18px Inter';
-        ctx.fillStyle = '#666';
-        ctx.fillText('Press R or Click to play again', ctx.canvas.width / 2, ctx.canvas.height / 2 + 100);
+        ctx.fillStyle = `rgba(255, 255, 255, ${promptAlpha})`;
+        ctx.textAlign = 'center';
+        ctx.fillText('Press R or Click to play again', ctx.canvas.width / 2, ctx.canvas.height / 2 + 170);
+
+        // Decorative corners
+        ctx.strokeStyle = this.victory ? '#00ff88' : '#ff4466';
+        ctx.lineWidth = 2;
+        const cornerSize = 30;
+        
+        // Top left
+        ctx.beginPath();
+        ctx.moveTo(panelX - 20, panelY - 20 + cornerSize);
+        ctx.lineTo(panelX - 20, panelY - 20);
+        ctx.lineTo(panelX - 20 + cornerSize, panelY - 20);
+        ctx.stroke();
+        
+        // Top right
+        ctx.beginPath();
+        ctx.moveTo(panelX + panelW + 20 - cornerSize, panelY - 20);
+        ctx.lineTo(panelX + panelW + 20, panelY - 20);
+        ctx.lineTo(panelX + panelW + 20, panelY - 20 + cornerSize);
+        ctx.stroke();
+        
+        // Bottom left
+        ctx.beginPath();
+        ctx.moveTo(panelX - 20, panelY + panelH + 20 - cornerSize);
+        ctx.lineTo(panelX - 20, panelY + panelH + 20);
+        ctx.lineTo(panelX - 20 + cornerSize, panelY + panelH + 20);
+        ctx.stroke();
+        
+        // Bottom right
+        ctx.beginPath();
+        ctx.moveTo(panelX + panelW + 20 - cornerSize, panelY + panelH + 20);
+        ctx.lineTo(panelX + panelW + 20, panelY + panelH + 20);
+        ctx.lineTo(panelX + panelW + 20, panelY + panelH + 20 - cornerSize);
+        ctx.stroke();
     }
 
     // ═══════════════════════════════════════════════════════════════════════════════════════════════════

@@ -31,7 +31,7 @@
           <div class="logo-ring"></div>
         </div>
         <span class="title-text">Lightning Games</span>
-        <span class="title-version">v2.1.1</span>
+        <span class="title-version">v2.1.6</span>
       </div>
       <div class="title-right" style="-webkit-app-region: no-drag;">
         <!-- Ultra Upgrade: Volume & Settings -->
@@ -68,11 +68,11 @@
       <!-- Category & Search Bar -->
       <div class="launcher-controls">
         <div class="category-tabs">
-          <button class="category-tab active" data-category="all">All</button>
-          <button class="category-tab" data-category="favorites">Favorites</button>
-          <button class="category-tab" data-category="arcade">Arcade</button>
-          <button class="category-tab" data-category="puzzle">Puzzle</button>
-          <button class="category-tab" data-category="classic">Classic</button>
+          <button class="category-tab active" data-category="all"><span class="tab-icon">&#127918;</span> All</button>
+          <button class="category-tab" data-category="favorites"><span class="tab-icon">&#11088;</span> Favorites</button>
+          <button class="category-tab" data-category="arcade"><span class="tab-icon">&#9889;</span> Arcade</button>
+          <button class="category-tab" data-category="puzzle"><span class="tab-icon">&#129504;</span> Puzzle</button>
+          <button class="category-tab" data-category="classic"><span class="tab-icon">&#127955;</span> Classic</button>
         </div>
 
         <div class="search-wrap">
@@ -106,14 +106,27 @@
         <h2 class="section-title">📊 Your Stats</h2>
         <div class="stats-cards">
           <div class="stat-card">
+            <span class="stat-icon">🎮</span>
             <span class="stat-value" id="stat-total-played">0</span>
             <span class="stat-label">Total Games</span>
           </div>
           <div class="stat-card">
+            <span class="stat-icon">🏆</span>
             <span class="stat-value" id="stat-achievements">0/10</span>
             <span class="stat-label">Achievements</span>
           </div>
+          <div class="stat-card">
+            <span class="stat-icon">⭐</span>
+            <span class="stat-value" id="stat-favorites">0</span>
+            <span class="stat-label">Favorites</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-icon">⏱️</span>
+            <span class="stat-value" id="stat-playtime">0m</span>
+            <span class="stat-label">Play Time</span>
+          </div>
         </div>
+        <h3 class="achievements-title">🏆 Achievements</h3>
         <div class="achievements-list" id="achievements-list">
           <!-- Achievements will be listed here -->
         </div>
