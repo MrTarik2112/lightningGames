@@ -1,6 +1,6 @@
 # ⚡ Lightning Games - Complete Technical Documentation
 
-> **Version:** 3.0  
+> **Version:** 3.3  
 > **Last Updated:** 2026-03-08  
 > **Author:** Tarik  
 > **Status:** Production Ready  
@@ -159,14 +159,68 @@ lightningGames/
 │                                 # - Theme-aware colors
 │
 ├── 📜 scripts/ (Build & Utilities)
-│   ├── build.js                 # Interactive build wizard (300+ lines)
-│   │                             # - Version number prompting
-│   │                             # - Compression level selection
-│   │                             # - Progress bar display
-│   │                             # - Build log generation
-│   │                             # - electron-builder orchestration
+│   ├── build.js                 # Interactive build wizard (800+ lines)
+│   │                             # - Version prompting
+│   │                             # - Compression level (0-10) with visual bars
+│   │                             # - Platform selection (Windows, WSL, Docker)
+│   │                             # - Parallel builds
+│   │                             # - Progress bar & logging
+│   │                             # - Release notes generation
 │   │
-│   └── sync-icons.js            # Icon generation tool (150+ lines)
+│   ├── dev.js                   # Development server (100+ lines)
+│   │                             # - Hot reload support
+│   │                             # - Auto dependency check
+│   │                             # - Debug mode enabled
+│   │
+│   ├── clean.js                 # Cleanup utility (150+ lines)
+│   │                             # - Clean dist, cache, logs
+│   │                             # - --all, --modules options
+│   │                             # - Disk space reporting
+│   │
+│   ├── stats.js                 # Project statistics (180+ lines)
+│   │                             # - Code line counts
+│   │                             # - File counts by category
+│   │                             # - Disk usage analysis
+│   │
+│   ├── test.js                  # Test suite (180+ lines)
+│   │                             # - File existence checks
+│   │                             # - Syntax validation
+│   │                             # - Dependency verification
+│   │
+│   ├── validate.js              # Game validator (170+ lines)
+│   │                             # - Required method checks
+│   │                             # - Common issue detection
+│   │                             # - Per-game or all-games mode
+│   │
+│   ├── lint.js                  # Code linter (170+ lines)
+│   │                             # - No var keyword
+│   │                             # - No == (use ===)
+│   │                             # - No debugger statements
+│   │                             # - Line length warnings
+│   │
+│   ├── package.js               # Quick packager (90+ lines)
+│   │                             # - Platform-specific builds
+│   │                             # - win, winzip, linux, deb, mac
+│   │
+│   ├── release.js               # Release manager (160+ lines)
+│   │                             # - Version bumping
+│   │                             # - Changelog generation
+│   │
+│   ├── install.js               # Setup script (170+ lines)
+│   │                             # - Prerequisite checks
+│   │                             # - Dependency installation
+│   │                             # - Platform-specific setup
+│   │
+│   ├── info.js                  # Project info (150+ lines)
+│   │                             # - Version & structure display
+│   │                             # - System information
+│   │                             # - Available scripts
+│   │
+│   ├── version.js               # Version bumper (70+ lines)
+│   │                             # - major, minor, patch
+│   │                             # - Specific version support
+│   │
+│   └── sync-icons.js            # Icon generator (150+ lines)
 │                                 # - Multi-resolution PNG generation
 │                                 # - ICO format conversion
 │                                 # - ICNS format support
@@ -1572,20 +1626,42 @@ The project uses an interactive build script (`scripts/build.js`) that guides us
 2. Prompt for new version number
    ↓
 3. Prompt for compression level (0-10)
-   ├─ 0-3 (Fast):    ~5s,   ~150MB
-   ├─ 4-7 (Normal):  ~30s,  ~110MB
-   └─ 8-10 (Max):    ~2m,   ~80MB
+   ├─ 0: Store    (~5s,   ~140MB) - No compression
+   ├─ 1-3: Fast   (~20-50s, ~125-105MB) - Quick builds
+   ├─ 4-6: Normal (~70s-2m, ~95-75MB) - Balanced
+   ├─ 7-9: High   (~3-8m, ~65-45MB) - High compression
+   └─ 10: MaxComp (~15m, ~35MB) - Maximum compression
    ↓
-4. Update package.json with new version
+4. Select target platform
+   ├─ Windows Portable
+   ├─ Linux AppImage (WSL)
+   ├─ Linux AppImage (Docker)
+   └─ Parallel builds
    ↓
-5. Run electron-builder --win portable
+5. Update package.json with new version
    ↓
-6. Save build log to BuildLogs/build-{timestamp}.log
+6. Run electron-builder
    ↓
-7. Display live progress bar in terminal
+7. Save build log to BuildLogs/
    ↓
 8. Output: dist/Lightning Games.exe
 ```
+
+#### Compression Levels (0-10)
+
+| Level | Name | Time | Size | Description |
+|:-----:|------|------|------|-------------|
+| 0 | Store | ~5s | ~140MB | No compression |
+| 1 | Fast | ~20s | ~125MB | Quick build |
+| 2 | Light | ~35s | ~115MB | Light compression |
+| 3 | Medium | ~50s | ~105MB | Balanced (default) |
+| 4 | Good | ~70s | ~95MB | Good compression |
+| 5 | High | ~90s | ~85MB | High compression |
+| 6 | Higher | ~2m | ~75MB | Higher compression |
+| 7 | Ultra | ~3m | ~65MB | Ultra compression |
+| 8 | Extreme | ~5m | ~55MB | Extreme compression |
+| 9 | Insane | ~8m | ~45MB | Insane compression |
+| 10 | MaxComp | ~15m | ~35MB | Maximum compression |
 
 #### Running the Build
 
@@ -1617,7 +1693,7 @@ npm run dist
         "portable": {
             "artifactName": "${productName}.exe"
         },
-        "compression": "store"
+        "compression": "normal"
     }
 }
 ```
@@ -1629,7 +1705,7 @@ npm run dist
 | **Exclude node_modules** | Only bundle essential files | Reduces 500MB → 80MB |
 | **Selective bundling** | Include only JS/HTML/CSS/assets | Faster build time |
 | **ASAR extraction** | Enabled for faster file access | Improves startup |
-| **Disabled compression** | `compression: "store"` | Avoids LZMA overhead |
+| **Compression levels** | 0-10 configurable | Size vs. time tradeoff |
 | **Portable format** | Single .exe file | No installation needed |
 
 ### Build Logs
@@ -1645,6 +1721,156 @@ All builds are logged to `BuildLogs/build-{timestamp}.log`:
 [2026-03-08 14:32:45] Output: dist/Lightning Games.exe (112 MB)
 [2026-03-08 14:32:45] Build time: 30 seconds
 ```
+
+---
+
+## 📜 13. Scripts Reference
+
+### Available Scripts
+
+| Script | Purpose | Usage |
+|--------|---------|-------|
+| `build.js` | Interactive build wizard | `npm run dist` |
+| `dev.js` | Start development server | `node scripts/dev.js` |
+| `clean.js` | Clean build artifacts | `node scripts/clean.js --all` |
+| `stats.js` | Project statistics | `node scripts/stats.js` |
+| `test.js` | Run test suite | `node scripts/test.js` |
+| `validate.js` | Validate game files | `node scripts/validate.js [game]` |
+| `lint.js` | Code quality checks | `node scripts/lint.js` |
+| `package.js` | Quick packaging | `node scripts/package.js [platform]` |
+| `release.js` | Create release | `node scripts/release.js [type]` |
+| `install.js` | Project setup | `node scripts/install.js` |
+| `info.js` | Project information | `node scripts/info.js` |
+| `version.js` | Version bumping | `node scripts/version.js [type]` |
+| `sync-icons.js` | Icon generation | `node scripts/sync-icons.js` |
+
+### Script Details
+
+#### dev.js - Development Server
+```bash
+node scripts/dev.js
+```
+- Checks and installs dependencies if missing
+- Starts Electron with dev flags enabled
+- Enables remote debugging on port 9222
+- Graceful shutdown on Ctrl+C
+
+#### clean.js - Cleanup Utility
+```bash
+node scripts/clean.js --all      # Clean everything
+node scripts/clean.js --dist     # Clean dist/ only
+node scripts/clean.js --cache    # Clean build cache
+node scripts/clean.js --logs     # Clean build logs
+node scripts/clean.js --modules  # Clean node_modules
+```
+- Reports freed disk space
+- Safe removal with error handling
+
+#### stats.js - Project Statistics
+```bash
+node scripts/stats.js
+```
+- Total lines of code
+- Files by category (games, renderer, styles, scripts)
+- Disk usage breakdown
+- Dependency count
+
+#### test.js - Test Suite
+```bash
+node scripts/test.js
+```
+Checks:
+- package.json validity
+- Main process file exists
+- Preload script exists
+- Index.html with canvas
+- Games folder with game files
+- Renderer folder with JS files
+- Styles folder with CSS files
+- Assets folder exists
+- node_modules installed
+- Electron binary present
+- JavaScript syntax validation
+
+#### validate.js - Game Validator
+```bash
+node scripts/validate.js           # Validate all games
+node scripts/validate.js snake     # Validate specific game
+```
+Checks:
+- Class definition exists
+- Required methods (init, update, draw, getScore, isGameOver, destroy)
+- No document.write() usage
+- No eval() usage
+- Canvas context usage
+- Game over handling
+- Score tracking
+
+#### lint.js - Code Linter
+```bash
+node scripts/lint.js
+```
+Rules:
+- No `var` keyword (use `let`/`const`)
+- No `==` (use `===`)
+- No `debugger` statements
+- No `alert()` calls
+- Line length warnings (>100 chars)
+- Trailing whitespace detection
+
+#### package.js - Quick Packager
+```bash
+node scripts/package.js win      # Windows portable
+node scripts/package.js winzip   # Windows ZIP
+node scripts/package.js linux    # Linux AppImage
+node scripts/package.js deb      # Linux DEB
+node scripts/package.js mac      # macOS DMG
+```
+- No prompts, direct build
+- Uses normal compression
+- Inherits stdio for live output
+
+#### release.js - Release Manager
+```bash
+node scripts/release.js major    # 1.0.0 → 2.0.0
+node scripts/release.js minor    # 1.0.0 → 1.1.0
+node scripts/release.js patch    # 1.0.0 → 1.0.1
+node scripts/release.js 2.5.0    # Specific version
+```
+- Updates package.json version
+- Generates RELEASE-vX.X.X.md changelog
+
+#### install.js - Project Setup
+```bash
+node scripts/install.js
+```
+Checks:
+- Node.js v16+ required
+- npm available
+- Platform-specific requirements
+- Creates dist/ and BuildLogs/ directories
+- Runs npm install
+
+#### info.js - Project Information
+```bash
+node scripts/info.js
+```
+Displays:
+- Project name, version, license
+- Game count
+- File structure summary
+- System info (platform, Node, npm, CPUs, memory)
+- Available scripts
+- Dependencies list
+
+#### version.js - Version Bumper
+```bash
+node scripts/version.js major    # 1.0.0 → 2.0.0
+node scripts/version.js minor    # 1.0.0 → 1.1.0
+node scripts/version.js patch    # 1.0.0 → 1.0.1
+```
+- Quick version update without release artifacts
+- Updates package.json only
 
 ---
 
@@ -1827,6 +2053,22 @@ npx electron-builder --win portable
 
 ## 🎯 17. Quick Reference
 
+| Task | Command |
+|------|----------|
+| Start app | `npm start` |
+| Build | `npm run dist` |
+| Dev mode | `node scripts/dev.js` |
+| Run tests | `node scripts/test.js` |
+| View stats | `node scripts/stats.js` |
+| Clean artifacts | `node scripts/clean.js --all` |
+| Validate games | `node scripts/validate.js` |
+| Lint code | `node scripts/lint.js` |
+| Quick package | `node scripts/package.js win` |
+| Create release | `node scripts/release.js minor` |
+| Bump version | `node scripts/version.js patch` |
+| Project info | `node scripts/info.js` |
+| Setup project | `node scripts/install.js` |
+
 | Task | Location |
 |------|----------|
 | Add game | `games/*.js` + `index.html` + `renderer/launcher.js` |
@@ -1840,6 +2082,18 @@ npx electron-builder --win portable
 ---
 
 ## 🛠️ 18. Recent Fixes & Updates
+
+### v3.2 (2026-03-08)
+- **Build UI**: Restored muted neon color palette for better readability
+- **Colors**: Softer cyan, magenta, green, and other accent colors
+- **Version**: Build system updated to v5.4
+
+### v3.1 (2026-03-08)
+- **Scripts**: Added 11 new utility scripts (dev, clean, stats, test, validate, lint, package, release, install, info, version)
+- **Build System**: Compression levels expanded to 0-10 with visual bars
+- **MaxComp**: Added Level 10 MaxComp mode for ~35MB ultra-compressed builds
+- **Platform Selection**: Improved UI with colored icons and availability indicators
+- **Documentation**: Added comprehensive scripts reference section
 
 ### v3.0 (2026-03-08)
 - **Documentation**: Complete technical documentation rewrite

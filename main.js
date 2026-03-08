@@ -32,21 +32,45 @@ function toggleWindow() {
 
 function updateTrayMenu() {
   if (!tray) return;
-  const contextMenu = Menu.buildFromTemplate([
+
+  // Check if login item settings are supported (Windows/macOS only)
+  const supportsLoginItems = process.platform === 'win32' || process.platform === 'darwin';
+  let openAtLogin = false;
+
+  if (supportsLoginItems) {
+    try {
+      openAtLogin = app.getLoginItemSettings().openAtLogin;
+    } catch (e) {
+      // Not supported on this platform
+    }
+  }
+
+  const menuTemplate = [
     { label: '⚡ Lightning Games', enabled: false },
     { type: 'separator' },
-    { label: '🎮 Open (Ctrl+Alt+G)', click: () => toggleWindow() },
-    {
-      label: app.getLoginItemSettings().openAtLogin ? '✅ Run at Startup' : '⬜ Run at Startup',
+    { label: '🎮 Open (Ctrl+Alt+G)', click: () => toggleWindow() }
+  ];
+
+  // Add "Run at Startup" option only on Windows/macOS
+  if (supportsLoginItems) {
+    menuTemplate.push({
+      label: openAtLogin ? '✅ Run at Startup' : '⬜ Run at Startup',
       click: () => {
-        const settings = app.getLoginItemSettings();
-        app.setLoginItemSettings({
-          openAtLogin: !settings.openAtLogin,
-          path: app.getPath('exe')
-        });
-        updateTrayMenu();
+        try {
+          const settings = app.getLoginItemSettings();
+          app.setLoginItemSettings({
+            openAtLogin: !settings.openAtLogin,
+            path: app.getPath('exe')
+          });
+          updateTrayMenu();
+        } catch (e) {
+          console.log('Login item settings not supported');
+        }
       }
-    },
+    });
+  }
+
+  menuTemplate.push(
     { type: 'separator' },
     {
       label: '❌ Quit Completely',
@@ -56,7 +80,9 @@ function updateTrayMenu() {
         app.quit();
       }
     }
-  ]);
+  );
+
+  const contextMenu = Menu.buildFromTemplate(menuTemplate);
   tray.setContextMenu(contextMenu);
 }
 
