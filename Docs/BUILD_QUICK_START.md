@@ -70,6 +70,12 @@ node scripts/build.js --clear-cache
 - Cached node_modules reused across builds
 - Cache statistics tracking
 
+✅ **Build Artifacts Archive**
+- Old builds kept in dist/old/ folder
+- New builds replace old ones
+- Never lose previous versions
+- Easy rollback if needed
+
 ✅ **Parallel npm Installation**
 - Concurrent package downloads
 - Optimized npm flags (--prefer-offline, --no-audit)

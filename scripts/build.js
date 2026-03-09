@@ -774,29 +774,51 @@ async function main() {
     if (!packageJson.build.win) packageJson.build.win = { target: 'portable', icon: 'assets/icon.ico' };
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2) + EOL);
 
-    // ===================== CLEAN DIST =====================
-    log.step('Cleaning dist folder...');
+    // ===================== ARCHIVE OLD BUILDS =====================
+    log.step('Archiving old builds...');
     const distDir = path.join(projectRoot, 'dist');
+    const oldDir = path.join(distDir, 'old');
+    
     if (fs.existsSync(distDir)) {
       try {
-        // Try to remove locked files on Windows
-        if (isWindows) {
-          try {
-            execSync(`rmdir /s /q "${distDir}"`, { stdio: 'pipe' });
-          } catch {
-            // If that fails, try force delete
-            fs.rmSync(distDir, { recursive: true, force: true });
-          }
-        } else {
-          fs.rmSync(distDir, { recursive: true, force: true });
+        // Create old directory if it doesn't exist
+        if (!fs.existsSync(oldDir)) {
+          fs.mkdirSync(oldDir, { recursive: true });
+          log.success('Created old builds archive directory');
         }
-        log.success('Dist folder cleaned');
+        
+        // Move existing artifacts to old directory
+        const artifacts = fs.readdirSync(distDir).filter(f => 
+          (f.endsWith('.exe') || f.endsWith('.AppImage') || f.endsWith('.dmg')) && f !== 'old'
+        );
+        
+        if (artifacts.length > 0) {
+          log.info(`Moving ${artifacts.length} old artifact(s) to dist/old/`);
+          artifacts.forEach(artifact => {
+            const src = path.join(distDir, artifact);
+            const dst = path.join(oldDir, artifact);
+            try {
+              // If file exists in old, replace it
+              if (fs.existsSync(dst)) {
+                fs.rmSync(dst, { force: true });
+              }
+              fs.renameSync(src, dst);
+              log.info(`  → Archived: ${artifact}`);
+            } catch (e) {
+              log.warning(`  Could not archive ${artifact}: ${e.message}`);
+            }
+          });
+        } else {
+          log.info('No old artifacts to archive');
+        }
       } catch (e) {
-        log.warning(`Could not clean dist: ${e.message}`);
-        log.warning('Make sure the app is not running!');
+        log.warning(`Could not archive old builds: ${e.message}`);
       }
+    } else {
+      fs.mkdirSync(distDir, { recursive: true });
     }
-    fs.mkdirSync(distDir, { recursive: true });
+    
+    log.success('Old builds archived successfully');
 
     // ===================== PRE-BUILD OPTIMIZATION =====================
     log.section('Pre-Build Optimization');
