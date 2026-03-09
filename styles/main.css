@@ -2656,3 +2656,418 @@ input,
 .stat-card {
   transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
+
+/* Settings Button */
+.settings-btn {
+  width: 100%;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
+  border: none;
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  box-shadow: 0 0 20px rgba(0, 220, 255, 0.2);
+}
+
+.settings-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 30px rgba(0, 220, 255, 0.4);
+}
+
+.settings-btn:active {
+  transform: translateY(0);
+}
+
+/* Dark Mode Override */
+[data-dark-mode="true"] {
+  --bg-primary: #000000 !important;
+  --bg-secondary: rgba(0, 0, 0, 0.9) !important;
+  --bg-card: rgba(10, 10, 10, 0.8) !important;
+  --bg-card-hover: rgba(20, 20, 20, 0.9) !important;
+  --text-primary: #ffffff !important;
+  --text-secondary: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Grid Layout Override */
+.games-grid[data-grid-layout="2"] {
+  grid-template-columns: repeat(2, 1fr) !important;
+}
+
+.games-grid[data-grid-layout="3"] {
+  grid-template-columns: repeat(3, 1fr) !important;
+}
+
+.games-grid[data-grid-layout="4"] {
+  grid-template-columns: repeat(4, 1fr) !important;
+}
+
+.games-grid[data-grid-layout="5"] {
+  grid-template-columns: repeat(5, 1fr) !important;
+}
+
+.games-grid[data-grid-layout="6"] {
+  grid-template-columns: repeat(6, 1fr) !important;
+}
+
+/* Screenshot Modal */
+.screenshot-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.screenshot-modal.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.screenshot-content {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glow);
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 600px;
+  width: 90%;
+  box-shadow: 0 0 40px rgba(0, 220, 255, 0.3);
+}
+
+.screenshot-preview {
+  width: 100%;
+  border-radius: 8px;
+  margin: 16px 0;
+  border: 1px solid var(--border-glass);
+}
+
+.screenshot-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.screenshot-actions button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.screenshot-actions .btn-download {
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
+  color: var(--text-primary);
+}
+
+.screenshot-actions .btn-close {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-secondary);
+}
+/* Hard Reset Button */
+.settings-btn.danger {
+  background: linear-gradient(135deg, var(--accent-red), #ff6b35) !important;
+  box-shadow: 0 0 20px rgba(255, 68, 102, 0.3) !important;
+}
+
+.settings-btn.danger:hover {
+  box-shadow: 0 0 30px rgba(255, 68, 102, 0.5) !important;
+}
+
+/* Hard Reset Confirmation Modal */
+.reset-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.reset-modal.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.reset-content {
+  background: var(--bg-card);
+  border: 2px solid var(--accent-red);
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 450px;
+  width: 90%;
+  box-shadow: 0 0 40px rgba(255, 68, 102, 0.3);
+  text-align: center;
+}
+
+.reset-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+}
+
+.reset-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--accent-red);
+  margin-bottom: 12px;
+}
+
+.reset-warning {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.reset-steps {
+  text-align: left;
+  background: rgba(255, 68, 102, 0.1);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.reset-step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.reset-step-num {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--accent-red);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.reset-step.active .reset-step-num {
+  background: var(--accent-green);
+}
+
+.reset-step.active .reset-step-text {
+  color: var(--text-primary);
+}
+
+.reset-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.reset-actions button {
+  flex: 1;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.reset-btn-cancel {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-secondary);
+}
+
+.reset-btn-cancel:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.reset-btn-confirm {
+  background: linear-gradient(135deg, var(--accent-red), #ff6b35);
+  color: white;
+  box-shadow: 0 0 20px rgba(255, 68, 102, 0.3);
+}
+
+.reset-btn-confirm:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 30px rgba(255, 68, 102, 0.5);
+}
+
+.reset-btn-confirm:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.reset-countdown {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--accent-red);
+  margin: 16px 0;
+}
+/* Data Management */
+.settings-btn.data {
+  background: linear-gradient(135deg, var(--accent-green), var(--accent-cyan)) !important;
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.2) !important;
+}
+
+.settings-btn.data:hover {
+  box-shadow: 0 0 30px rgba(0, 255, 136, 0.4) !important;
+}
+
+/* Import/Export Modal */
+.data-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.data-modal.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.data-content {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glow);
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 0 40px rgba(0, 220, 255, 0.3);
+  text-align: center;
+}
+
+.data-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+}
+
+.data-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.data-description {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.data-info {
+  background: rgba(0, 220, 255, 0.1);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.data-info-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 13px;
+}
+
+.data-info-item:last-child {
+  border-bottom: none;
+}
+
+.data-info-label {
+  color: var(--text-secondary);
+}
+
+.data-info-value {
+  color: var(--accent-cyan);
+  font-weight: 600;
+}
+
+.data-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.data-actions button {
+  flex: 1;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.data-btn-cancel {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-secondary);
+}
+
+.data-btn-cancel:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.data-btn-confirm {
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
+  color: white;
+  box-shadow: 0 0 20px rgba(0, 220, 255, 0.3);
+}
+
+.data-btn-confirm:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 30px rgba(0, 220, 255, 0.5);
+}
+
+/* Import Success Toast */
+.import-success {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: linear-gradient(135deg, var(--accent-green), var(--accent-cyan));
+  color: white;
+  padding: 16px 32px;
+  border-radius: 12px;
+  font-weight: 600;
+  box-shadow: 0 0 30px rgba(0, 255, 136, 0.4);
+  transition: transform 0.3s ease;
+  z-index: 10001;
+}
+
+.import-success.show {
+  transform: translateX(-50%) translateY(0);
+}
