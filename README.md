@@ -18,7 +18,7 @@
 <br/>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-3.4-00d4ff?style=for-the-badge&logo=semver&logoColor=white" alt="Version" />
+  <img src="https://img.shields.io/badge/version-3.5-00d4ff?style=for-the-badge&logo=semver&logoColor=white" alt="Version" />
   <img src="https://img.shields.io/badge/games-40-ff00aa?style=for-the-badge&logoColor=white" alt="Games" />
   <img src="https://img.shields.io/badge/achievements-100+-ffcc00?style=for-the-badge&logoColor=white" alt="Achievements" />
   <img src="https://img.shields.io/badge/themes-11-00ff88?style=for-the-badge&logoColor=white" alt="Themes" />
@@ -32,6 +32,71 @@
   <img src="https://img.shields.io/badge/runtime%20deps-0-brightgreen?style=flat-square" alt="Zero Runtime Deps" />
   <img src="https://img.shields.io/badge/size-%7E80MB-00d4ff?style=flat-square" alt="Size" />
   <img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="License" />
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/arcade-games-24-purple?style=flat-square&logoColor=white" alt="Arcade Games" />
+  <img src="https://img.shields.io/badge/puzzle-games-10-yellow?style=flat-square&logoColor=white" alt="Puzzle Games" />
+  <img src="https://img.shields.io/badge/classic-games-3-orange?style=flat-square&logoColor=white" alt="Classic Games" />
+  <img src="https://img.shields.io/badge/strategy-games-1-red?style=flat-square&logoColor=white" alt="Strategy Games" />
+  <img src="https://img.shields.io/badge/creative-games-2-green?style=flat-square&logoColor=white" alt="Creative Games" />
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/sound%20effects-25%2B-00d4ff?style=flat-square&logo=audio&logoColor=white" alt="Sound Effects" />
+  <img src="https://img.shields.io/badge/music%20engine-8-bit-ff00aa?style=flat-square&logo=audio&logoColor=white" alt="8-Bit Music" />
+  <img src="https://img.shields.io/badge/particles-60fps-00ff88?style=flat-square&logo=video&logoColor=white" alt="Particles" />
+  <img src="https://img.shields.io/badge/fps-target-60-brightgreen?style=flat-square&logo=video&logoColor=white" alt="60 FPS" />
+  <img src="https://img.shields.io/badge/gpu-accelerated-00d4ff?style=flat-square&logo=video&logoColor=white" alt="GPU Accelerated" />
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/achievements-normal-11-brightgreen?style=flat-square&logoColor=white" alt="Normal Achievements" />
+  <img src="https://img.shields.io/badge/achievements-ultra-7-yellow?style=flat-square&logoColor=white" alt="Ultra Achievements" />
+  <img src="https://img.shields.io/badge/achievements-skill-15-orange?style=flat-square&logoColor=white" alt="Skill Achievements" />
+  <img src="https://img.shields.io/badge/achievements-time-3-purple?style=flat-square&logoColor=white" alt="Time Achievements" />
+  <img src="https://img.shields.io/badge/achievements-hidden-1-pink?style=flat-square&logoColor=white" alt="Hidden Achievements" />
+  <img src="https://img.shields.io/badge/achievements-godly-1-red?style=flat-square&logoColor=white" alt="Godly Achievement" />
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/towers-8-00d4ff?style=flat-square&logoColor=white" alt="Tower Types" />
+  <img src="https://img.shields.io/badge/enemies-6-ff00aa?style=flat-square&logoColor=white" alt="Enemy Types" />
+  <img src="https://img.shields.io/badge/waves-50%2B-00ff88?style=flat-square&logoColor=white" alt="Waves" />
+  <img src="https://img.shields.io/badge/abilities-3-purple?style=flat-square&logoColor=white" alt="Super Abilities" />
+  <img src="https://img.shields.io/badge/endless-mode-yes-brightgreen?style=flat-square&logoColor=white" alt="Endless Mode" />
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/settings-18%2B-00d4ff?style=flat-square&logoColor=white" alt="Settings" />
+  <img src="https://img.shields.io/badge/visual%20effects-5-yellow?style=flat-square&logoColor=white" alt="Visual Effects" />
+  <img src="https://img.shields.io/badge/audio%20settings-3-orange?style=flat-square&logoColor=white" alt="Audio Settings" />
+  <img src="https://img.shields.io/badge/gameplay%20settings-4-purple?style=flat-square&logoColor=white" alt="Gameplay Settings" />
+  <img src="https://img.shields.io/badge/interface%20settings-5-brightgreen?style=flat-square&logoColor=white" alt="Interface Settings" />
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/lines%20of%20code-8500%2B-00d4ff?style=flat-square&logo=code&logoColor=white" alt="Lines of Code" />
+  <img src="https://img.shields.io/badge/renderer%20code-2000%2B-ff00aa?style=flat-square&logo=code&logoColor=white" alt="Renderer Code" />
+  <img src="https://img.shields.io/badge/styles-1200%2B-00ff88?style=flat-square&logo=css3&logoColor=white" alt="CSS Lines" />
+  <img src="https://img.shields.io/badge/scripts-14-47848F?style=flat-square&logo=terminal&logoColor=white" alt="Scripts" />
+  <img src="https://img.shields.io/badge/build%20time-5s-15s-purple?style=flat-square&logo=timer&logoColor=white" alt="Build Time" />
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/total%20games%20played-0-brightgreen?style=flat-square&logo=counter&logoColor=white" alt="Total Games" />
+  <img src="https://img.shields.io/badge/total%20playtime-0s-brightgreen?style=flat-square&logo=counter&logoColor=white" alt="Total Playtime" />
+  <img src="https://img.shields.io/badge/unique%20games-0-brightgreen?style=flat-square&logo=counter&logoColor=white" alt="Unique Games" />
+  <img src="https://img.shields.io/badge/consecutive%20streak-0-brightgreen?style=flat-square&logo=counter&logoColor=white" alt="Consecutive Streak" />
+  <img src="https://img.shields.io/badge/achievements%20unlocked-0-brightgreen?style=flat-square&logo=counter&logoColor=white" alt="Achievements Unlocked" />
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/last%20updated-2026-00d4ff?style=flat-square&logo=calendar&logoColor=white" alt="Last Updated" />
+  <img src="https://img.shields.io/badge/author-Tarik-ff00aa?style=flat-square&logo=github&logoColor=white" alt="Author" />
+  <img src="https://img.shields.io/badge/status-Production-00ff88?style=flat-square&logo=check&logoColor=white" alt="Production Status" />
+  <img src="https://img.shields.io/badge/build-system-v6.0-47848F?style=flat-square&logo=build&logoColor=white" alt="Build System" />
+  <img src="https://img.shields.io/badge/tech-stack-Vanilla-00d4ff?style=flat-square&logo=code&logoColor=white" alt="Tech Stack" />
 </p>
 
 <br/>
