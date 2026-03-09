@@ -20,8 +20,8 @@
 <p align="center">
   <img src="https://img.shields.io/badge/version-3.4-00d4ff?style=for-the-badge&logo=semver&logoColor=white" alt="Version" />
   <img src="https://img.shields.io/badge/games-40-ff00aa?style=for-the-badge&logoColor=white" alt="Games" />
-  <img src="https://img.shields.io/badge/achievements-37-ffcc00?style=for-the-badge&logoColor=white" alt="Achievements" />
-  <img src="https://img.shields.io/badge/themes-4-00ff88?style=for-the-badge&logoColor=white" alt="Themes" />
+  <img src="https://img.shields.io/badge/achievements-100+-ffcc00?style=for-the-badge&logoColor=white" alt="Achievements" />
+  <img src="https://img.shields.io/badge/themes-11-00ff88?style=for-the-badge&logoColor=white" alt="Themes" />
   <img src="https://img.shields.io/badge/launch%20time-%3C200ms-00d4ff?style=for-the-badge&logoColor=white" alt="Launch Time" />
 </p>
 
@@ -502,8 +502,8 @@ Persistent tracking across sessions
 </td>
 <td width="33%" valign="top" align="center">
 
-### 🌓 4 Themes
-Neon • Retro • Minimal • Forest
+### 🌓 11 Themes
+Neon • Retro • Minimal • Forest • Ocean • Sunset • Purple Haze • Matrix • Cyberpunk • Dark Blue • Fire
 
 Instant switching via CSS variables  
 Complete UI transformation
@@ -575,7 +575,7 @@ Timeless arcade favorites
 #### Strategy (1)
 Deep, tactical gameplay
 
-- 🗼 **Tower Defense** - 8 towers, 6 enemies, 50+ waves, endless mode (1,300+ lines of code)
+- 🗼 **Tower Defense** - 8 towers, 6 enemies, 50+ waves, 4 difficulty modes, endless mode (1,300+ lines of code)
 
 #### Creative (2)
 No score, pure expression
@@ -1445,7 +1445,16 @@ Most games use these standard controls:
 
 ## 🏰 Tower Defense -- In Depth
 
-The crown jewel of Lightning Games. A complete tower defense experience with strategic depth, 8 unique tower types, 6 enemy classes, 3 super abilities, and an endless mode.
+The crown jewel of Lightning Games. A complete tower defense experience with strategic depth, 8 unique tower types, 6 enemy classes, 3 super abilities, 4 difficulty modes, and an endless mode.
+
+### Difficulty Modes
+
+| Mode | Starting Money | Enemy HP | Enemy Speed | Best For |
+|------|-----------------|----------|-------------|----------|
+| **Easy** | $225 | 0.75x | 0.9x | Beginners |
+| **Normal** | $150 | 1.34x | 1.15x | Balanced challenge |
+| **Hard** | $120 | 2.144x | 1.84x | 60% harder |
+| **Extreme** | $150 | 3.2x | 2.4x | Beatable challenge |
 
 ### Towers (8 Total)
 
