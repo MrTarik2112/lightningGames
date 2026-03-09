@@ -404,45 +404,126 @@
     ];
 
     const ALL_ACHIEVEMENTS = [
+        // ===== NORMAL ACHIEVEMENTS (Başlangıç) =====
         { id: 'first_game', title: 'Welcome!', desc: 'You launched your first game.', icon: '🎮' },
         { id: 'record_breaker', title: 'Record Breaker!', desc: 'You broke a record.', icon: '🏆' },
         { id: 'score_1000', title: 'Master Player', desc: 'You reached 1000 points.', icon: '🔥' },
+        { id: 'score_5000', title: 'Elite Player', desc: 'You reached 5000 points in any game.', icon: '💫' },
+        { id: 'score_10000', title: 'Legendary Player', desc: 'You reached 10000 points in any game.', icon: '👑' },
+        { id: 'first_favorite', title: 'First Love', desc: 'You marked your first favorite game.', icon: '❤️' },
+        { id: 'theme_switcher', title: 'Style Master', desc: 'You changed the theme for the first time.', icon: '🎨' },
+        { id: 'settings_explorer', title: 'Tinkerer', desc: 'You opened the settings menu.', icon: '⚙️' },
+        { id: 'quick_player', title: 'Speed Demon', desc: 'Played 3 games in under 5 minutes.', icon: '⚡' },
+        { id: 'comeback_king', title: 'Comeback King', desc: 'Beat your high score after 10 failed attempts.', icon: '🔄' },
+        
+        // ===== GAME-SPECIFIC ACHIEVEMENTS =====
         { id: 'snake_100', title: 'Snake Tamer', desc: 'Scored 100 points in Snake.', icon: '🐍' },
-        { id: 'tetris_500', title: 'Architect', desc: 'Scored 500 points in Tetris.', icon: '🧱' },
-        { id: 'simon_10', title: 'Memory Apprentice', desc: 'Scored 10 points in Memotron.', icon: '🧠' },
-        { id: 'minesweeper_win', title: 'Mine Expert', desc: 'Cleared a challenging minefield.', icon: '💣' },
-        { id: 'runner_high', title: 'Fast Runner', desc: 'Scored 500 in Neon Runner.', icon: '🦖' },
-        { id: 'frogger_master', title: 'Frogger Master', desc: 'Crossed the road in Frogger!', icon: '👑' },
-        { id: 'warmup', title: 'Warmup Done', desc: 'Played a total of 10 games.', icon: '🔥' },
-        // ULTRA ACHIEVEMENTS
-        { id: 'marathon_runner', title: 'Marathon Runner', desc: 'Played a total of 50 games.', icon: '🏃', ultra: true },
-        { id: 'night_owl', title: 'Night Owl', desc: 'Played a game after 10 PM.', icon: '🦉', ultra: true },
-        { id: 'early_bird', title: 'Early Bird', desc: 'Played a game before 8 AM.', icon: '🐤', ultra: true },
-        { id: 'weekend_warrior', title: 'Weekend Warrior', desc: 'Played a game on Saturday or Sunday.', icon: '⚔️', ultra: true },
         { id: 'snake_charmer', title: 'Snake Charmer', desc: 'Scored 250 points in Snake.', icon: '🐍', ultra: true },
+        { id: 'snake_master', title: 'Snake Master', desc: 'Scored 500 points in Snake.', icon: '🐍', ultra: true },
+        { id: 'snake_god', title: 'Snake God', desc: 'Scored 1000 points in Snake.', icon: '🐍', legendary: true },
+        
+        { id: 'tetris_500', title: 'Architect', desc: 'Scored 500 points in Tetris.', icon: '🧱' },
         { id: 'pentominium', title: 'Pentominium', desc: 'Scored 1000 points in Tetris.', icon: '🧱', ultra: true },
+        { id: 'tetris_master', title: 'Tetris Master', desc: 'Scored 2500 points in Tetris.', icon: '🧱', ultra: true },
+        { id: 'tetris_god', title: 'Block God', desc: 'Scored 5000 points in Tetris.', icon: '🧱', legendary: true },
+        { id: 'tetris_combo', title: 'Combo Master', desc: 'Clear 4 lines at once (Tetris).', icon: '💥', ultra: true },
+        
+        { id: 'simon_10', title: 'Memory Apprentice', desc: 'Scored 10 points in Memotron.', icon: '🧠' },
+        { id: 'simons_rival', title: 'Simon\'s Rival', desc: 'Scored 20 points in Memotron.', icon: '🧠', ultra: true },
+        { id: 'memory_god', title: 'Memory God', desc: 'Finished Memory Match under 30 seconds.', icon: '⚡', ultra: true },
+        { id: 'memory_master', title: 'Memory Master', desc: 'Scored 30 points in Memotron.', icon: '🧠', legendary: true },
+        
+        { id: 'minesweeper_win', title: 'Mine Expert', desc: 'Cleared a challenging minefield.', icon: '💣' },
         { id: 'safe_stepper', title: 'Safe Stepper', desc: 'Marked 20 mines correctly in one go.', icon: '🛡️', ultra: true },
-        { id: 'first_rock', title: 'First Rock', desc: 'Destroyed an asteroid for the first time.', icon: '🪨', hidden: true },
+        { id: 'mine_master', title: 'Mine Master', desc: 'Win 10 Minesweeper games.', icon: '💣', ultra: true },
+        { id: 'perfect_sweep', title: 'Perfect Sweep', desc: 'Clear Minesweeper without any wrong flags.', icon: '✨', legendary: true },
+        
+        { id: 'runner_high', title: 'Fast Runner', desc: 'Scored 500 in Neon Runner.', icon: '🦖' },
+        { id: 'speedrunner', title: 'Speedrunner', desc: 'Scored 500 in Neon Runner within 1 minute.', icon: '🏎️', ultra: true },
+        { id: 'marathon_runner_game', title: 'Marathon Runner', desc: 'Scored 2000 in Neon Runner.', icon: '🦖', ultra: true },
+        { id: 'ultra_runner', title: 'Ultra Runner', desc: 'Scored 5000 in Neon Runner.', icon: '🦖', legendary: true },
+        
+        { id: 'frogger_master', title: 'Frogger Master', desc: 'Crossed the road in Frogger!', icon: '👑' },
+        { id: 'frogger_pro', title: 'Frogger Pro', desc: 'Score 1000 in Frogger.', icon: '🐸', ultra: true },
+        { id: 'road_warrior', title: 'Road Warrior', desc: 'Cross 50 roads in Frogger.', icon: '🛣️', ultra: true },
+        
+        { id: 'first_rock', title: 'First Rock', desc: 'Destroyed an asteroid for the first time.', icon: '🪨' },
         { id: 'asteroid_annihilator', title: 'Asteroid Annihilator', desc: 'Destroyed a total of 50 asteroids.', icon: '☄️', ultra: true },
         { id: 'space_ace', title: 'Space Ace', desc: 'Destroyed a total of 100 asteroids.', icon: '🌌', ultra: true },
-        { id: 'memory_god', title: 'Memory God', desc: 'Finished Memory Match under 30 seconds.', icon: '⚡', ultra: true },
-        { id: 'reflex_master', title: 'Reflex Master', desc: 'Achieved a 10x combo in Snake.', icon: '💨', ultra: true },
-        { id: 'persistent', title: 'Persistent', desc: 'Played the same game 5 times in a row.', icon: '🔄', ultra: true },
-        { id: 'explorer', title: 'Explorer', desc: 'Played 10 different games.', icon: '🗺️', ultra: true },
-        { id: 'master_2048', title: '2048 Master', desc: 'Reached the 4096 tile.', icon: '🌟', ultra: true },
-        { id: 'high_jumper', title: 'High Jumper', desc: 'Reached 10000 height in Neon Jump.', icon: '🚀', ultra: true },
-        { id: 'simons_rival', title: 'Simon\'s Rival', desc: 'Scored 20 points in Memotron.', icon: '🧠', ultra: true },
-        { id: 'mole_slayer', title: 'Mole Slayer', desc: 'Scored 200 points in Whack-A-Mole.', icon: '🔨', ultra: true },
         { id: 'indestructible', title: 'Indestructible', desc: 'Survived 3 minutes in Asteroids.', icon: '💎', ultra: true },
+        { id: 'asteroid_master', title: 'Asteroid Master', desc: 'Destroyed 500 asteroids total.', icon: '☄️', legendary: true },
+        
+        { id: 'reflex_master', title: 'Reflex Master', desc: 'Achieved a 10x combo in Snake.', icon: '💨', ultra: true },
+        { id: 'master_2048', title: '2048 Master', desc: 'Reached the 4096 tile.', icon: '🌟', ultra: true },
+        { id: '2048_god', title: '2048 God', desc: 'Reached the 8192 tile.', icon: '✨', legendary: true },
+        { id: 'high_jumper', title: 'High Jumper', desc: 'Reached 10000 height in Neon Jump.', icon: '🚀', ultra: true },
+        { id: 'sky_master', title: 'Sky Master', desc: 'Reached 25000 height in Neon Jump.', icon: '🚀', legendary: true },
+        { id: 'mole_slayer', title: 'Mole Slayer', desc: 'Scored 200 points in Whack-A-Mole.', icon: '🔨', ultra: true },
+        { id: 'mole_destroyer', title: 'Mole Destroyer', desc: 'Scored 500 points in Whack-A-Mole.', icon: '🔨', legendary: true },
         { id: 'precision', title: 'Precision', desc: 'Scored 50 points in Breakout without losing a ball.', icon: '🎯', ultra: true },
+        { id: 'breakout_master', title: 'Breakout Master', desc: 'Score 1000 in Breakout.', icon: '🧱', ultra: true },
         { id: 'triple_threat', title: 'Triple Threat', desc: 'Won Tic-Tac-Toe under 10 seconds.', icon: '🔥', ultra: true },
-        { id: 'addict', title: 'Addict', desc: 'Total playtime exceeded 1 hour.', icon: '💊', ultra: true },
-        { id: 'no_life', title: 'Non-Stop', desc: 'Played a total of 100 games.', icon: '⚡', ultra: true },
-        { id: 'collector', title: 'Collector', desc: 'Unlocked 15 achievements.', icon: '👑', ultra: true },
-        { id: 'godly', title: 'Godly', desc: 'Unlocked all achievements.', icon: '⛩️', ultra: true },
-        { id: 'speedrunner', title: 'Speedrunner', desc: 'Scored 500 in Neon Runner within 1 minute.', icon: '🏎️', ultra: true },
         { id: 'bulletproof', title: 'Bulletproof', desc: 'Survived 1 minute in Space Shooter without getting hit.', icon: '🧥', ultra: true },
+        { id: 'space_legend', title: 'Space Legend', desc: 'Score 5000 in Space Shooter.', icon: '🚀', legendary: true },
+        
+        // ===== PROGRESSION ACHIEVEMENTS =====
+        { id: 'warmup', title: 'Warmup Done', desc: 'Played a total of 10 games.', icon: '🔥' },
+        { id: 'getting_started', title: 'Getting Started', desc: 'Played a total of 25 games.', icon: '🎮' },
+        { id: 'marathon_runner', title: 'Marathon Runner', desc: 'Played a total of 50 games.', icon: '🏃', ultra: true },
+        { id: 'dedicated', title: 'Dedicated', desc: 'Played a total of 75 games.', icon: '💪', ultra: true },
+        { id: 'no_life', title: 'Non-Stop', desc: 'Played a total of 100 games.', icon: '⚡', ultra: true },
+        { id: 'obsessed', title: 'Obsessed', desc: 'Played a total of 250 games.', icon: '🔥', legendary: true },
+        { id: 'legend', title: 'Legend', desc: 'Played a total of 500 games.', icon: '👑', legendary: true },
+        { id: 'immortal', title: 'Immortal', desc: 'Played a total of 1000 games.', icon: '⛩️', legendary: true },
+        
+        { id: 'persistent', title: 'Persistent', desc: 'Played the same game 5 times in a row.', icon: '🔄', ultra: true },
+        { id: 'super_persistent', title: 'Super Persistent', desc: 'Played the same game 10 times in a row.', icon: '🔄', legendary: true },
+        { id: 'explorer', title: 'Explorer', desc: 'Played 10 different games.', icon: '🗺️', ultra: true },
+        { id: 'completionist', title: 'Completionist', desc: 'Played all 40 games at least once.', icon: '🎯', legendary: true },
+        
+        // ===== TIME-BASED ACHIEVEMENTS =====
+        { id: 'night_owl', title: 'Night Owl', desc: 'Played a game after 10 PM.', icon: '🦉', ultra: true },
+        { id: 'midnight_gamer', title: 'Midnight Gamer', desc: 'Played a game after midnight.', icon: '🌙', ultra: true },
+        { id: 'early_bird', title: 'Early Bird', desc: 'Played a game before 8 AM.', icon: '🐤', ultra: true },
+        { id: 'dawn_warrior', title: 'Dawn Warrior', desc: 'Played a game before 6 AM.', icon: '🌅', legendary: true },
+        { id: 'weekend_warrior', title: 'Weekend Warrior', desc: 'Played a game on Saturday or Sunday.', icon: '⚔️', ultra: true },
+        { id: 'weekday_grinder', title: 'Weekday Grinder', desc: 'Played games 5 weekdays in a row.', icon: '💼', ultra: true },
+        { id: 'daily_player', title: 'Daily Player', desc: 'Played at least one game every day for a week.', icon: '📅', legendary: true },
+        { id: 'monthly_champion', title: 'Monthly Champion', desc: 'Played at least one game every day for 30 days.', icon: '🗓️', legendary: true },
+        
+        // ===== PLAYTIME ACHIEVEMENTS =====
+        { id: 'quick_break', title: 'Quick Break', desc: 'Total playtime exceeded 10 minutes.', icon: '⏱️' },
+        { id: 'casual_gamer', title: 'Casual Gamer', desc: 'Total playtime exceeded 30 minutes.', icon: '🎮' },
+        { id: 'addict', title: 'Addict', desc: 'Total playtime exceeded 1 hour.', icon: '💊', ultra: true },
+        { id: 'hardcore', title: 'Hardcore', desc: 'Total playtime exceeded 3 hours.', icon: '🔥', ultra: true },
+        { id: 'no_sleep', title: 'No Sleep', desc: 'Total playtime exceeded 10 hours.', icon: '😴', legendary: true },
+        { id: 'time_traveler', title: 'Time Traveler', desc: 'Total playtime exceeded 24 hours.', icon: '⏰', legendary: true },
+        
+        // ===== COLLECTION ACHIEVEMENTS =====
+        { id: 'collector', title: 'Collector', desc: 'Unlocked 15 achievements.', icon: '👑', ultra: true },
+        { id: 'achievement_hunter', title: 'Achievement Hunter', desc: 'Unlocked 30 achievements.', icon: '🏹', ultra: true },
+        { id: 'completionist_achievements', title: 'Achievement Master', desc: 'Unlocked 50 achievements.', icon: '🎖️', legendary: true },
+        { id: 'godly', title: 'Godly', desc: 'Unlocked all achievements.', icon: '⛩️', legendary: true },
+        
+        // ===== SOCIAL & UI ACHIEVEMENTS =====
         { id: 'socialite', title: 'Socialite', desc: 'Switched tabs 10 times.', icon: '📱', ultra: true },
+        { id: 'tab_master', title: 'Tab Master', desc: 'Switched tabs 50 times.', icon: '📑', legendary: true },
+        { id: 'theme_collector', title: 'Theme Collector', desc: 'Tried all available themes.', icon: '🎨', ultra: true },
+        { id: 'settings_master', title: 'Settings Master', desc: 'Changed every setting at least once.', icon: '⚙️', ultra: true },
+        { id: 'favorite_collector', title: 'Favorite Collector', desc: 'Marked 10 games as favorites.', icon: '❤️', ultra: true },
+        { id: 'search_master', title: 'Search Master', desc: 'Used the search bar 25 times.', icon: '🔍', ultra: true },
+        
+        // ===== SPECIAL & HIDDEN ACHIEVEMENTS =====
+        { id: 'lucky_seven', title: 'Lucky Seven', desc: 'Score exactly 777 points in any game.', icon: '🎰', hidden: true },
+        { id: 'perfect_score', title: 'Perfect Score', desc: 'Score exactly 1000 points in any game.', icon: '💯', hidden: true },
+        { id: 'close_call', title: 'Close Call', desc: 'Survive with 1 HP in any game.', icon: '❤️‍🩹', hidden: true },
+        { id: 'instant_death', title: 'Instant Death', desc: 'Die within 3 seconds of starting a game.', icon: '💀', hidden: true },
+        { id: 'rage_quit', title: 'Rage Quit', desc: 'Exit a game within 5 seconds 3 times.', icon: '😤', hidden: true },
+        { id: 'comeback', title: 'Comeback', desc: 'Beat your high score after 20 failed attempts.', icon: '🔥', hidden: true },
+        { id: 'perfectionist', title: 'Perfectionist', desc: 'Restart a game 10 times without finishing.', icon: '🔄', hidden: true },
+        { id: 'speed_demon', title: 'Speed Demon', desc: 'Complete any game in under 30 seconds.', icon: '⚡', hidden: true },
+        { id: 'slow_and_steady', title: 'Slow and Steady', desc: 'Play a single game for over 10 minutes.', icon: '🐢', hidden: true },
+        { id: 'multitasker', title: 'Multitasker', desc: 'Switch between 5 different games in 2 minutes.', icon: '🎭', hidden: true },
 
     ];
 
@@ -963,6 +1044,92 @@
                 settingsScaleValue.textContent = `${Math.round(val * 100)}%`;
             }
         }
+        
+        // Apply new settings to UI
+        const particleDensityEl = document.getElementById('settings-particle-density');
+        const particleValueEl = document.getElementById('settings-particle-value');
+        if (particleDensityEl && settings.particleDensity !== undefined) {
+            particleDensityEl.value = settings.particleDensity;
+            if (particleValueEl) particleValueEl.textContent = `${Math.round(settings.particleDensity * 100)}%`;
+        }
+        
+        const glowIntensityEl = document.getElementById('settings-glow-intensity');
+        const glowValueEl = document.getElementById('settings-glow-value');
+        if (glowIntensityEl && settings.glowIntensity !== undefined) {
+            glowIntensityEl.value = settings.glowIntensity;
+            if (glowValueEl) glowValueEl.textContent = `${Math.round(settings.glowIntensity * 100)}%`;
+            document.documentElement.style.setProperty('--glow-multiplier', settings.glowIntensity);
+        }
+        
+        const animSpeedEl = document.getElementById('settings-anim-speed');
+        const animValueEl = document.getElementById('settings-anim-value');
+        if (animSpeedEl && settings.animSpeed !== undefined) {
+            animSpeedEl.value = settings.animSpeed;
+            if (animValueEl) animValueEl.textContent = `${Math.round(settings.animSpeed * 100)}%`;
+        }
+        
+        const showFPSEl = document.getElementById('settings-show-fps');
+        if (showFPSEl) showFPSEl.checked = !!settings.showFPS;
+        
+        const screenFlashEl = document.getElementById('settings-screen-flash');
+        if (screenFlashEl) screenFlashEl.checked = settings.screenFlash !== false;
+        
+        const sfxVolumeEl = document.getElementById('settings-sfx-volume');
+        const sfxValueEl = document.getElementById('settings-sfx-value');
+        if (sfxVolumeEl && settings.sfxVolume !== undefined) {
+            sfxVolumeEl.value = settings.sfxVolume;
+            if (sfxValueEl) sfxValueEl.textContent = `${Math.round(settings.sfxVolume * 100)}%`;
+        }
+        
+        const musicVolumeEl = document.getElementById('settings-music-volume');
+        const musicValueEl = document.getElementById('settings-music-value');
+        if (musicVolumeEl && settings.musicVolume !== undefined) {
+            musicVolumeEl.value = settings.musicVolume;
+            if (musicValueEl) musicValueEl.textContent = `${Math.round(settings.musicVolume * 100)}%`;
+        }
+        
+        const muteOnBlurEl = document.getElementById('settings-mute-on-blur');
+        if (muteOnBlurEl) muteOnBlurEl.checked = settings.muteOnBlur !== false;
+        
+        const autoPauseEl = document.getElementById('settings-auto-pause');
+        if (autoPauseEl) autoPauseEl.checked = !!settings.autoPause;
+        
+        const confirmExitEl = document.getElementById('settings-confirm-exit');
+        if (confirmExitEl) confirmExitEl.checked = !!settings.confirmExit;
+        
+        const showTimerEl = document.getElementById('settings-show-timer');
+        if (showTimerEl) showTimerEl.checked = settings.showTimer !== false;
+        
+        const difficultyEl = document.getElementById('settings-difficulty');
+        if (difficultyEl) {
+            difficultyEl.value = settings.difficulty || 'normal';
+        }
+        
+        const compactModeEl = document.getElementById('settings-compact-mode');
+        if (compactModeEl) {
+            compactModeEl.checked = !!settings.compactMode;
+            gamesGrid.classList.toggle('compact-mode', !!settings.compactMode);
+        }
+        
+        const showDescriptionsEl = document.getElementById('settings-show-descriptions');
+        if (showDescriptionsEl) {
+            showDescriptionsEl.checked = settings.showDescriptions !== false;
+            document.querySelectorAll('.game-card-desc').forEach(el => {
+                el.style.display = settings.showDescriptions !== false ? 'block' : 'none';
+            });
+        }
+        
+        const achievementNotificationsEl = document.getElementById('settings-achievement-notifications');
+        if (achievementNotificationsEl) achievementNotificationsEl.checked = settings.achievementNotifications !== false;
+        
+        const cardSizeEl = document.getElementById('settings-card-size');
+        const cardSizeValueEl = document.getElementById('settings-card-size-value');
+        if (cardSizeEl && settings.cardSize !== undefined) {
+            cardSizeEl.value = settings.cardSize;
+            if (cardSizeValueEl) cardSizeValueEl.textContent = `${Math.round(settings.cardSize * 100)}%`;
+            document.documentElement.style.setProperty('--card-scale', settings.cardSize);
+        }
+        
         if (appContainer) {
             if (settings.reducedMotion) {
                 appContainer.classList.add('reduced-motion');
@@ -1024,6 +1191,292 @@
             });
         });
     }
+
+    // NEW SETTINGS HANDLERS
+    
+    // Particle Density
+    const settingsParticleDensity = document.getElementById('settings-particle-density');
+    const settingsParticleValue = document.getElementById('settings-particle-value');
+    if (settingsParticleDensity) {
+        settingsParticleDensity.addEventListener('input', () => {
+            const val = parseFloat(settingsParticleDensity.value || '1');
+            if (settingsParticleValue) {
+                settingsParticleValue.textContent = `${Math.round(val * 100)}%`;
+            }
+            gm.updateSettings && gm.updateSettings({ particleDensity: val });
+        });
+    }
+    
+    // Glow Intensity
+    const settingsGlowIntensity = document.getElementById('settings-glow-intensity');
+    const settingsGlowValue = document.getElementById('settings-glow-value');
+    if (settingsGlowIntensity) {
+        settingsGlowIntensity.addEventListener('input', () => {
+            const val = parseFloat(settingsGlowIntensity.value || '1');
+            if (settingsGlowValue) {
+                settingsGlowValue.textContent = `${Math.round(val * 100)}%`;
+            }
+            gm.updateSettings && gm.updateSettings({ glowIntensity: val });
+            // Apply glow intensity to document
+            document.documentElement.style.setProperty('--glow-multiplier', val);
+        });
+    }
+    
+    // Animation Speed
+    const settingsAnimSpeed = document.getElementById('settings-anim-speed');
+    const settingsAnimValue = document.getElementById('settings-anim-value');
+    if (settingsAnimSpeed) {
+        settingsAnimSpeed.addEventListener('input', () => {
+            const val = parseFloat(settingsAnimSpeed.value || '1');
+            if (settingsAnimValue) {
+                settingsAnimValue.textContent = `${Math.round(val * 100)}%`;
+            }
+            gm.updateSettings && gm.updateSettings({ animSpeed: val });
+        });
+    }
+    
+    // Show FPS
+    const settingsShowFPS = document.getElementById('settings-show-fps');
+    const fpsCounter = document.getElementById('fps-counter');
+    if (settingsShowFPS) {
+        settingsShowFPS.addEventListener('change', () => {
+            const show = settingsShowFPS.checked;
+            gm.updateSettings && gm.updateSettings({ showFPS: show });
+            if (fpsCounter) {
+                fpsCounter.classList.toggle('hidden', !show);
+            }
+            if (show) {
+                startFPSCounter();
+            } else {
+                stopFPSCounter();
+            }
+        });
+    }
+    
+    // Screen Flash
+    const settingsScreenFlash = document.getElementById('settings-screen-flash');
+    if (settingsScreenFlash) {
+        settingsScreenFlash.addEventListener('change', () => {
+            gm.updateSettings && gm.updateSettings({ screenFlash: settingsScreenFlash.checked });
+        });
+    }
+    
+    // SFX Volume
+    const settingsSFXVolume = document.getElementById('settings-sfx-volume');
+    const settingsSFXValue = document.getElementById('settings-sfx-value');
+    if (settingsSFXVolume) {
+        settingsSFXVolume.addEventListener('input', () => {
+            const val = parseFloat(settingsSFXVolume.value || '1');
+            if (settingsSFXValue) {
+                settingsSFXValue.textContent = `${Math.round(val * 100)}%`;
+            }
+            gm.updateSettings && gm.updateSettings({ sfxVolume: val });
+            if (window.soundManager) window.soundManager.setSFXVolume(val);
+        });
+    }
+    
+    // Music Volume
+    const settingsMusicVolume = document.getElementById('settings-music-volume');
+    const settingsMusicValue = document.getElementById('settings-music-value');
+    if (settingsMusicVolume) {
+        settingsMusicVolume.addEventListener('input', () => {
+            const val = parseFloat(settingsMusicVolume.value || '0.5');
+            if (settingsMusicValue) {
+                settingsMusicValue.textContent = `${Math.round(val * 100)}%`;
+            }
+            gm.updateSettings && gm.updateSettings({ musicVolume: val });
+            if (window.soundManager) window.soundManager.setMusicVolume(val);
+        });
+    }
+    
+    // Mute on Blur
+    const settingsMuteOnBlur = document.getElementById('settings-mute-on-blur');
+    if (settingsMuteOnBlur) {
+        settingsMuteOnBlur.addEventListener('change', () => {
+            gm.updateSettings && gm.updateSettings({ muteOnBlur: settingsMuteOnBlur.checked });
+        });
+    }
+    
+    // Auto Pause
+    const settingsAutoPause = document.getElementById('settings-auto-pause');
+    if (settingsAutoPause) {
+        settingsAutoPause.addEventListener('change', () => {
+            gm.updateSettings && gm.updateSettings({ autoPause: settingsAutoPause.checked });
+        });
+    }
+    
+    // Confirm Exit
+    const settingsConfirmExit = document.getElementById('settings-confirm-exit');
+    if (settingsConfirmExit) {
+        settingsConfirmExit.addEventListener('change', () => {
+            gm.updateSettings && gm.updateSettings({ confirmExit: settingsConfirmExit.checked });
+        });
+    }
+    
+    // Show Timer
+    const settingsShowTimer = document.getElementById('settings-show-timer');
+    if (settingsShowTimer) {
+        settingsShowTimer.addEventListener('change', () => {
+            gm.updateSettings && gm.updateSettings({ showTimer: settingsShowTimer.checked });
+        });
+    }
+    
+    // Difficulty
+    const settingsDifficulty = document.getElementById('settings-difficulty');
+    if (settingsDifficulty) {
+        settingsDifficulty.addEventListener('change', () => {
+            console.log(`[Launcher] Difficulty changed to: ${settingsDifficulty.value}`);
+            gm.updateSettings && gm.updateSettings({ difficulty: settingsDifficulty.value });
+        });
+    }
+    
+    // Compact Mode
+    const settingsCompactMode = document.getElementById('settings-compact-mode');
+    if (settingsCompactMode) {
+        settingsCompactMode.addEventListener('change', () => {
+            const compact = settingsCompactMode.checked;
+            gm.updateSettings && gm.updateSettings({ compactMode: compact });
+            gamesGrid.classList.toggle('compact-mode', compact);
+        });
+    }
+    
+    // Show Descriptions
+    const settingsShowDescriptions = document.getElementById('settings-show-descriptions');
+    if (settingsShowDescriptions) {
+        settingsShowDescriptions.addEventListener('change', () => {
+            const show = settingsShowDescriptions.checked;
+            gm.updateSettings && gm.updateSettings({ showDescriptions: show });
+            document.querySelectorAll('.game-card-desc').forEach(el => {
+                el.style.display = show ? 'block' : 'none';
+            });
+        });
+    }
+    
+    // Achievement Notifications
+    const settingsAchievementNotifications = document.getElementById('settings-achievement-notifications');
+    if (settingsAchievementNotifications) {
+        settingsAchievementNotifications.addEventListener('change', () => {
+            gm.updateSettings && gm.updateSettings({ achievementNotifications: settingsAchievementNotifications.checked });
+        });
+    }
+    
+    // Card Size
+    const settingsCardSize = document.getElementById('settings-card-size');
+    const settingsCardSizeValue = document.getElementById('settings-card-size-value');
+    if (settingsCardSize) {
+        settingsCardSize.addEventListener('input', () => {
+            const val = parseFloat(settingsCardSize.value || '1');
+            if (settingsCardSizeValue) {
+                settingsCardSizeValue.textContent = `${Math.round(val * 100)}%`;
+            }
+            gm.updateSettings && gm.updateSettings({ cardSize: val });
+            document.documentElement.style.setProperty('--card-scale', val);
+        });
+    }
+    
+    // FPS Counter Logic
+    let fpsInterval = null;
+    let lastFrameTime = performance.now();
+    let frameCount = 0;
+    let fps = 60;
+    
+    function startFPSCounter() {
+        if (fpsInterval) return;
+        
+        function updateFPS() {
+            const now = performance.now();
+            frameCount++;
+            
+            if (now >= lastFrameTime + 1000) {
+                fps = Math.round((frameCount * 1000) / (now - lastFrameTime));
+                frameCount = 0;
+                lastFrameTime = now;
+                
+                if (fpsCounter) {
+                    fpsCounter.textContent = `FPS: ${fps}`;
+                    // Color code based on FPS
+                    if (fps >= 55) {
+                        fpsCounter.style.color = 'var(--accent-green)';
+                    } else if (fps >= 30) {
+                        fpsCounter.style.color = 'var(--accent-yellow)';
+                    } else {
+                        fpsCounter.style.color = 'var(--accent-red)';
+                    }
+                }
+            }
+            
+            fpsInterval = requestAnimationFrame(updateFPS);
+        }
+        
+        updateFPS();
+    }
+    
+    function stopFPSCounter() {
+        if (fpsInterval) {
+            cancelAnimationFrame(fpsInterval);
+            fpsInterval = null;
+        }
+    }
+    
+    // Initialize FPS counter if enabled
+    const currentSettings = gm.getSettings();
+    if (currentSettings.showFPS && fpsCounter) {
+        fpsCounter.classList.remove('hidden');
+        startFPSCounter();
+    }
+    
+    // Track settings changes for achievements
+    let settingsChangedCount = 0;
+    window.addEventListener('settingsChanged', () => {
+        settingsChangedCount++;
+        if (settingsChangedCount === 1) {
+            gm.unlockAchievement('settings_explorer', 'Tinkerer', 'You opened the settings menu.', '⚙️');
+        }
+    });
+    
+    // Track theme changes
+    let themesTriedSet = new Set();
+    themeButtons.forEach(btn => {
+        const originalClick = btn.onclick;
+        btn.addEventListener('click', () => {
+            const theme = btn.dataset.theme;
+            themesTriedSet.add(theme);
+            
+            if (themesTriedSet.size === 1) {
+                gm.unlockAchievement('theme_switcher', 'Style Master', 'You changed the theme for the first time.', '🎨');
+            }
+            if (themesTriedSet.size >= 11) {
+                gm.unlockAchievement('theme_collector', 'Theme Collector', 'Tried all available themes.', '🎨', true);
+            }
+        });
+    });
+    
+    // Track favorite additions
+    const originalToggleFavorite = gm.toggleFavorite.bind(gm);
+    gm.toggleFavorite = function(gameId) {
+        const result = originalToggleFavorite(gameId);
+        const favCount = gm.favorites.length;
+        
+        if (favCount === 1) {
+            gm.unlockAchievement('first_favorite', 'First Love', 'You marked your first favorite game.', '❤️');
+        }
+        if (favCount >= 10) {
+            gm.unlockAchievement('favorite_collector', 'Favorite Collector', 'Marked 10 games as favorites.', '❤️', true);
+        }
+        
+        return result;
+    };
+    
+    // Track search usage
+    let searchCount = 0;
+    gameSearch.addEventListener('input', () => {
+        if (gameSearch.value.length > 0) {
+            searchCount++;
+            if (searchCount >= 25) {
+                gm.unlockAchievement('search_master', 'Search Master', 'Used the search bar 25 times.', '🔍', true);
+            }
+        }
+    });
 
     window.addEventListener('settingsChanged', (e) => {
         applySettingsToUI(e.detail.settings);

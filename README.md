@@ -18,7 +18,7 @@
 <br/>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-3.0-00d4ff?style=for-the-badge&logo=semver&logoColor=white" alt="Version" />
+  <img src="https://img.shields.io/badge/version-3.4-00d4ff?style=for-the-badge&logo=semver&logoColor=white" alt="Version" />
   <img src="https://img.shields.io/badge/games-40-ff00aa?style=for-the-badge&logoColor=white" alt="Games" />
   <img src="https://img.shields.io/badge/achievements-37-ffcc00?style=for-the-badge&logoColor=white" alt="Achievements" />
   <img src="https://img.shields.io/badge/themes-4-00ff88?style=for-the-badge&logoColor=white" alt="Themes" />
@@ -28,6 +28,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/platform-Windows%2010%2F11-0078D6?style=flat-square&logo=windows&logoColor=white" alt="Platform" />
   <img src="https://img.shields.io/badge/electron-28.0-47848F?style=flat-square&logo=electron&logoColor=white" alt="Electron" />
+  <img src="https://img.shields.io/badge/package%20manager-Bun%20%2B%20npm-F471B6?style=flat-square&logo=bun&logoColor=white" alt="Bun + npm" />
   <img src="https://img.shields.io/badge/runtime%20deps-0-brightgreen?style=flat-square" alt="Zero Runtime Deps" />
   <img src="https://img.shields.io/badge/size-%7E80MB-00d4ff?style=flat-square" alt="Size" />
   <img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="License" />
@@ -312,9 +313,18 @@ cd lightning-games
 ```
 
 **2. Install dependencies**
+
+With **Bun** (recommended - 3-5x faster):
+```bash
+bun install
+```
+
+Or with **npm** (fallback):
 ```bash
 npm install
 ```
+
+The project automatically detects which package manager to use. Both are fully supported.
 
 This installs:
 - `electron` (^28.0.0) - Desktop runtime
@@ -323,15 +333,27 @@ This installs:
 - `png-to-ico` (^3.0.1) - Icon conversion
 
 **3. Development mode**
-```bash
-# Launch in development mode
-npm start
 
-# Launch with dev tools open
-npm run dev
+With Bun:
+```bash
+bun start          # Launch in development mode
+bun run dev        # Launch with dev tools open
+```
+
+Or with npm:
+```bash
+npm start          # Launch in development mode
+npm run dev        # Launch with dev tools open
 ```
 
 **4. Build portable executable**
+
+With Bun:
+```bash
+bun run dist
+```
+
+Or with npm:
 ```bash
 npm run dist
 ```
@@ -339,9 +361,9 @@ npm run dist
 The interactive build wizard will guide you through:
 1. Version number selection
 2. Compression level (0-10)
-   - **0-3 (Fast)**: ~5 seconds, ~150 MB
-   - **4-7 (Normal)**: ~30 seconds, ~110 MB
-   - **8-10 (Maximum)**: ~2 minutes, ~80 MB
+   - **0-3 (Fast)**: ~5-50 seconds, ~150-105 MB
+   - **4-7 (Normal)**: ~30 seconds - 2 minutes, ~110-75 MB
+   - **8-10 (Maximum)**: ~2-15 minutes, ~80-35 MB
 3. Automatic package.json update
 4. Build execution with progress bar
 5. Log file generation in `BuildLogs/`
@@ -378,12 +400,26 @@ The build process is configured in `package.json`:
 
 #### Development Scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm start` | Launch app in development mode |
-| `npm run dev` | Launch with DevTools open |
-| `npm run dist` | Build portable executable (interactive) |
-| `npx electron-builder --win portable` | Direct build (no wizard) |
+All commands work with both **Bun** and **npm**:
+
+| Command | Bun | npm | Description |
+|---------|-----|-----|-------------|
+| Start app | `bun start` | `npm start` | Launch in development mode |
+| Dev tools | `bun run dev` | `npm run dev` | Launch with DevTools open |
+| Build | `bun run dist` | `npm run dist` | Build portable executable (interactive) |
+| Direct build | `bun run dist` | `npx electron-builder --win portable` | Direct build (no wizard) |
+
+**Package Manager Detection:** The project automatically detects and uses Bun if available, otherwise falls back to npm. You can override this with the `LIGHTNING_PM` environment variable:
+
+```bash
+# Force Bun
+export LIGHTNING_PM=bun
+bun start
+
+# Force npm
+export LIGHTNING_PM=npm
+npm start
+```
 
 #### Project Structure for Developers
 

@@ -1,9 +1,10 @@
 # ⚡ Lightning Games - Complete Technical Documentation
 
-> **Version:** 3.3  
-> **Last Updated:** 2026-03-08  
+> **Version:** 3.4  
+> **Last Updated:** 2026-03-09  
 > **Author:** Tarik  
 > **Status:** Production Ready  
+> **Package Manager:** Bun + npm (auto-detect)  
 
 ---
 
@@ -35,6 +36,7 @@
 |-----------|------------|---------|---------|
 | **Framework** | Electron | ^28.0.0 | Desktop application runtime |
 | **Build Tool** | electron-builder | ^24.13.3 | Packaging & distribution |
+| **Package Manager** | Bun / npm | Latest | Dependency management (auto-detect) |
 | **Frontend** | Vanilla JavaScript | ES2020+ | Game logic & UI |
 | **Rendering** | HTML5 Canvas | 2D Context | Game graphics |
 | **Styling** | CSS3 | Variables & Grid | Responsive design |
@@ -2082,6 +2084,44 @@ npx electron-builder --win portable
 ---
 
 ## 🛠️ 18. Recent Fixes & Updates
+
+### v3.4 (2026-03-09) - DIFFICULTY SYSTEM ENHANCEMENTS & BUN MIGRATION
+- **Difficulty System**: Complete overhaul with comprehensive logging
+  - Added settings reload in `startGame()` to ensure latest difficulty is applied
+  - Enhanced logging in GameManager, Tower Defense, and Launcher
+  - Fixed constructor initialization - removed hardcoded starting values
+  - Added `waveReward` calculation in `init()` method
+  - Difficulty now properly applied before game initialization
+  - Console logs show entire difficulty application flow for debugging
+- **Bun Migration**: Full support for Bun package manager
+  - Automatic package manager detection (Bun → npm fallback)
+  - All build scripts support both Bun and npm
+  - 3-5x faster dependency installation with Bun
+  - 100% backward compatible with npm
+  - `scripts/detect-pm.js` handles automatic detection
+  - Updated `bunfig.toml` for Bun configuration
+- **Documentation**: Added comprehensive guides
+  - `DIFFICULTY_SYSTEM_VERIFICATION.md` - Complete verification guide
+  - `DIFFICULTY_DEBUG_GUIDE.md` - Debugging instructions
+  - `BUN_README.md` - Bun migration guide
+  - `BUN_MIGRATION_COMPLETE.md` - Migration completion report
+
+### v3.3 (2026-03-09) - MASSIVE FEATURES EXPANSION
+- **Achievements**: Expanded from 37 to 100+ achievements
+  - Added 8 new categories: Game-Specific, Progression, Time-Based, Playtime, Collection, Social/UI, Special/Hidden
+  - Added rarity tiers: Normal, Ultra, Legendary, Hidden
+  - Comprehensive achievement tracking system
+- **Themes**: Expanded from 4 to 11 themes
+  - Added 7 new themes: Ocean, Sunset, Purple Haze, Matrix, Cyberpunk, Dark Blue, Fire
+  - Theme switching achievement tracking
+- **Settings**: Expanded from 3 to 18+ settings
+  - Visual Effects: Particle Density, Glow Intensity, Animation Speed, Show FPS, Screen Flash
+  - Audio: SFX Volume, Music Volume, Mute on Blur
+  - Gameplay: Auto-Pause, Confirm Exit, Show Timer, Difficulty Selector
+  - Interface: Compact Mode, Show Descriptions, Achievement Notifications, Card Size
+- **FPS Counter**: Real-time FPS monitoring with color-coded display
+- **Achievement System**: Comprehensive tracking for all user actions
+- **Documentation**: Added FEATURES_EXPANSION_COMPLETE.md and NEW_FEATURES_QUICK_REFERENCE.md
 
 ### v3.2 (2026-03-08)
 - **Build UI**: Restored muted neon color palette for better readability

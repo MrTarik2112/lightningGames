@@ -91,7 +91,24 @@ class GameManager {
                 return {
                     reducedMotion: true,
                     shakeIntensity: 0.6,
-                    renderScale: 0.9
+                    renderScale: 0.9,
+                    // New settings with defaults
+                    particleDensity: 1.0,
+                    glowIntensity: 1.0,
+                    animSpeed: 1.0,
+                    showFPS: false,
+                    screenFlash: true,
+                    sfxVolume: 1.0,
+                    musicVolume: 0.5,
+                    muteOnBlur: true,
+                    autoPause: false,
+                    confirmExit: false,
+                    showTimer: true,
+                    difficulty: 'normal',
+                    compactMode: false,
+                    showDescriptions: true,
+                    achievementNotifications: true,
+                    cardSize: 1.0
                 };
             }
             const parsed = JSON.parse(raw);
@@ -102,13 +119,46 @@ class GameManager {
                     : 0.6,
                 renderScale: typeof parsed.renderScale === 'number'
                     ? Math.max(0.7, Math.min(1, parsed.renderScale))
-                    : 0.9
+                    : 0.9,
+                // New settings
+                particleDensity: typeof parsed.particleDensity === 'number' ? Math.max(0, Math.min(1, parsed.particleDensity)) : 1.0,
+                glowIntensity: typeof parsed.glowIntensity === 'number' ? Math.max(0, Math.min(1, parsed.glowIntensity)) : 1.0,
+                animSpeed: typeof parsed.animSpeed === 'number' ? Math.max(0.5, Math.min(2, parsed.animSpeed)) : 1.0,
+                showFPS: !!parsed.showFPS,
+                screenFlash: parsed.screenFlash !== false,
+                sfxVolume: typeof parsed.sfxVolume === 'number' ? Math.max(0, Math.min(1, parsed.sfxVolume)) : 1.0,
+                musicVolume: typeof parsed.musicVolume === 'number' ? Math.max(0, Math.min(1, parsed.musicVolume)) : 0.5,
+                muteOnBlur: parsed.muteOnBlur !== false,
+                autoPause: !!parsed.autoPause,
+                confirmExit: !!parsed.confirmExit,
+                showTimer: parsed.showTimer !== false,
+                difficulty: parsed.difficulty || 'normal',
+                compactMode: !!parsed.compactMode,
+                showDescriptions: parsed.showDescriptions !== false,
+                achievementNotifications: parsed.achievementNotifications !== false,
+                cardSize: typeof parsed.cardSize === 'number' ? Math.max(0.8, Math.min(1.2, parsed.cardSize)) : 1.0
             };
         } catch {
             return {
                 reducedMotion: true,
                 shakeIntensity: 0.6,
-                renderScale: 0.9
+                renderScale: 0.9,
+                particleDensity: 1.0,
+                glowIntensity: 1.0,
+                animSpeed: 1.0,
+                showFPS: false,
+                screenFlash: true,
+                sfxVolume: 1.0,
+                musicVolume: 0.5,
+                muteOnBlur: true,
+                autoPause: false,
+                confirmExit: false,
+                showTimer: true,
+                difficulty: 'normal',
+                compactMode: false,
+                showDescriptions: true,
+                achievementNotifications: true,
+                cardSize: 1.0
             };
         }
     }
@@ -134,6 +184,7 @@ class GameManager {
         }
         this.settings = next;
         this._saveSettings();
+        console.log(`[GameManager] Settings updated:`, this.settings);
         // Inform UI if needed
         const evt = new CustomEvent('settingsChanged', { detail: { settings: this.getSettings() } });
         window.dispatchEvent(evt);
@@ -246,7 +297,20 @@ class GameManager {
                 game.instance.destroy();
             }
             game.instance = new game.GameClass();
+            
+            // Reload settings to ensure we have the latest difficulty
+            this.settings = this._loadSettings();
+            
+            // Apply difficulty setting BEFORE init if game supports it (Tower Defense)
+            if (game.instance.setDifficulty && this.settings && this.settings.difficulty) {
+                console.log(`[GameManager] Applying difficulty: ${this.settings.difficulty}`, this.settings);
+                game.instance.setDifficulty(this.settings.difficulty);
+            } else {
+                console.log(`[GameManager] No difficulty applied. setDifficulty: ${!!game.instance.setDifficulty}, settings: ${!!this.settings}, difficulty: ${this.settings?.difficulty}`);
+            }
+            
             game.instance.init(canvas, ctx);
+            
             game.hasState = true;
             this.totalGamesPlayed++;
             this._saveTotalGames();
@@ -254,6 +318,12 @@ class GameManager {
             game.instance.resume();
         } else {
             game.instance.init(canvas, ctx);
+            
+            // Apply difficulty setting if game supports it (Tower Defense)
+            if (game.instance.setDifficulty && this.settings && this.settings.difficulty) {
+                game.instance.setDifficulty(this.settings.difficulty);
+            }
+            
             game.hasState = true;
             this.totalGamesPlayed++;
             this._saveTotalGames();
@@ -414,12 +484,179 @@ class GameManager {
         if (this.totalGamesPlayed >= 10) {
             this.unlockAchievement('warmup', 'Warmup Done', 'Played a total of 10 games.', '🔥');
         }
+        if (this.totalGamesPlayed >= 25) {
+            this.unlockAchievement('getting_started', 'Getting Started', 'Played a total of 25 games.', '🎮');
+        }
         if (this.totalGamesPlayed >= 50) {
             this.unlockAchievement('marathon_runner', 'Marathon Runner', 'Played a total of 50 games.', '🏃', true);
+        }
+        if (this.totalGamesPlayed >= 75) {
+            this.unlockAchievement('dedicated', 'Dedicated', 'Played a total of 75 games.', '💪', true);
         }
         if (this.totalGamesPlayed >= 100) {
             this.unlockAchievement('no_life', 'Non-Stop', 'Played a total of 100 games.', '⚡', true);
         }
+        if (this.totalGamesPlayed >= 250) {
+            this.unlockAchievement('obsessed', 'Obsessed', 'Played a total of 250 games.', '🔥', true);
+        }
+        if (this.totalGamesPlayed >= 500) {
+            this.unlockAchievement('legend', 'Legend', 'Played a total of 500 games.', '👑', true);
+        }
+        if (this.totalGamesPlayed >= 1000) {
+            this.unlockAchievement('immortal', 'Immortal', 'Played a total of 1000 games.', '⛩️', true);
+        }
+    }
+
+    _checkGameSpecificAchievements(gameId, score) {
+        // Snake achievements
+        if (gameId === 'snake') {
+            if (score >= 100) this.unlockAchievement('snake_100', 'Snake Tamer', 'Scored 100 points in Snake.', '🐍');
+            if (score >= 250) this.unlockAchievement('snake_charmer', 'Snake Charmer', 'Scored 250 points in Snake.', '🐍', true);
+            if (score >= 500) this.unlockAchievement('snake_master', 'Snake Master', 'Scored 500 points in Snake.', '🐍', true);
+            if (score >= 1000) this.unlockAchievement('snake_god', 'Snake God', 'Scored 1000 points in Snake.', '🐍', true);
+        }
+        
+        // Tetris achievements
+        if (gameId === 'tetris') {
+            if (score >= 500) this.unlockAchievement('tetris_500', 'Architect', 'Scored 500 points in Tetris.', '🧱');
+            if (score >= 1000) this.unlockAchievement('pentominium', 'Pentominium', 'Scored 1000 points in Tetris.', '🧱', true);
+            if (score >= 2500) this.unlockAchievement('tetris_master', 'Tetris Master', 'Scored 2500 points in Tetris.', '🧱', true);
+            if (score >= 5000) this.unlockAchievement('tetris_god', 'Block God', 'Scored 5000 points in Tetris.', '🧱', true);
+        }
+        
+        // Memory/Simon achievements
+        if (gameId === 'simon') {
+            if (score >= 10) this.unlockAchievement('simon_10', 'Memory Apprentice', 'Scored 10 points in Memotron.', '🧠');
+            if (score >= 20) this.unlockAchievement('simons_rival', 'Simon\'s Rival', 'Scored 20 points in Memotron.', '🧠', true);
+            if (score >= 30) this.unlockAchievement('memory_master', 'Memory Master', 'Scored 30 points in Memotron.', '🧠', true);
+        }
+        
+        // Minesweeper achievements
+        if (gameId === 'minesweeper' && score > 0) {
+            this.unlockAchievement('minesweeper_win', 'Mine Expert', 'Cleared a challenging minefield.', '💣');
+        }
+        
+        // Runner achievements
+        if (gameId === 'runner') {
+            if (score >= 500) this.unlockAchievement('runner_high', 'Fast Runner', 'Scored 500 in Neon Runner.', '🦖');
+            if (score >= 2000) this.unlockAchievement('marathon_runner_game', 'Marathon Runner', 'Scored 2000 in Neon Runner.', '🦖', true);
+            if (score >= 5000) this.unlockAchievement('ultra_runner', 'Ultra Runner', 'Scored 5000 in Neon Runner.', '🦖', true);
+        }
+        
+        // Frogger achievements
+        if (gameId === 'frogger') {
+            if (score > 0) this.unlockAchievement('frogger_master', 'Frogger Master', 'Crossed the road in Frogger!', '👑');
+            if (score >= 1000) this.unlockAchievement('frogger_pro', 'Frogger Pro', 'Score 1000 in Frogger.', '🐸', true);
+        }
+        
+        // 2048 achievements
+        if (gameId === 'game2048') {
+            if (score >= 4096) this.unlockAchievement('master_2048', '2048 Master', 'Reached the 4096 tile.', '🌟', true);
+            if (score >= 8192) this.unlockAchievement('2048_god', '2048 God', 'Reached the 8192 tile.', '✨', true);
+        }
+        
+        // Doodle Jump achievements
+        if (gameId === 'doodlejump') {
+            if (score >= 10000) this.unlockAchievement('high_jumper', 'High Jumper', 'Reached 10000 height in Neon Jump.', '🚀', true);
+            if (score >= 25000) this.unlockAchievement('sky_master', 'Sky Master', 'Reached 25000 height in Neon Jump.', '🚀', true);
+        }
+        
+        // Whack-a-mole achievements
+        if (gameId === 'whackamole') {
+            if (score >= 200) this.unlockAchievement('mole_slayer', 'Mole Slayer', 'Scored 200 points in Whack-A-Mole.', '🔨', true);
+            if (score >= 500) this.unlockAchievement('mole_destroyer', 'Mole Destroyer', 'Scored 500 points in Whack-A-Mole.', '🔨', true);
+        }
+        
+        // Breakout achievements
+        if (gameId === 'breakout') {
+            if (score >= 1000) this.unlockAchievement('breakout_master', 'Breakout Master', 'Score 1000 in Breakout.', '🧱', true);
+        }
+        
+        // Space Shooter achievements
+        if (gameId === 'space') {
+            if (score >= 5000) this.unlockAchievement('space_legend', 'Space Legend', 'Score 5000 in Space Shooter.', '🚀', true);
+        }
+        
+        // General score achievements
+        if (score >= 5000) {
+            this.unlockAchievement('score_5000', 'Elite Player', 'You reached 5000 points in any game.', '💫');
+        }
+        if (score >= 10000) {
+            this.unlockAchievement('score_10000', 'Legendary Player', 'You reached 10000 points in any game.', '👑', true);
+        }
+        
+        // Special score achievements
+        if (score === 777) {
+            this.unlockAchievement('lucky_seven', 'Lucky Seven', 'Score exactly 777 points in any game.', '🎰', true);
+        }
+        if (score === 1000) {
+            this.unlockAchievement('perfect_score', 'Perfect Score', 'Score exactly 1000 points in any game.', '💯', true);
+        }
+    }
+
+    _checkPlaytimeAchievements() {
+        const minutes = this.totalPlayTime / 60;
+        if (minutes >= 10) {
+            this.unlockAchievement('quick_break', 'Quick Break', 'Total playtime exceeded 10 minutes.', '⏱️');
+        }
+        if (minutes >= 30) {
+            this.unlockAchievement('casual_gamer', 'Casual Gamer', 'Total playtime exceeded 30 minutes.', '🎮');
+        }
+        if (minutes >= 60) {
+            this.unlockAchievement('addict', 'Addict', 'Total playtime exceeded 1 hour.', '💊', true);
+        }
+        if (minutes >= 180) {
+            this.unlockAchievement('hardcore', 'Hardcore', 'Total playtime exceeded 3 hours.', '🔥', true);
+        }
+        if (minutes >= 600) {
+            this.unlockAchievement('no_sleep', 'No Sleep', 'Total playtime exceeded 10 hours.', '😴', true);
+        }
+        if (minutes >= 1440) {
+            this.unlockAchievement('time_traveler', 'Time Traveler', 'Total playtime exceeded 24 hours.', '⏰', true);
+        }
+    }
+
+    _checkCollectionAchievements() {
+        const count = this.achievements.length;
+        if (count >= 15) {
+            this.unlockAchievement('collector', 'Collector', 'Unlocked 15 achievements.', '👑', true);
+        }
+        if (count >= 30) {
+            this.unlockAchievement('achievement_hunter', 'Achievement Hunter', 'Unlocked 30 achievements.', '🏹', true);
+        }
+        if (count >= 50) {
+            this.unlockAchievement('completionist_achievements', 'Achievement Master', 'Unlocked 50 achievements.', '🎖️', true);
+        }
+    }
+
+    _checkConsecutiveAchievements() {
+        if (this.consecutiveGames >= 5) {
+            this.unlockAchievement('persistent', 'Persistent', 'Played the same game 5 times in a row.', '🔄', true);
+        }
+        if (this.consecutiveGames >= 10) {
+            this.unlockAchievement('super_persistent', 'Super Persistent', 'Played the same game 10 times in a row.', '🔄', true);
+        }
+    }
+
+    _checkExplorerAchievements() {
+        const uniqueCount = this.uniqueGamesPlayed.length;
+        if (uniqueCount >= 10) {
+            this.unlockAchievement('explorer', 'Explorer', 'Played 10 different games.', '🗺️', true);
+        }
+        if (uniqueCount >= 40) {
+            this.unlockAchievement('completionist', 'Completionist', 'Played all 40 games at least once.', '🎯', true);
+        }
+    }
+
+    // Call this when a game ends
+    checkAllAchievements(gameId, score) {
+        this._checkGameSpecificAchievements(gameId, score);
+        this._checkPlaytimeAchievements();
+        this._checkCollectionAchievements();
+        this._checkConsecutiveAchievements();
+        this._checkExplorerAchievements();
+        this._checkTotalPlayed();
+        this._checkTimedAchievements();
     }
 
     trackAsteroidDestroyed() {
@@ -555,6 +792,7 @@ class GameManager {
     onGameOver(score) {
         if (!this.activeGame) return;
         this.checkAndUpdateHighScore(this.activeGame.id, score);
+        this.checkAllAchievements(this.activeGame.id, score);
         this._showGameOverOverlay(this.activeGame.id, score);
     }
 

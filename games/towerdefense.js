@@ -23,10 +23,14 @@ class TowerDefense {
         this.paused = false;
         this.victory = false;
         this.gameStarted = false;
+        
+        // Difficulty selection screen
+        this.showDifficultyScreen = true;
+        this.selectedDifficultyOption = null;
 
-        // Player resources - STARTING VALUES
-        this.money = 200;
-        this.lives = 15;
+        // Player resources - STARTING VALUES (will be set in init() based on difficulty)
+        this.money = 0;
+        this.lives = 0;
         this.wave = 0;
         this.maxWave = 50;
 
@@ -108,42 +112,55 @@ class TowerDefense {
         this.difficulty = 'normal';
         this.difficultySettings = {
             easy: {
+                difficultyMultiplier: 1.5,  // Base money multiplier
                 enemyHPMultiplier: 0.75,
                 enemySpeedMultiplier: 0.9,
                 rewardMultiplier: 1.25,
-                startMoney: 250,
+                startMoney: Math.floor(150 * 1.5),  // 225
                 startLives: 30,
                 waveRewardBonus: 10
             },
             normal: {
-                enemyHPMultiplier: 1.0,
-                enemySpeedMultiplier: 1.0,
+                difficultyMultiplier: 1.0,  // Base money multiplier
+                enemyHPMultiplier: 1.34,    // Original base multiplier
+                enemySpeedMultiplier: 1.15, // Original base multiplier
                 rewardMultiplier: 1.0,
-                startMoney: 200,
+                startMoney: Math.floor(150 * 1.0),  // 150
                 startLives: 20,
                 waveRewardBonus: 0
             },
             hard: {
-                enemyHPMultiplier: 1.5,
-                enemySpeedMultiplier: 1.2,
-                rewardMultiplier: 0.85,
-                startMoney: 150,
-                startLives: 15,
-                waveRewardBonus: -5
+                difficultyMultiplier: 0.8,  // Base money multiplier
+                enemyHPMultiplier: 2.144,   // 1.34 * 1.6 = 2.144 (60% harder)
+                enemySpeedMultiplier: 1.84, // 1.15 * 1.6 = 1.84 (60% harder)
+                rewardMultiplier: 0.68,     // 0.85 * 0.8 = 0.68 (less reward)
+                startMoney: Math.floor(150 * 0.8),  // 120
+                startLives: 12,             // 15 * 0.8 = 12 (40% less lives)
+                waveRewardBonus: -10        // Less wave bonus
+            },
+            extreme: {
+                difficultyMultiplier: 0.5,  // Base money multiplier (not used for extreme)
+                enemyHPMultiplier: 3.2,     // Very high HP
+                enemySpeedMultiplier: 2.4,  // Very fast
+                rewardMultiplier: 0.65,     // Increased from 0.5 to make beatable (more money from kills)
+                startMoney: 150,            // SPECIAL: Fixed 150 for extreme mode (beatable)
+                startLives: 8,              // Very few lives
+                waveRewardBonus: -5         // Reduced penalty from -15 to -5 (more wave rewards)
             },
             nightmare: {
+                difficultyMultiplier: 0.6,  // Base money multiplier
                 enemyHPMultiplier: 2.0,
                 enemySpeedMultiplier: 1.4,
                 rewardMultiplier: 0.7,
-                startMoney: 100,
+                startMoney: Math.floor(150 * 0.6),  // 90
                 startLives: 10,
                 waveRewardBonus: -10
             }
         };
 
         // Difficulty scaling (applied on top of mode)
-        this.enemyHPMultiplier = 1.34;
-        this.enemySpeedMultiplier = 1.15;
+        this.enemyHPMultiplier = 1.0;      // Base multiplier (difficulty settings will be applied on top)
+        this.enemySpeedMultiplier = 1.0;   // Base multiplier (difficulty settings will be applied on top)
         this.rewardMultiplier = 1.0;
 
         // Tower definitions with 5 UPGRADE LEVELS
@@ -631,13 +648,25 @@ class TowerDefense {
         this.victory = false;
         this.paused = false;
         this.gameStarted = false;
+        
+        // Show difficulty selection screen
+        this.showDifficultyScreen = true;
+        this.selectedDifficultyOption = null;
 
         // Apply difficulty settings
         const settings = this.difficultySettings[this.difficulty];
         this.money = settings.startMoney;
         this.lives = settings.startLives;
+        this.waveReward = 50 + settings.waveRewardBonus;
         this.wave = 0;
         this.gameSpeed = 1;
+        
+        console.log(`[Tower Defense] Init called with difficulty: ${this.difficulty}`, {
+            money: this.money,
+            lives: this.lives,
+            enemyHPMultiplier: settings.enemyHPMultiplier,
+            enemySpeedMultiplier: settings.enemySpeedMultiplier
+        });
 
         this.enemies = [];
         this.towers = [];
@@ -711,13 +740,19 @@ class TowerDefense {
 
         this.hoveredCell = { x, y };
 
-        if (this.selectedTowerInstance) {
+        if (this.selectedTowerInstance && !this.showDifficultyScreen) {
             this.showTowerInfo = true;
             this.towerInfoPosition = { x, y };
         }
     }
 
     _handleClick(e) {
+        // Handle difficulty selection screen clicks
+        if (this.showDifficultyScreen) {
+            this._handleDifficultyScreenClick(e);
+            return;
+        }
+        
         if (this.gameOver || this.victory) {
             this.init(this.canvas, this.ctx);
             return;
@@ -1247,6 +1282,9 @@ class TowerDefense {
     // ═══════════════════════════════════════════════════════════════════════════════════════════════════
 
     update(dt) {
+        // Skip update if difficulty selection screen is showing
+        if (this.showDifficultyScreen) return;
+        
         if (this.paused || this.gameOver || this.victory) return;
 
         dt *= this.gameSpeed; // Fast forward
@@ -1582,8 +1620,23 @@ class TowerDefense {
     setDifficulty(difficulty) {
         if (this.difficultySettings[difficulty]) {
             this.difficulty = difficulty;
+            
+            // Apply difficulty settings immediately (before init is called)
+            const settings = this.difficultySettings[difficulty];
+            this.money = settings.startMoney;
+            this.lives = settings.startLives;
+            this.waveReward = 50 + settings.waveRewardBonus;
+            
+            console.log(`[Tower Defense] Difficulty set to: ${difficulty}`, {
+                enemyHPMultiplier: settings.enemyHPMultiplier,
+                enemySpeedMultiplier: settings.enemySpeedMultiplier,
+                startMoney: settings.startMoney,
+                startLives: settings.startLives
+            });
+            
             return true;
         }
+        console.log(`[Tower Defense] Invalid difficulty: ${difficulty}. Available: ${Object.keys(this.difficultySettings).join(', ')}`);
         return false;
     }
 
@@ -2682,6 +2735,12 @@ class TowerDefense {
     draw() {
         const ctx = this.ctx;
         const canvas = this.canvas;
+
+        // Show difficulty selection screen if needed
+        if (this.showDifficultyScreen) {
+            this._drawDifficultyScreen(ctx, canvas);
+            return;
+        }
 
         // Apply screen shake
         ctx.save();
@@ -6726,7 +6785,164 @@ class TowerDefense {
             ctx.fillText(toast.achievement.desc, x + 40, y + 35);
         }
     }
+
+    // ═══════════════════════════════════════════════════════════════════════════════════════════════════
+    // DIFFICULTY SELECTION SCREEN
+    // ═══════════════════════════════════════════════════════════════════════════════════════════════════
+
+    _drawDifficultyScreen(ctx, canvas) {
+        // Dark overlay
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Title
+        ctx.font = 'bold 48px Inter';
+        ctx.fillStyle = '#00d4ff';
+        ctx.textAlign = 'center';
+        ctx.shadowColor = '#00d4ff';
+        ctx.shadowBlur = 20;
+        ctx.fillText('SELECT DIFFICULTY', canvas.width / 2, 80);
+        ctx.shadowBlur = 0;
+
+        // Difficulty options
+        const difficulties = [
+            { key: 'easy', name: 'Easy', color: '#00ff88', desc: '0.75x HP, 0.9x Speed, $225' },
+            { key: 'normal', name: 'Normal', color: '#00d4ff', desc: '1.34x HP, 1.15x Speed, $150' },
+            { key: 'hard', name: 'Hard', color: '#ff00aa', desc: '2.144x HP, 1.84x Speed, $120' },
+            { key: 'extreme', name: 'Extreme', color: '#ff4466', desc: '3.2x HP, 2.4x Speed, $150 (Beatable!)' }
+        ];
+
+        const buttonWidth = 180;
+        const buttonHeight = 80;
+        const spacing = 20;
+        const totalWidth = difficulties.length * buttonWidth + (difficulties.length - 1) * spacing;
+        const startX = (canvas.width - totalWidth) / 2;
+        const startY = 180;
+
+        difficulties.forEach((diff, index) => {
+            const x = startX + index * (buttonWidth + spacing);
+            const y = startY;
+            const isHovered = this._isPointInRect(this.hoveredCell?.x || -1, this.hoveredCell?.y || -1, x, y, buttonWidth, buttonHeight);
+            const isSelected = this.selectedDifficultyOption === diff.key;
+
+            // Button background
+            ctx.fillStyle = isSelected ? diff.color : (isHovered ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.05)');
+            ctx.fillRect(x, y, buttonWidth, buttonHeight);
+
+            // Button border
+            ctx.strokeStyle = isSelected ? diff.color : (isHovered ? diff.color : 'rgba(255, 255, 255, 0.2)');
+            ctx.lineWidth = isSelected ? 3 : 2;
+            ctx.strokeRect(x, y, buttonWidth, buttonHeight);
+
+            // Button glow
+            if (isSelected || isHovered) {
+                ctx.shadowColor = diff.color;
+                ctx.shadowBlur = 15;
+                ctx.strokeStyle = diff.color;
+                ctx.lineWidth = 1;
+                ctx.strokeRect(x - 2, y - 2, buttonWidth + 4, buttonHeight + 4);
+                ctx.shadowBlur = 0;
+            }
+
+            // Difficulty name
+            ctx.font = 'bold 20px Inter';
+            ctx.fillStyle = diff.color;
+            ctx.textAlign = 'center';
+            ctx.fillText(diff.name, x + buttonWidth / 2, y + 30);
+
+            // Difficulty description
+            ctx.font = '12px Inter';
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+            ctx.fillText(diff.desc, x + buttonWidth / 2, y + 55);
+        });
+
+        // Start button
+        const startBtnX = canvas.width / 2 - 100;
+        const startBtnY = 350;
+        const startBtnW = 200;
+        const startBtnH = 50;
+        const startBtnHovered = this._isPointInRect(this.hoveredCell?.x || -1, this.hoveredCell?.y || -1, startBtnX, startBtnY, startBtnW, startBtnH);
+
+        ctx.fillStyle = this.selectedDifficultyOption ? (startBtnHovered ? '#00ff88' : '#00d4ff') : 'rgba(0, 212, 255, 0.3)';
+        ctx.fillRect(startBtnX, startBtnY, startBtnW, startBtnH);
+
+        ctx.strokeStyle = this.selectedDifficultyOption ? '#00d4ff' : 'rgba(0, 212, 255, 0.5)';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(startBtnX, startBtnY, startBtnW, startBtnH);
+
+        if (startBtnHovered && this.selectedDifficultyOption) {
+            ctx.shadowColor = '#00d4ff';
+            ctx.shadowBlur = 15;
+            ctx.strokeStyle = '#00d4ff';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(startBtnX - 2, startBtnY - 2, startBtnW + 4, startBtnH + 4);
+            ctx.shadowBlur = 0;
+        }
+
+        ctx.font = 'bold 18px Inter';
+        ctx.fillStyle = this.selectedDifficultyOption ? '#000000' : 'rgba(255, 255, 255, 0.5)';
+        ctx.textAlign = 'center';
+        ctx.fillText('START GAME', canvas.width / 2, startBtnY + 32);
+
+        // Instructions
+        ctx.font = '14px Inter';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+        ctx.textAlign = 'center';
+        ctx.fillText('Click a difficulty level, then click START GAME', canvas.width / 2, 450);
+    }
+
+    _handleDifficultyScreenClick(e) {
+        const rect = this.canvas.getBoundingClientRect();
+        const scaleX = this.canvas.width / rect.width;
+        const scaleY = this.canvas.height / rect.height;
+
+        const x = (e.clientX - rect.left) * scaleX;
+        const y = (e.clientY - rect.top) * scaleY;
+
+        // Check difficulty buttons
+        const difficulties = ['easy', 'normal', 'hard', 'extreme'];
+        const buttonWidth = 180;
+        const buttonHeight = 80;
+        const spacing = 20;
+        const totalWidth = difficulties.length * buttonWidth + (difficulties.length - 1) * spacing;
+        const startX = (this.canvas.width - totalWidth) / 2;
+        const startY = 180;
+
+        difficulties.forEach((diff, index) => {
+            const bx = startX + index * (buttonWidth + spacing);
+            const by = startY;
+
+            if (x >= bx && x <= bx + buttonWidth && y >= by && y <= by + buttonHeight) {
+                this.selectedDifficultyOption = diff;
+                this.difficulty = diff;
+                if (window.soundManager) {
+                    window.soundManager.playClick();
+                }
+            }
+        });
+
+        // Check start button
+        const startBtnX = this.canvas.width / 2 - 100;
+        const startBtnY = 350;
+        const startBtnW = 200;
+        const startBtnH = 50;
+
+        if (x >= startBtnX && x <= startBtnX + startBtnW && y >= startBtnY && y <= startBtnY + startBtnH) {
+            if (this.selectedDifficultyOption) {
+                this.showDifficultyScreen = false;
+                this.gameStarted = true;
+                if (window.soundManager) {
+                    window.soundManager.playLevelUp();
+                }
+            }
+        }
+    }
+
+    _isPointInRect(px, py, rx, ry, rw, rh) {
+        return px >= rx && px <= rx + rw && py >= ry && py <= ry + rh;
+    }
 }
+
 
 // Register the game with the game manager
 if (window.gameManager) {

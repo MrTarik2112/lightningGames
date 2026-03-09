@@ -15,6 +15,9 @@
 
 <body>
   <div id="app" class="app-container">
+    <!-- FPS Counter (hidden by default) -->
+    <div id="fps-counter" class="hidden">FPS: 60</div>
+    
     <!-- Animated Background Canvas -->
     <canvas id="bg-particles" class="bg-particles"></canvas>
 
@@ -218,7 +221,7 @@
           </div>
           <div class="settings-section">
             <h3 class="settings-section-title">Theme Selection</h3>
-            <div class="theme-grid">
+            <div class="theme-grid" style="grid-template-columns: repeat(5, 1fr);">
               <button class="theme-btn active" data-theme="default" title="Default Neon">
                 <span class="theme-preview" style="background: #050512; border: 1px solid #00d4ff;"></span>
                 <span class="theme-label">Neon</span>
@@ -235,6 +238,34 @@
                 <span class="theme-preview" style="background: #001a0a; border: 1px solid #00ff88;"></span>
                 <span class="theme-label">Forest</span>
               </button>
+              <button class="theme-btn" data-theme="ocean" title="Ocean Blue">
+                <span class="theme-preview" style="background: #001a2e; border: 1px solid #00d4ff;"></span>
+                <span class="theme-label">Ocean</span>
+              </button>
+              <button class="theme-btn" data-theme="sunset" title="Sunset Orange">
+                <span class="theme-preview" style="background: #2e1a00; border: 1px solid #ff6b35;"></span>
+                <span class="theme-label">Sunset</span>
+              </button>
+              <button class="theme-btn" data-theme="purple" title="Purple Haze">
+                <span class="theme-preview" style="background: #1a001a; border: 1px solid #b537f2;"></span>
+                <span class="theme-label">Purple</span>
+              </button>
+              <button class="theme-btn" data-theme="matrix" title="Matrix Green">
+                <span class="theme-preview" style="background: #000000; border: 1px solid #00ff00;"></span>
+                <span class="theme-label">Matrix</span>
+              </button>
+              <button class="theme-btn" data-theme="cyberpunk" title="Cyberpunk">
+                <span class="theme-preview" style="background: #0a0a0a; border: 1px solid #ff00ff;"></span>
+                <span class="theme-label">Cyber</span>
+              </button>
+              <button class="theme-btn" data-theme="darkblue" title="Dark Blue">
+                <span class="theme-preview" style="background: #0a0a1e; border: 1px solid #4d94ff;"></span>
+                <span class="theme-label">D.Blue</span>
+              </button>
+              <button class="theme-btn" data-theme="fire" title="Fire Red">
+                <span class="theme-preview" style="background: #1a0000; border: 1px solid #ff4500;"></span>
+                <span class="theme-label">Fire</span>
+              </button>
             </div>
           </div>
           <div class="settings-field">
@@ -250,6 +281,146 @@
                 <span class="settings-field-value" id="settings-scale-value">90%</span>
               </div>
               <input type="range" id="settings-render-scale" min="0.7" max="1" step="0.05" value="0.9">
+            </div>
+            
+            <!-- NEW SETTINGS -->
+            <div class="settings-section">
+              <h3 class="settings-section-title">Visual Effects</h3>
+              
+              <div class="settings-field">
+                <div class="settings-field-header">
+                  <span class="settings-field-label">Particle Density</span>
+                  <span class="settings-field-value" id="settings-particle-value">100%</span>
+                </div>
+                <input type="range" id="settings-particle-density" min="0" max="1" step="0.1" value="1">
+              </div>
+              
+              <div class="settings-field">
+                <div class="settings-field-header">
+                  <span class="settings-field-label">Glow Intensity</span>
+                  <span class="settings-field-value" id="settings-glow-value">100%</span>
+                </div>
+                <input type="range" id="settings-glow-intensity" min="0" max="1" step="0.1" value="1">
+              </div>
+              
+              <div class="settings-field">
+                <div class="settings-field-header">
+                  <span class="settings-field-label">Animation Speed</span>
+                  <span class="settings-field-value" id="settings-anim-value">100%</span>
+                </div>
+                <input type="range" id="settings-anim-speed" min="0.5" max="2" step="0.1" value="1">
+              </div>
+              
+              <div class="settings-field">
+                <label class="settings-checkbox">
+                  <input type="checkbox" id="settings-show-fps">
+                  <span>Show FPS Counter</span>
+                </label>
+              </div>
+              
+              <div class="settings-field">
+                <label class="settings-checkbox">
+                  <input type="checkbox" id="settings-screen-flash">
+                  <span>Screen Flash Effects</span>
+                </label>
+              </div>
+            </div>
+            
+            <div class="settings-section">
+              <h3 class="settings-section-title">Audio Settings</h3>
+              
+              <div class="settings-field">
+                <div class="settings-field-header">
+                  <span class="settings-field-label">Sound Effects Volume</span>
+                  <span class="settings-field-value" id="settings-sfx-value">100%</span>
+                </div>
+                <input type="range" id="settings-sfx-volume" min="0" max="1" step="0.1" value="1">
+              </div>
+              
+              <div class="settings-field">
+                <div class="settings-field-header">
+                  <span class="settings-field-label">Music Volume</span>
+                  <span class="settings-field-value" id="settings-music-value">50%</span>
+                </div>
+                <input type="range" id="settings-music-volume" min="0" max="1" step="0.1" value="0.5">
+              </div>
+              
+              <div class="settings-field">
+                <label class="settings-checkbox">
+                  <input type="checkbox" id="settings-mute-on-blur" checked>
+                  <span>Mute When Window Loses Focus</span>
+                </label>
+              </div>
+            </div>
+            
+            <div class="settings-section">
+              <h3 class="settings-section-title">Gameplay</h3>
+              
+              <div class="settings-field">
+                <label class="settings-checkbox">
+                  <input type="checkbox" id="settings-auto-pause">
+                  <span>Auto-Pause on Window Blur</span>
+                </label>
+              </div>
+              
+              <div class="settings-field">
+                <label class="settings-checkbox">
+                  <input type="checkbox" id="settings-confirm-exit">
+                  <span>Confirm Before Exiting Game</span>
+                </label>
+              </div>
+              
+              <div class="settings-field">
+                <label class="settings-checkbox">
+                  <input type="checkbox" id="settings-show-timer" checked>
+                  <span>Show Game Timer</span>
+                </label>
+              </div>
+              
+              <div class="settings-field">
+                <div class="settings-field-header">
+                  <span class="settings-field-label">Game Difficulty</span>
+                </div>
+                <select id="settings-difficulty" class="settings-select">
+                  <option value="easy">Easy</option>
+                  <option value="normal" selected>Normal</option>
+                  <option value="hard">Hard</option>
+                  <option value="extreme">Extreme</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="settings-section">
+              <h3 class="settings-section-title">Interface</h3>
+              
+              <div class="settings-field">
+                <label class="settings-checkbox">
+                  <input type="checkbox" id="settings-compact-mode">
+                  <span>Compact Card View</span>
+                </label>
+              </div>
+              
+              <div class="settings-field">
+                <label class="settings-checkbox">
+                  <input type="checkbox" id="settings-show-descriptions" checked>
+                  <span>Show Game Descriptions</span>
+                </label>
+              </div>
+              
+              <div class="settings-field">
+                <label class="settings-checkbox">
+                  <input type="checkbox" id="settings-achievement-notifications" checked>
+                  <span>Achievement Notifications</span>
+                </label>
+              </div>
+              
+              <div class="settings-field">
+                <div class="settings-field-header">
+                  <span class="settings-field-label">Card Size</span>
+                  <span class="settings-field-value" id="settings-card-size-value">100%</span>
+                </div>
+                <input type="range" id="settings-card-size" min="0.8" max="1.2" step="0.1" value="1">
+              </div>
             </div>
           </div>
         </div>
