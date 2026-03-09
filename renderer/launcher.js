@@ -706,7 +706,7 @@
             favoriteBtn.className = `btn-favorite ${config.isFavorite ? 'active' : ''}`;
             favoriteBtn.innerHTML = '★';
             favoriteBtn.title = config.isFavorite ? 'Remove from favorites' : 'Add to favorites';
-            // Removed individual favoriteBtn.addEventListener
+            favoriteBtn.dataset.gameId = config.id;
 
             cardContent.innerHTML = `
                 <span class="game-card-category">${config.category}</span>
@@ -1529,7 +1529,7 @@
     gm.totalAchievementsCount = ALL_ACHIEVEMENTS.length;
     renderGameCards();
 
-    // Event Delegation for Games Grid
+    // Event Delegation for Games Grid - Left Click
     gamesGrid.addEventListener('click', (e) => {
         const gameCard = e.target.closest('.game-card');
         if (!gameCard) return;
@@ -1539,14 +1539,25 @@
         if (!config) return;
 
         if (e.target.classList.contains('btn-favorite')) {
-            e.stopPropagation(); // Prevent card click event from firing
-            const isFav = gm.toggleFavorite(gameId);
-            // The renderGameCards will re-render all cards, so we don't need to manually update the button state here
+            e.stopPropagation();
+            gm.toggleFavorite(gameId);
             sfx.play('select');
             renderGameCards(gameSearch.value);
         } else {
             openGame(gameId, config.name, config.icon);
         }
+    });
+
+    // Right-click to toggle favorite
+    gamesGrid.addEventListener('contextmenu', (e) => {
+        const gameCard = e.target.closest('.game-card');
+        if (!gameCard) return;
+
+        e.preventDefault();
+        const gameId = gameCard.dataset.gameId;
+        gm.toggleFavorite(gameId);
+        sfx.play('select');
+        renderGameCards(gameSearch.value);
     });
 
     gamesGrid.addEventListener('mouseover', (e) => {
