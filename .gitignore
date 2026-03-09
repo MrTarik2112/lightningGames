@@ -1,1 +1,10 @@
 nul
+
+# Tailwind CSS
+styles/tailwind-output.css
+styles/tailwind-output.css.map
+
+# Node modules
+node_modules/
+package-lock.json
+bun.lockb

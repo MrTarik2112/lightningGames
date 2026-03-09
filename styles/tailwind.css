@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Tailwind components for Lightning Games */
+
+@layer components {
+  /* Neon Button */
+  .btn-neon {
+    @apply px-4 py-2 rounded-lg font-semibold transition-all duration-300;
+    @apply bg-gradient-to-r from-neon-cyan to-neon-magenta;
+    @apply text-white shadow-neon-cyan;
+    @apply hover:shadow-lg hover:scale-105;
+    @apply active:scale-95;
+  }
+
+  /* Neon Card */
+  .card-neon {
+    @apply p-4 rounded-lg border border-neon-cyan/30;
+    @apply bg-neon-dark/50 backdrop-blur-sm;
+    @apply shadow-neon-cyan;
+    @apply hover:shadow-lg hover:border-neon-cyan/60;
+    @apply transition-all duration-300;
+  }
+
+  /* Neon Input */
+  .input-neon {
+    @apply w-full px-3 py-2 rounded-lg;
+    @apply bg-white/5 border border-neon-cyan/30;
+    @apply text-white placeholder-gray-400;
+    @apply focus:outline-none focus:border-neon-cyan focus:shadow-neon-cyan;
+    @apply transition-all duration-300;
+  }
+
+  /* Neon Badge */
+  .badge-neon {
+    @apply inline-block px-3 py-1 rounded-full;
+    @apply bg-neon-cyan/20 text-neon-cyan;
+    @apply text-xs font-semibold;
+    @apply border border-neon-cyan/50;
+  }
+
+  /* Neon Text */
+  .text-neon {
+    @apply text-neon-cyan font-bold;
+    @apply drop-shadow-lg;
+  }
+
+  /* Neon Glow Animation */
+  .animate-neon-glow {
+    @apply animate-glow;
+  }
+}
