@@ -113,38 +113,10 @@ async function buildWindows(compression, compressionName) {
     log.step(`Running: ${builderPath} --win portable --config.compression=maximum`);
     
     try {
-      // Update package.json temporarily for ULTRA MEGA settings
-      const originalBuild = packageJson.build;
-      packageJson.build = {
-        ...originalBuild,
-        compression: 'maximum',
-        asar: true,
-        asarUnpack: ['**/*.node'],
-        removePackageScripts: true,
-        removeFiles: [
-          '**/*.md',
-          '**/*.txt',
-          '**/*.map',
-          '**/LICENSE*',
-          '**/CHANGELOG*',
-          '**/README*',
-        ]
-      };
-      fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2) + '\n');
-      
       await runCommand(builderPath, ['--win', 'portable', '--config.compression=maximum']);
-      
-      // Restore original package.json
-      packageJson.build = originalBuild;
-      fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2) + '\n');
-      
       log.success('Windows build complete');
       return true;
     } catch (err) {
-      // Restore original package.json on error
-      packageJson.build = originalBuild;
-      fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2) + '\n');
-      
       log.error(`Windows build failed: ${err.message}`);
       return false;
     }
@@ -255,9 +227,25 @@ async function main() {
 
     if (normalizedVersion && validateVersion(normalizedVersion)) {
       newVersion = normalizedVersion;
+      
+      // Update package.json
       packageJson.version = newVersion;
       fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2) + '\n');
+      
+      // Update version in index.html
+      const indexHtmlPath = path.join(projectRoot, 'index.html');
+      let indexHtml = fs.readFileSync(indexHtmlPath, 'utf8');
+      indexHtml = indexHtml.replace(
+        /<span class="title-version">v[\d.]+<\/span>/,
+        `<span class="title-version">v${newVersion}</span>`
+      );
+      fs.writeFileSync(indexHtmlPath, indexHtml);
+      
+      // Reload package.json to ensure it's updated
+      const updatedPackageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+      
       log.success(`Version updated to ${neon.yellow}${newVersion}${neon.reset}`);
+      log.info(`Updated: package.json (${updatedPackageJson.version}), index.html`);
     } else if (normalizedVersion) {
       log.error(`Invalid version format: "${versionInput.trim()}"`);
       log.info(`Keeping version ${neon.yellow}${packageJson.version}${neon.reset}`);

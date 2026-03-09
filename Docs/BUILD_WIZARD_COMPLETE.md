@@ -48,8 +48,14 @@ Both commands launch the interactive build wizard. The wizard automatically dete
 
   Current version: 2.2.0
 
-  Enter new version (or press Enter to keep current): _
+  Enter new version (or press Enter to keep current): 2.3.0
 ```
+
+**What Happens:**
+- Updates `package.json` → `"version": "2.3.0"`
+- Updates `index.html` → `<span class="title-version">v2.3.0</span>`
+- Shows confirmation: `✓ Version updated to 2.3.0`
+- Shows files updated: `ℹ Updated: package.json, index.html`
 
 **Options:**
 - Press Enter to keep current version
@@ -62,6 +68,12 @@ Both commands launch the interactive build wizard. The wizard automatically dete
 2.2.1  → Patch update
 2.3.0  → Minor update
 3.0.0  → Major update
+```
+
+**Result:**
+The version will appear in the top-left corner of the app:
+```
+⚡ Lightning Games v2.3.0
 ```
 
 ---

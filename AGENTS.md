@@ -1,10 +1,11 @@
 # ⚡ Lightning Games - Complete Technical Documentation
 
-> **Version:** 3.4  
+> **Version:** 3.5  
 > **Last Updated:** 2026-03-09  
 > **Author:** Tarik  
 > **Status:** Production Ready  
 > **Package Manager:** Bun + npm (auto-detect)  
+> **Build System:** v6.0 - Interactive Wizard with Bun Support  
 
 ---
 
@@ -2154,6 +2155,137 @@ npx electron-builder --win portable
 ## 📄 License
 
 [MIT](LICENSE) - Free to use, modify, and distribute.
+
+---
+
+## 🚀 7. Build System v6.0 - Interactive Wizard
+
+### Overview
+
+The Lightning Games Build System v6.0 is a complete interactive build wizard that guides you through building Windows and Linux packages with full customization.
+
+### Key Features
+
+✅ **Bun Support** - Auto-detects Bun, falls back to npm (3-5x faster builds)  
+✅ **Version Selection** - Interactive version update with auto-sync to UI  
+✅ **Platform Selection** - Windows, Linux (WSL), or Both  
+✅ **Compression Levels** - Store, Normal, Maximum, ULTRA MEGA  
+✅ **WSL Detection** - Automatic availability check  
+✅ **Build Verification** - Automatic artifact validation  
+✅ **Beautiful UI** - Neon-themed interactive prompts  
+
+### Quick Start
+
+```bash
+npm run dist
+```
+
+Or with Bun:
+
+```bash
+bun run dist
+```
+
+### Build Wizard Flow
+
+1. **Version Configuration**
+   - Enter new version or press Enter to keep current
+   - Auto-updates `package.json` and `index.html`
+   - Shows in app UI (top-left corner)
+
+2. **Platform Selection**
+   - [1] Windows Portable
+   - [2] Linux AppImage (WSL)
+   - [3] Both Platforms
+
+3. **Compression Level**
+   - [1] Store (~140MB, ~5s) - No compression
+   - [2] Normal (~105MB, ~50s) - Balanced
+   - [3] Maximum (~85MB, ~90s) - High compression
+   - [4] ULTRA MEGA (~65MB, ~3m) - Extreme compression
+
+4. **Confirmation**
+   - Review settings and start build
+
+### Compression Comparison
+
+| Level | Windows | Linux | Time | Use Case |
+|-------|---------|-------|------|----------|
+| Store | 274 MB | 140 MB | ~5s | Quick testing |
+| Normal | 105 MB | 99 MB | ~50s | Development |
+| Maximum | 85 MB | 75 MB | ~90s | Release |
+| ULTRA MEGA | 65 MB | 55 MB | ~3m | Final production |
+
+### Version Auto-Update
+
+When you enter a new version during build:
+
+**Updates:**
+- `package.json` → `"version": "X.Y.Z"`
+- `index.html` → `<span class="title-version">vX.Y.Z</span>`
+- Build filename → `Lightning Games X.Y.Z.exe`
+
+**Result:**
+- Version appears in app UI (top-left)
+- Included in build artifacts
+- Tracked in build logs
+
+### Build Configuration
+
+**Files Included:**
+```
+**/*
+├── games/**/*
+├── renderer/**/*
+├── styles/**/*
+├── assets/**/*
+├── index.html
+├── main.js
+├── preload.js
+└── package.json
+```
+
+**Excluded:**
+- node_modules/
+- dist/
+- BuildLogs/
+- .git/
+- Docs/
+- scripts/
+- *.md files
+
+### Package Manager Detection
+
+The build wizard automatically detects which package manager to use:
+
+1. **Checks for Bun** - If available, uses `bunx electron-builder`
+2. **Falls back to npm** - If Bun not found, uses `npx electron-builder`
+
+**Performance:**
+- Bun: 3-5x faster dependency installation
+- Same output: Identical build artifacts
+
+### Build Output
+
+All builds are saved to `dist/`:
+
+```
+dist/
+├── Lightning Games X.Y.Z.exe          # Windows portable
+├── Lightning Games-X.Y.Z.AppImage     # Linux AppImage
+├── win-unpacked/                      # Windows unpacked files
+└── linux-unpacked/                    # Linux unpacked files
+```
+
+### Recent Fixes (v6.0)
+
+- ✨ Fixed ASAR packaging - All folders now properly included
+- ✨ Fixed build configuration - Corrected files list
+- ✨ Added version auto-update to UI
+- ✨ Added ULTRA MEGA compression level
+- ✨ Added Bun support with auto-detection
+- 🐛 Fixed missing renderer/, games/, styles/ in builds
+- 🐛 Fixed assets/ not being included in ASAR
 
 ---
 
