@@ -8,6 +8,7 @@ const { spawn, execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
+const PackageManagerDetector = require('./detect-pm');
 
 const neon = {
   cyan: '\x1b[38;5;51m',
@@ -20,6 +21,7 @@ const neon = {
 };
 
 const projectRoot = path.join(__dirname, '..');
+const pmDetector = new PackageManagerDetector();
 
 function checkNodeVersion() {
   const version = process.version;
@@ -34,15 +36,23 @@ function checkNodeVersion() {
   return true;
 }
 
-function checkNpm() {
-  try {
-    const version = execSync('npm --version', { encoding: 'utf8' }).trim();
-    console.log(`${neon.green}✓ npm v${version}${neon.reset}`);
-    return true;
-  } catch {
-    console.log(`${neon.red}✗ npm not found${neon.reset}`);
-    return false;
+function checkPackageManagers() {
+  const report = pmDetector.detect();
+  
+  if (report.bun.available) {
+    console.log(`${neon.green}✓ Bun v${report.bun.version}${neon.reset} ${neon.dim}(preferred)${neon.reset}`);
+  } else {
+    console.log(`${neon.dim}○ Bun not installed${neon.reset} ${neon.dim}(optional, faster)${neon.reset}`);
   }
+  
+  if (report.npm.available) {
+    const preferred = !report.bun.available ? ` ${neon.dim}(fallback)${neon.reset}` : '';
+    console.log(`${neon.green}✓ npm v${report.npm.version}${neon.reset}${preferred}`);
+  } else {
+    console.log(`${neon.red}✗ npm not found${neon.reset}`);
+  }
+  
+  return report.preferred !== null;
 }
 
 function checkGit() {
@@ -59,20 +69,32 @@ function checkGit() {
 async function installDependencies() {
   return new Promise((resolve) => {
     console.log();
-    console.log(`${neon.cyan}Installing dependencies...${neon.reset}`);
     
-    const npm = spawn('npm', ['install'], {
+    const pm = pmDetector.getPreferred();
+    const installCmd = pmDetector.getCommand('install');
+    
+    if (!pm || !installCmd) {
+      console.log(`${neon.red}✗ No package manager available${neon.reset}`);
+      resolve(false);
+      return;
+    }
+    
+    const icon = pm === 'bun' ? '⚡' : '📦';
+    console.log(`${neon.cyan}${icon} Installing dependencies with ${pm}...${neon.reset}`);
+    
+    const [cmd, ...args] = installCmd.split(' ');
+    const proc = spawn(cmd, args, {
       cwd: projectRoot,
       stdio: 'inherit',
       shell: true,
     });
     
-    npm.on('close', (code) => {
+    proc.on('close', (code) => {
       if (code === 0) {
         console.log(`${neon.green}✓ Dependencies installed${neon.reset}`);
         resolve(true);
       } else {
-        console.log(`${neon.red}✗ npm install failed${neon.reset}`);
+        console.log(`${neon.red}✗ ${pm} install failed${neon.reset}`);
         resolve(false);
       }
     });
@@ -133,12 +155,15 @@ async function main() {
   console.log(`${neon.bold}Checking prerequisites...${neon.reset}`);
   
   const nodeOk = checkNodeVersion();
-  const npmOk = checkNpm();
+  const pmOk = checkPackageManagers();
   const gitOk = checkGit();
   
-  if (!nodeOk || !npmOk) {
+  if (!nodeOk || !pmOk) {
     console.log();
     console.log(`${neon.red}Please install required tools and try again.${neon.reset}`);
+    console.log();
+    console.log(`  ${neon.cyan}Bun (recommended):${neon.reset} https://bun.sh`);
+    console.log(`  ${neon.cyan}Node.js + npm:${neon.reset} https://nodejs.org`);
     process.exit(1);
   }
   
@@ -157,8 +182,13 @@ async function main() {
   if (installOk) {
     console.log(`${neon.green}✓ Setup complete!${neon.reset}`);
     console.log();
-    console.log(`  Run ${neon.cyan}npm start${neon.reset} to launch the app`);
-    console.log(`  Run ${neon.cyan}npm run dist${neon.reset} to build`);
+    
+    const pm = pmDetector.getPreferred();
+    const runCmd = pm === 'bun' ? 'bun run' : 'npm run';
+    const startCmd = pm === 'bun' ? 'bun start' : 'npm start';
+    
+    console.log(`  Run ${neon.cyan}${startCmd}${neon.reset} to launch the app`);
+    console.log(`  Run ${neon.cyan}${runCmd} dist${neon.reset} to build`);
     console.log();
   } else {
     console.log(`${neon.red}✗ Setup failed${neon.reset}`);

@@ -4,6 +4,7 @@ const path = require('path');
 const readline = require('readline');
 const crypto = require('crypto');
 const os = require('os');
+const PackageManagerDetector = require('./detect-pm');
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -11,6 +12,9 @@ const rl = readline.createInterface({
 });
 
 const question = (query) => new Promise((resolve) => rl.question(query, resolve));
+
+// Initialize package manager detector
+const pmDetector = new PackageManagerDetector();
 
 // ===================== CONFIGURATION =====================
 const CONFIG = {
@@ -416,6 +420,10 @@ class WindowsBuildExecutor extends BuildExecutor {
     this.logWrite(`\n  Platform: Windows Portable`);
     this.logWrite(`\n  Compression: ${this.config.compression.name} (${this.config.compression.setting})`);
     
+    const pm = pmDetector.getPreferred();
+    const icon = pm === 'bun' ? '⚡' : '📦';
+    log.info(`Using ${icon} ${pm} for build`);
+    
     // Set up environment with cache paths
     const env = {
       ...process.env,
@@ -427,7 +435,7 @@ class WindowsBuildExecutor extends BuildExecutor {
       npm_config_progress: 'false'
     };
 
-    const builderPath = path.join(projectRoot, 'node_modules', '.bin', 'electron-builder.cmd');
+    const builderPath = pmDetector.getBuilderPath();
     const args = ['--win', 'portable', '--config.compression', this.config.compression.setting];
 
     return new Promise((resolve, reject) => {
@@ -475,9 +483,16 @@ class WSLBuildExecutor extends BuildExecutor {
     const wslSourcePath = `/mnt/c${projectRoot.substring(2).replace(/\\/g, '/')}`;
     const linuxBuildPath = `~/lightning-games-build-${Date.now()}`;
     const cachePath = `~/.cache/${CONFIG.projectName}`;
+    
+    // Detect package manager for WSL
+    const pm = pmDetector.getPreferred();
+    const useBun = pm === 'bun';
+    const pmCmd = useBun ? 'bun' : 'npm';
+    const installCmd = useBun ? 'bun install --frozen-lockfile' : 'npm ci --no-optional --prefer-offline --no-fund --no-audit';
+    const builderCmd = useBun ? 'bunx electron-builder@24.13.3' : 'npx electron-builder@24.13.3';
 
     const commands = [
-      `echo "🐧 Starting Linux build in WSL..."`,
+      `echo "🐧 Starting Linux build in WSL with ${pmCmd}..."`,
       `export DEBIAN_FRONTEND=noninteractive`,
       `export ELECTRON_CACHE=~/.cache/electron`,
       `export ELECTRON_BUILDER_CACHE=~/.cache/electron-builder`,
@@ -492,10 +507,10 @@ class WSLBuildExecutor extends BuildExecutor {
       `rsync -aW --inplace --exclude='node_modules' --exclude='dist' --exclude='BuildLogs' --exclude='.git' --exclude='.cache' --exclude='.crush' "${wslSourcePath}/" "${linuxBuildPath}/" 2>&1 | head -5`,
       `if [ -d "${cachePath}/node_modules" ]; then echo "📦 Restoring cached node_modules..."; cp -r "${cachePath}/node_modules" "${linuxBuildPath}/"; fi`,
       `cd "${linuxBuildPath}"`,
-      `echo "📥 Installing dependencies (parallel)..."`,
-      `/usr/bin/npm ci --no-optional --prefer-offline --no-fund --no-audit 2>&1 | tail -5`,
+      `echo "📥 Installing dependencies with ${pmCmd}..."`,
+      `${installCmd} 2>&1 | tail -5`,
       `echo "🔨 Building AppImage..."`,
-      `/usr/bin/npx electron-builder@24.13.3 --linux AppImage --config.compression=${this.config.compression.setting} 2>&1 | grep -E "(packaging|building|complete|error|failed)" || true`,
+      `${builderCmd} --linux AppImage --config.compression=${this.config.compression.setting} 2>&1 | grep -E "(packaging|building|complete|error|failed)" || true`,
       `echo "💾 Caching node_modules for future builds..."`,
       `rm -rf "${cachePath}/node_modules"`,
       `cp -r "${linuxBuildPath}/node_modules" "${cachePath}/" 2>/dev/null || true`,
@@ -517,7 +532,7 @@ class WSLBuildExecutor extends BuildExecutor {
         this.logWrite(output);
         if (output.includes('Copying project')) log.step('Copying project to Linux filesystem...');
         if (output.includes('Restoring cached')) log.step('Restoring cached node_modules...');
-        if (output.includes('Installing dependencies')) log.step('Installing dependencies (parallel)...');
+        if (output.includes('Installing dependencies')) log.step(`Installing dependencies with ${pmCmd}...`);
         if (output.includes('Building AppImage')) log.step('Building AppImage...');
         if (output.includes('Caching node_modules')) log.step('Caching node_modules...');
         if (output.includes('Copying artifacts')) log.step('Copying artifacts to Windows...');
@@ -541,8 +556,14 @@ class DockerBuildExecutor extends BuildExecutor {
     log.step(`${icons.docker} Starting Docker Linux build...`);
     this.logWrite(`\n  Platform: Linux AppImage (Docker)`);
     this.logWrite(`\n  Compression: ${this.config.compression.name} (${this.config.compression.setting})`);
+    
+    const pm = pmDetector.getPreferred();
+    const useBun = pm === 'bun';
+    const installCmd = useBun ? 'bun install --frozen-lockfile' : 'npm ci --no-optional --prefer-offline';
+    const builderCmd = useBun ? 'bunx electron-builder' : 'npx electron-builder';
+    
     const containerName = `${CONFIG.projectName}-build-${Date.now()}`;
-    const dockerCmd = `docker run --rm --name "${containerName}" -v "${projectRoot}:/project" -w /project -e NODE_ENV=production -e npm_config_prefer_offline=true -e npm_config_no_audit=true -e npm_config_progress=false ${CONFIG.dockerImage} bash -c "npm ci --no-optional --prefer-offline && npx electron-builder --linux AppImage --config.compression=${this.config.compression.setting}"`;
+    const dockerCmd = `docker run --rm --name "${containerName}" -v "${projectRoot}:/project" -w /project -e NODE_ENV=production -e npm_config_prefer_offline=true -e npm_config_no_audit=true -e npm_config_progress=false ${CONFIG.dockerImage} bash -c "${installCmd} && ${builderCmd} --linux AppImage --config.compression=${this.config.compression.setting}"`;
 
     return new Promise((resolve, reject) => {
       const proc = spawn('docker', dockerCmd.split(' '), { shell: true, cwd: projectRoot });
@@ -573,6 +594,10 @@ class LinuxNativeBuildExecutor extends BuildExecutor {
     this.logWrite(`\n  Platform: Linux AppImage (Native)`);
     this.logWrite(`\n  Compression: ${this.config.compression.name} (${this.config.compression.setting})`);
     
+    const pm = pmDetector.getPreferred();
+    const icon = pm === 'bun' ? '⚡' : '📦';
+    log.info(`Using ${icon} ${pm} for build`);
+    
     // Set up environment with cache paths and optimizations
     const env = {
       ...process.env,
@@ -585,7 +610,7 @@ class LinuxNativeBuildExecutor extends BuildExecutor {
       npm_config_loglevel: 'error'
     };
 
-    const builderPath = path.join(projectRoot, 'node_modules', '.bin', 'electron-builder');
+    const builderPath = pmDetector.getBuilderPath();
     const args = ['--linux', 'AppImage', '--config.compression', this.config.compression.setting];
 
     return new Promise((resolve, reject) => {

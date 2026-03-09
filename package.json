@@ -9,7 +9,11 @@
     "dist": "node scripts/build.js",
     "build:win": "electron-builder --win portable",
     "build:linux": "electron-builder --linux AppImage",
-    "build:all": "electron-builder --win portable --linux AppImage"
+    "build:all": "electron-builder --win portable --linux AppImage",
+    "bun:install": "bun install",
+    "bun:start": "bun run start",
+    "bun:dev": "bun run dev",
+    "bun:dist": "bun run dist"
   },
   "author": "Tarik",
   "license": "MIT",

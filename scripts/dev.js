@@ -7,6 +7,7 @@
 const { spawn } = require('child_process');
 const path = require('path');
 const fs = require('fs');
+const PackageManagerDetector = require('./detect-pm');
 
 const neon = {
   cyan: '\x1b[38;5;51m',
@@ -21,6 +22,7 @@ const neon = {
 const projectRoot = path.join(__dirname, '..');
 const packageJsonPath = path.join(projectRoot, 'package.json');
 const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+const pmDetector = new PackageManagerDetector();
 
 function checkDependencies() {
   const nodeModulesPath = path.join(projectRoot, 'node_modules');
@@ -39,25 +41,37 @@ async function main() {
 
   // Check dependencies
   if (!checkDependencies()) {
-    const npmInstall = spawn('npm', ['install'], { 
+    const pm = pmDetector.getPreferred();
+    const installCmd = pmDetector.getCommand('install');
+    
+    if (!pm || !installCmd) {
+      console.log(`${neon.red}✗ No package manager available${neon.reset}`);
+      process.exit(1);
+    }
+    
+    const [cmd, ...args] = installCmd.split(' ');
+    const install = spawn(cmd, args, { 
       cwd: projectRoot, 
       stdio: 'inherit',
       shell: true 
     });
     
     await new Promise((resolve) => {
-      npmInstall.on('close', resolve);
+      install.on('close', resolve);
     });
     console.log();
   }
 
-  console.log(`${neon.green}✓ Starting Electron...${neon.reset}`);
+  const pm = pmDetector.getPreferred();
+  const icon = pm === 'bun' ? '⚡' : '📦';
+  
+  console.log(`${neon.green}✓ Starting Electron with ${pm}...${neon.reset}`);
   console.log(`${neon.dim}  Version: ${packageJson.version}${neon.reset}`);
   console.log(`${neon.dim}  Press Ctrl+C to stop${neon.reset}`);
   console.log();
 
   // Start electron with dev flags
-  const electronPath = path.join(projectRoot, 'node_modules', '.bin', 'electron');
+  const electronPath = pmDetector.getElectronPath();
   const electron = spawn(electronPath, [
     '.',
     '--enable-logging',
