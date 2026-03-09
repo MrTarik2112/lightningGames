@@ -211,16 +211,6 @@ node scripts/build.js --clear-cache
 └── electron/                  # Cached Electron binaries
 ```
 
-### Build Artifacts Location
-```
-dist/
-├── Lightning Games.exe        # Latest Windows build
-├── Lightning Games.AppImage   # Latest Linux build
-└── old/                       # Previous builds archive
-    ├── Lightning Games.exe    # Old Windows builds
-    └── Lightning Games.AppImage # Old Linux builds
-```
-
 ### Cache Statistics
 ```bash
 # View cache stats (shown after each build)
