@@ -10,6 +10,11 @@ app.commandLine.appendSwitch('disable-background-timer-throttle');
 app.commandLine.appendSwitch('disable-renderer-backgrounding');
 app.commandLine.appendSwitch('force-color-profile', 'srgb');
 
+// Disable DNS prefetching and external DNS requests
+app.commandLine.appendSwitch('disable-dns-prefetch');
+app.commandLine.appendSwitch('disable-features', 'DnsOverHttps,SecureDns');
+app.commandLine.appendSwitch('no-proxy-server');
+
 let mainWindow = null;
 let tray = null;
 let isQuitting = false;
@@ -102,7 +107,10 @@ function createWindow() {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
-      nodeIntegration: false
+      nodeIntegration: false,
+      webSecurity: true,
+      allowRunningInsecureContent: false,
+      experimentalFeatures: false
     }
   });
 

@@ -237,15 +237,24 @@ class GameManager {
         const pauseOverlay = document.getElementById('pause-overlay');
         if (pauseOverlay) pauseOverlay.classList.add('hidden');
 
-        if (!game.instance) {
+        // Check if previous game instance was game over - if so, create new instance
+        const wasGameOver = game.instance && game.instance.isGameOver && game.instance.isGameOver();
+
+        if (!game.instance || wasGameOver) {
+            // Clean up old instance if it exists
+            if (game.instance && game.instance.destroy) {
+                game.instance.destroy();
+            }
             game.instance = new game.GameClass();
             game.instance.init(canvas, ctx);
+            game.hasState = true;
             this.totalGamesPlayed++;
             this._saveTotalGames();
         } else if (game.hasState) {
             game.instance.resume();
         } else {
             game.instance.init(canvas, ctx);
+            game.hasState = true;
             this.totalGamesPlayed++;
             this._saveTotalGames();
         }
@@ -557,7 +566,27 @@ class GameManager {
                 this.activeGame.instance.getScore()
             );
         }
-        this.pauseCurrentGame();
+
+        // Stop the game loop first
+        this.stopLoop();
+        this.isPaused = false;
+
+        // Clean up the current game instance if game is over
+        if (this.activeGame && this.activeGame.instance) {
+            if (this.activeGame.instance.isGameOver && this.activeGame.instance.isGameOver()) {
+                // Game is over, destroy the instance and clear state
+                if (this.activeGame.instance.destroy) {
+                    this.activeGame.instance.destroy();
+                }
+                this.activeGame.instance = null;
+                this.activeGame.hasState = false;
+            } else {
+                // Game is not over, just pause it
+                if (this.activeGame.instance.pause) {
+                    this.activeGame.instance.pause();
+                }
+            }
+        }
 
         // Hide pause overlay when going to launcher
         const pauseOverlay = document.getElementById('pause-overlay');

@@ -108,7 +108,7 @@ class TicTacToeGame {
                 if (this.board[a] === 'X') {
                     this.score += 100;
                     if (this.gameTime < 10) {
-                        window.gameManager.unlockAchievement('triple_threat', 'Üçlü Tehdit', 'Tic-Tac-Toe\'yu 10 saniyenin altında kazandın.', '🔥', true);
+                        window.gameManager.unlockAchievement('triple_threat', 'Triple Threat', 'Won Tic-Tac-Toe under 10 seconds.', '🔥', true);
                     }
                     this._triggerGameOver('win');
                 } else {
@@ -163,7 +163,7 @@ class TicTacToeGame {
             if (result === 'win') window.gameManager.checkAndUpdateHighScore('tictactoe', this.score);
         }
 
-        let title = result === 'win' ? 'Kazandın! 🎉' : (result === 'lose' ? 'Kaybettin 💀' : 'Berabere 🤝');
+        let title = result === 'win' ? 'You Win! 🎉' : (result === 'lose' ? 'You Lose 💀' : 'Draw 🤝');
 
         setTimeout(() => {
             const container = document.querySelector('.game-canvas-container');
@@ -172,8 +172,8 @@ class TicTacToeGame {
             overlay.className = 'game-over-overlay';
             overlay.innerHTML = `
                 <div class="game-over-title">${title}</div>
-                <div class="game-over-score">Skor: ${this.score}</div>
-                <button class="game-over-btn" id="ttt-restart">↻ Tekrar Oyna</button>
+                <div class="game-over-score">Score: ${this.score}</div>
+                <button class="game-over-btn" id="ttt-restart">↻ Play Again</button>
             `;
             container.appendChild(overlay);
             overlay.querySelector('#ttt-restart').addEventListener('click', () => {
@@ -274,7 +274,7 @@ class TicTacToeGame {
         ctx.font = '16px Inter, sans-serif';
         ctx.textAlign = 'center';
         if (!this.gameOver) {
-            ctx.fillText(this.playerTurn ? 'Senin Sıran (X)' : 'Rakip Bekleniyor (O)...', canvas.width / 2, this.offsetY - 30);
+            ctx.fillText(this.playerTurn ? 'Your Turn (X)' : 'AI Thinking (O)...', canvas.width / 2, this.offsetY - 30);
         }
     }
 

@@ -94,7 +94,7 @@ class FroggerGame {
                 if (this.frog.y === 1) {
                     this.score += 500;
                     this.won = true;
-                    window.gameManager.unlockAchievement('frogger_master', 'Kurbağa Efendisi', 'Frogger\'da karşıya geçtin!', '👑', true);
+                    window.gameManager.unlockAchievement('frogger_master', 'Frogger Master', 'Successfully crossed in Frogger!', '👑', true);
                     if (window.soundManager) window.soundManager.playWin();
                     this._triggerGameOver();
                 }
@@ -182,6 +182,10 @@ class FroggerGame {
     }
 
     _showGameOverOverlay() {
+        // Remove any existing overlay first
+        const existingOverlay = document.querySelector('.game-over-overlay');
+        if (existingOverlay) existingOverlay.remove();
+
         const container = document.querySelector('.game-canvas-container');
         if (!container) return;
 
@@ -191,10 +195,10 @@ class FroggerGame {
         const overlay = document.createElement('div');
         overlay.className = 'game-over-overlay';
         overlay.innerHTML = `
-            <div class="game-over-title">${this.won ? 'Karşıya Geçtin! 🎉' : 'Ezildin! 🐸'}</div>
-            <div class="game-over-score">Skor: ${this.score}</div>
-            ${isNew ? '<div class="game-over-new">🎉 YENİ REKOR!</div>' : `<div class="game-over-highscore">🏆 Rekor: ${hs}</div>`}
-            <button class="game-over-btn" id="frog-restart">↻ Tekrar Oyna</button>
+            <div class="game-over-title">${this.won ? 'You Crossed! 🎉' : 'Squashed! 🐸'}</div>
+            <div class="game-over-score">Score: ${this.score}</div>
+            ${isNew ? '<div class="game-over-new">🎉 NEW RECORD!</div>' : `<div class="game-over-highscore">🏆 Record: ${hs}</div>`}
+            <button class="game-over-btn" id="frog-restart">↻ Play Again</button>
         `;
         container.appendChild(overlay);
         overlay.querySelector('#frog-restart').addEventListener('click', () => {
@@ -246,8 +250,12 @@ class FroggerGame {
 
         // Draw Frog
         if (!this.frog.dead) {
-            let fx = this.frog.x * this.gridSize + this.gridSize / 2;
-            let fy = this.frog.y * this.gridSize + this.gridSize / 2;
+            // Clamp frog position to valid grid range
+            const clampedX = Math.max(0, Math.min(this.cols - 1, this.frog.x));
+            const clampedY = Math.max(0, Math.min(this.rows - 1, this.frog.y));
+
+            let fx = clampedX * this.gridSize + this.gridSize / 2;
+            let fy = clampedY * this.gridSize + this.gridSize / 2 + 5; // +5 offset for visual centering
             ctx.fillStyle = '#00ff88';
             ctx.shadowColor = '#00ff88';
             ctx.shadowBlur = 15;

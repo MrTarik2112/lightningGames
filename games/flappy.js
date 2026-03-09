@@ -281,11 +281,11 @@ class FlappyGame {
         const overlay = document.createElement('div');
         overlay.className = 'game-over-overlay';
         overlay.innerHTML = `
-            <div class="game-over-title">Oyun Bitti!</div>
+            <div class="game-over-title">Game Over!</div>
             ${medal ? `<div style="font-size:40px">${medal}</div>` : ''}
-            <div class="game-over-score">Skor: ${this.score}</div>
-            ${isNew ? '<div class="game-over-new">🎉 YENİ REKOR!</div>' : `<div class="game-over-highscore">🏆 Rekor: ${hs}</div>`}
-            <button class="game-over-btn" id="flappy-restart">↻ Tekrar Oyna</button>
+            <div class="game-over-score">Score: ${this.score}</div>
+            ${isNew ? '<div class="game-over-new">🎉 NEW RECORD!</div>' : `<div class="game-over-highscore">🏆 Record: ${hs}</div>`}
+            <button class="game-over-btn" id="flappy-restart">↻ Play Again</button>
         `;
         container.appendChild(overlay);
         overlay.querySelector('#flappy-restart').addEventListener('click', () => {
@@ -488,7 +488,7 @@ class FlappyGame {
             ctx.fillStyle = 'rgba(255,255,255,0.6)';
             ctx.font = '600 16px Inter, sans-serif';
             ctx.textAlign = 'center';
-            ctx.fillText('Space veya Tıkla ile başla', canvas.width / 2, canvas.height / 2 + 70);
+            ctx.fillText('Press Space or Click to start', canvas.width / 2, canvas.height / 2 + 70);
 
             // Animated arrow
             const arrowY = canvas.height / 2 + 40 + Math.sin(Date.now() / 300) * 5;

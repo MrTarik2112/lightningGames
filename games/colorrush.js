@@ -1,4 +1,4 @@
-// Color Rush - doğru renge koş, yanlış renge basma
+// Color Rush - run to the correct color, don't tap the wrong color
 class ColorRushGame {
     constructor() {
         this.canvas = null;
@@ -149,10 +149,10 @@ class ColorRushGame {
         const overlay = document.createElement('div');
         overlay.className = 'game-over-overlay';
         overlay.innerHTML = `
-            <div class="game-over-title">Yanlış Renk!</div>
-            <div class="game-over-score">Skor: ${this.score}</div>
-            ${isNew ? '<div class="game-over-new">🎉 YENİ REKOR!</div>' : `<div class="game-over-highscore">🏆 Rekor: ${hs}</div>`}
-            <button class="game-over-btn" id="colorrush-restart">↻ Tekrar Oyna</button>
+            <div class="game-over-title">Wrong Color!</div>
+            <div class="game-over-score">Score: ${this.score}</div>
+            ${isNew ? '<div class="game-over-new">🎉 NEW RECORD!</div>' : `<div class="game-over-highscore">🏆 Record: ${hs}</div>`}
+            <button class="game-over-btn" id="colorrush-restart">↻ Play Again</button>
         `;
         container.appendChild(overlay);
         overlay.querySelector('#colorrush-restart').addEventListener('click', () => {

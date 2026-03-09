@@ -156,7 +156,7 @@ class MemoryGame {
             window.gameManager.shakeScreen(0.5);
             window.gameManager.checkAndUpdateHighScore('memory', this.score);
             if (this.gameTime < 30) {
-                window.gameManager.unlockAchievement('memory_god', 'Hafıza Tanrısı', 'Memory Match\'i 30 saniyenin altında bitirdin.', '⚡', true);
+                window.gameManager.unlockAchievement('memory_god', 'Memory God', 'Finished Memory Match under 30 seconds.', '⚡', true);
             }
         }
         setTimeout(() => this._showGameOverOverlay(), 500);
@@ -171,10 +171,10 @@ class MemoryGame {
         const overlay = document.createElement('div');
         overlay.className = 'game-over-overlay';
         overlay.innerHTML = `
-            <div class="game-over-title">Tamamlandı! 🧠</div>
-            <div class="game-over-score">Skor: ${this.score}</div>
-            ${isNew ? '<div class="game-over-new">🎉 YENİ REKOR!</div>' : `<div class="game-over-highscore">🏆 Rekor: ${hs}</div>`}
-            <button class="game-over-btn" id="mem-restart">↻ Tekrar Oyna</button>
+            <div class="game-over-title">Completed! 🧠</div>
+            <div class="game-over-score">Score: ${this.score}</div>
+            ${isNew ? '<div class="game-over-new">🎉 NEW RECORD!</div>' : `<div class="game-over-highscore">🏆 Record: ${hs}</div>`}
+            <button class="game-over-btn" id="mem-restart">↻ Play Again</button>
         `;
         container.appendChild(overlay);
         overlay.querySelector('#mem-restart').addEventListener('click', () => {

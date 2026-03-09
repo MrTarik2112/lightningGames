@@ -108,7 +108,7 @@ class WhackAMoleGame {
         this.score += pts;
 
         if (this.score >= 200) {
-            window.gameManager.unlockAchievement('mole_slayer', 'Köstebek Katili', 'Whack-A-Mole\'da 200 puan yaptın.', '🔨', true);
+            window.gameManager.unlockAchievement('mole_slayer', 'Mole Slayer', 'Scored 200 points in Whack-A-Mole.', '🔨', true);
         }
 
         this._spawnParticles(m.hole.x, m.hole.y - this.holeRadius, m.type === 'golden' ? '#ffdd00' : '#ff4466', 20);
@@ -217,10 +217,10 @@ class WhackAMoleGame {
         const overlay = document.createElement('div');
         overlay.className = 'game-over-overlay';
         overlay.innerHTML = `
-            <div class="game-over-title">Süre Bitti! ⏱️</div>
-            <div class="game-over-score">Skor: ${this.score}</div>
-            ${isNew ? '<div class="game-over-new">🎉 YENİ REKOR!</div>' : `<div class="game-over-highscore">🏆 Rekor: ${hs}</div>`}
-            <button class="game-over-btn" id="wam-restart">↻ Tekrar Oyna</button>
+            <div class="game-over-title">Time's Up! ⏱️</div>
+            <div class="game-over-score">Score: ${this.score}</div>
+            ${isNew ? '<div class="game-over-new">🎉 NEW RECORD!</div>' : `<div class="game-over-highscore">🏆 Record: ${hs}</div>`}
+            <button class="game-over-btn" id="wam-restart">↻ Play Again</button>
         `;
         container.appendChild(overlay);
         overlay.querySelector('#wam-restart').addEventListener('click', () => {
@@ -243,7 +243,7 @@ class WhackAMoleGame {
         ctx.fillStyle = '#ffffff';
         ctx.font = '24px Inter, sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillText(`Kalan Süre: ${Math.ceil(this.timeLeft)}s`, canvas.width / 2, 40);
+        ctx.fillText(`Time Left: ${Math.ceil(this.timeLeft)}s`, canvas.width / 2, 40);
 
         // Draw Holes (Back)
         this.holes.forEach(h => {

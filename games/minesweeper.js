@@ -171,7 +171,7 @@ class MinesweeperGame {
         const totalSafe = this.rows * this.cols - this.mineCount;
         if (this.revealedCount >= totalSafe) {
             this.won = true;
-            window.gameManager.unlockAchievement('minesweeper_win', 'Mayın Uzmanı', 'Zorlu bir mayın tarlasını temizledin.', '💣', false);
+            window.gameManager.unlockAchievement('minesweeper_win', 'Mine Expert', 'Cleared a challenging minefield.', '💣', false);
             if (window.soundManager) window.soundManager.playWin();
             this._triggerGameOver(true);
         }
@@ -187,7 +187,7 @@ class MinesweeperGame {
         if (cell.flagged && cell.mine) {
             this.correctFlags++;
             if (this.correctFlags >= 20) {
-                window.gameManager.unlockAchievement('safe_stepper', 'Güvenli Adım', 'Bir seferde 20 mayını hatasız işaretledin.', '🛡️', true);
+                window.gameManager.unlockAchievement('safe_stepper', 'Safe Stepper', 'Marked 20 mines correctly in one go.', '🛡️', true);
             }
         } else if (!cell.flagged && cell.mine) {
             this.correctFlags--;
@@ -233,10 +233,10 @@ class MinesweeperGame {
         const overlay = document.createElement('div');
         overlay.className = 'game-over-overlay';
         overlay.innerHTML = `
-            <div class="game-over-title">${this.won ? 'Kazandın! 🎉' : 'Mayına Bastın! 💥'}</div>
-            <div class="game-over-score">Hücre: ${this.revealedCount} • Süre: ${timeStr}</div>
-            ${isNew ? '<div class="game-over-new">🎉 YENİ REKOR!</div>' : `<div class="game-over-highscore">🏆 Rekor: ${hs}</div>`}
-            <button class="game-over-btn" id="mine-restart">↻ Tekrar Oyna</button>
+            <div class="game-over-title">${this.won ? 'You Won! 🎉' : 'Hit a Mine! 💥'}</div>
+            <div class="game-over-score">Cells: ${this.revealedCount} • Time: ${timeStr}</div>
+            ${isNew ? '<div class="game-over-new">🎉 NEW RECORD!</div>' : `<div class="game-over-highscore">🏆 Record: ${hs}</div>`}
+            <button class="game-over-btn" id="mine-restart">↻ Play Again</button>
         `;
         container.appendChild(overlay);
         overlay.querySelector('#mine-restart').addEventListener('click', () => {
@@ -368,7 +368,7 @@ class MinesweeperGame {
         ctx.fillStyle = '#555577';
         ctx.font = '500 11px Inter, sans-serif';
         ctx.textAlign = 'right';
-        ctx.fillText('Sol tık: Aç • Sağ tık: Bayrak', offsetX + cols * cellSize, barY);
+        ctx.fillText('Left click: Open • Right click: Flag', offsetX + cols * cellSize, barY);
 
         // Progress bar
         const totalSafe = this.rows * this.cols - this.mineCount;
@@ -420,7 +420,7 @@ class MinesweeperGame {
 }
 
 window.gameManager.registerGame('minesweeper', MinesweeperGame, {
-    name: 'Mayın Tarlası',
+    name: 'Minesweeper',
     canvasWidth: 880,
     canvasHeight: 540
 });

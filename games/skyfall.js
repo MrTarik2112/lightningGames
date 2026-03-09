@@ -1,4 +1,4 @@
-// SkyFall - Yukarıdan düşen yıldızları yakala, boşluklardan kaç
+// SkyFall - catch falling stars from above, avoid gaps
 class SkyFallGame {
     constructor() {
         this.canvas = null;
@@ -174,10 +174,10 @@ class SkyFallGame {
         const overlay = document.createElement('div');
         overlay.className = 'game-over-overlay';
         overlay.innerHTML = `
-            <div class="game-over-title">Düştün!</div>
-            <div class="game-over-score">Skor: ${this.score}</div>
-            ${isNew ? '<div class="game-over-new">🎉 YENİ REKOR!</div>' : `<div class="game-over-highscore">🏆 Rekor: ${hs}</div>`}
-            <button class="game-over-btn" id="skyfall-restart">↻ Tekrar Oyna</button>
+            <div class="game-over-title">You Fell!</div>
+            <div class="game-over-score">Score: ${this.score}</div>
+            ${isNew ? '<div class="game-over-new">🎉 NEW RECORD!</div>' : `<div class="game-over-highscore">🏆 Record: ${hs}</div>`}
+            <button class="game-over-btn" id="skyfall-restart">↻ Play Again</button>
         `;
         container.appendChild(overlay);
         overlay.querySelector('#skyfall-restart').addEventListener('click', () => {

@@ -117,10 +117,10 @@ class SimonGame {
             if (this.playerStep === this.sequence.length) {
                 this.score = this.sequence.length;
                 if (this.score >= 10) {
-                    window.gameManager.unlockAchievement('simon_10', 'Hafıza Çırağı', 'Memotron\'da 10 puan yaptın.', '🧠', false);
+                    window.gameManager.unlockAchievement('simon_10', 'Memory Apprentice', 'Scored 10 points in Memotron.', '🧠', false);
                 }
                 if (this.score >= 20) {
-                    window.gameManager.unlockAchievement('simons_rival', 'Simon\'un Rakibi', 'Memotron\'da 20 puan yaptın.', '🧠', true);
+                    window.gameManager.unlockAchievement('simons_rival', 'Simon\'s Rival', 'Scored 20 points in Memotron.', '🧠', true);
                 }
                 this.state = 'idle';
                 if (window.soundManager) window.soundManager.playLevelUp();
@@ -213,10 +213,10 @@ class SimonGame {
         const overlay = document.createElement('div');
         overlay.className = 'game-over-overlay';
         overlay.innerHTML = `
-            <div class="game-over-title">Yanlış Tuş! ❌</div>
-            <div class="game-over-score">Seviye: ${this.score}</div>
-            ${isNew ? '<div class="game-over-new">🎉 YENİ REKOR!</div>' : `<div class="game-over-highscore">🏆 Rekor: ${hs}</div>`}
-            <button class="game-over-btn" id="smn-restart">↻ Tekrar Oyna</button>
+            <div class="game-over-title">Wrong Button! ❌</div>
+            <div class="game-over-score">Level: ${this.score}</div>
+            ${isNew ? '<div class="game-over-new">🎉 NEW RECORD!</div>' : `<div class="game-over-highscore">🏆 Record: ${hs}</div>`}
+            <button class="game-over-btn" id="smn-restart">↻ Play Again</button>
         `;
         container.appendChild(overlay);
         overlay.querySelector('#smn-restart').addEventListener('click', () => {

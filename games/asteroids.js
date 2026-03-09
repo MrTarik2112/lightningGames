@@ -127,7 +127,7 @@ class AsteroidsGame {
         if (this.gameOver) return;
         this.survivalTime += dt;
         if (this.survivalTime >= 180) {
-            window.gameManager.unlockAchievement('indestructible', 'Yıkılmaz', 'Asteroids\'te 3 dakika hayatta kaldın.', '💎', true);
+            window.gameManager.unlockAchievement('indestructible', 'Indestructible', 'Survived 3 minutes in Asteroids.', '💎', true);
         }
 
         // Thrust
@@ -247,6 +247,9 @@ class AsteroidsGame {
         if (window.gameManager) window.gameManager.shakeScreen(0.3);
         if (window.soundManager) window.soundManager.playExplosion();
 
+        // Remove the asteroid first to avoid index issues
+        this.asteroids.splice(index, 1);
+
         if (a.r > 20) {
             this.asteroids.push({
                 x: a.x, y: a.y,
@@ -269,7 +272,6 @@ class AsteroidsGame {
             this.score += 50;
         }
 
-        this.asteroids.splice(index, 1);
         if (window.gameManager) {
             window.gameManager.trackAsteroidDestroyed();
         }
@@ -287,6 +289,10 @@ class AsteroidsGame {
     }
 
     _showGameOverOverlay() {
+        // Remove any existing overlay first
+        const existingOverlay = document.querySelector('.game-over-overlay');
+        if (existingOverlay) existingOverlay.remove();
+
         const container = document.querySelector('.game-canvas-container');
         if (!container) return;
 
@@ -296,10 +302,10 @@ class AsteroidsGame {
         const overlay = document.createElement('div');
         overlay.className = 'game-over-overlay';
         overlay.innerHTML = `
-            <div class="game-over-title">Gemi Parçalandı!</div>
-            <div class="game-over-score">Skor: ${this.score} • Seviye: ${this.level}</div>
-            ${isNew ? '<div class="game-over-new">🎉 YENİ REKOR!</div>' : `<div class="game-over-highscore">🏆 Rekor: ${hs}</div>`}
-            <button class="game-over-btn" id="ast-restart">↻ Tekrar Oyna</button>
+            <div class="game-over-title">Ship Destroyed!</div>
+            <div class="game-over-score">Score: ${this.score} • Level: ${this.level}</div>
+            ${isNew ? '<div class="game-over-new">🎉 NEW RECORD!</div>' : `<div class="game-over-highscore">🏆 Record: ${hs}</div>`}
+            <button class="game-over-btn" id="ast-restart">↻ Play Again</button>
         `;
         container.appendChild(overlay);
         overlay.querySelector('#ast-restart').addEventListener('click', () => {

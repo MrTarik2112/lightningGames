@@ -141,7 +141,7 @@ class Game2048 {
                         window.gameManager.shakeScreen(1);
                     }
                     if (val === 4096) {
-                        window.gameManager.unlockAchievement('master_2048', '2048 Ustası', '4096 karosuna ulaştın.', '🌟', true);
+                        window.gameManager.unlockAchievement('master_2048', '2048 Master', 'Reached the 4096 tile.', '🌟', true);
                     }
                     skip = true;
                 } else {
@@ -227,10 +227,10 @@ class Game2048 {
         const overlay = document.createElement('div');
         overlay.className = 'game-over-overlay';
         overlay.innerHTML = `
-            <div class="game-over-title">${this.won ? 'Kazandın! 🎉' : 'Oyun Bitti!'}</div>
-            <div class="game-over-score">Skor: ${this.score}</div>
-            ${isNew ? '<div class="game-over-new">🎉 YENİ REKOR!</div>' : `<div class="game-over-highscore">🏆 Rekor: ${hs}</div>`}
-            <button class="game-over-btn" id="g2048-restart">↻ Tekrar Oyna</button>
+            <div class="game-over-title">${this.won ? 'You Won! 🎉' : 'Game Over!'}</div>
+            <div class="game-over-score">Score: ${this.score}</div>
+            ${isNew ? '<div class="game-over-new">🎉 NEW RECORD!</div>' : `<div class="game-over-highscore">🏆 Record: ${hs}</div>`}
+            <button class="game-over-btn" id="g2048-restart">↻ Play Again</button>
         `;
         container.appendChild(overlay);
         overlay.querySelector('#g2048-restart').addEventListener('click', () => {
@@ -353,7 +353,7 @@ class Game2048 {
         ctx.fillStyle = '#333355';
         ctx.font = '400 10px Inter, sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillText('← ↑ → ↓ ile kaydır', canvas.width / 2, offsetY + this.boardSize + 30);
+        ctx.fillText('Slide with ← ↑ → ↓', canvas.width / 2, offsetY + this.boardSize + 30);
     }
 
     getScore() { return this.score; }

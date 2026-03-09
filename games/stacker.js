@@ -1,4 +1,4 @@
-// Stacker - blokları üst üste hizala, kaçırdıkça daralır
+// Stacker - stack blocks on top of each other, narrows as you miss
 class StackerGame {
     constructor() {
         this.canvas = null;
@@ -159,10 +159,10 @@ class StackerGame {
         const overlay = document.createElement('div');
         overlay.className = 'game-over-overlay';
         overlay.innerHTML = `
-            <div class="game-over-title">Kule Düştü</div>
-            <div class="game-over-score">Skor: ${this.score}</div>
-            ${isNew ? '<div class="game-over-new">🎉 YENİ REKOR!</div>' : `<div class="game-over-highscore">🏆 Rekor: ${hs}</div>`}
-            <button class="game-over-btn" id="stacker-restart">↻ Tekrar Oyna</button>
+            <div class="game-over-title">Tower Collapsed!</div>
+            <div class="game-over-score">Score: ${this.score}</div>
+            ${isNew ? '<div class="game-over-new">🎉 NEW RECORD!</div>' : `<div class="game-over-highscore">🏆 Record: ${hs}</div>`}
+            <button class="game-over-btn" id="stacker-restart">↻ Play Again</button>
         `;
         container.appendChild(overlay);
         overlay.querySelector('#stacker-restart').addEventListener('click', () => {

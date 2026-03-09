@@ -150,7 +150,7 @@
         {
             id: 'minesweeper',
             icon: '💣',
-            name: 'Mayın Tarlası',
+            name: 'Minesweeper',
             desc: 'Logic puzzle',
             category: 'puzzle',
     color: '--accent-red',
@@ -675,7 +675,7 @@
             const item = document.createElement('div');
             item.className = `achievement-item ${isUnlocked ? 'unlocked' : ''} ${a.ultra ? 'ultra' : ''}`;
             const isHiddenLocked = a.hidden && !isUnlocked;
-            const title = isHiddenLocked ? 'Gizli Başarım' : a.title;
+            const title = isHiddenLocked ? 'Hidden Achievement' : a.title;
             const icon = isHiddenLocked ? '❔' : a.icon;
             item.innerHTML = `
                 <span class="achievement-item-icon">${icon}</span>
@@ -710,7 +710,7 @@
                 const item = document.createElement('div');
                 item.className = 'recent-item';
                 const timeAgo = Math.floor((Date.now() - g.lastPlayed) / 60000);
-                const timeText = timeAgo < 1 ? 'Az önce' : `${timeAgo} dk önce`;
+                const timeText = timeAgo < 1 ? 'Just now' : `${timeAgo} min ago`;
 
                 item.innerHTML = `
                     <span class="recent-icon">${g.icon}</span>
@@ -752,7 +752,7 @@
             });
             bestScoreDisplay.textContent = (bestGame && bestScore > 0)
                 ? `🏆 ${bestGame}: ${bestScore}`
-                : '🏆 En İyi: --';
+                : '🏆 Best: --';
         }
     }
 

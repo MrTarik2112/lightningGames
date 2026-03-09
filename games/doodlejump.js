@@ -144,7 +144,7 @@ class DoodleJumpGame {
             if (currentScore > this.score) {
                 this.score = currentScore;
                 if (this.score >= 10000) {
-                    window.gameManager.unlockAchievement('high_jumper', 'Yüksek Atlamacı', 'Neon Jump\'ta 10000 yüksekliğe ulaştın.', '🚀', true);
+                    window.gameManager.unlockAchievement('high_jumper', 'High Jumper', 'Reached 10000 height in Neon Jump.', '🚀', true);
                 }
             }
         }
@@ -207,10 +207,10 @@ class DoodleJumpGame {
         const overlay = document.createElement('div');
         overlay.className = 'game-over-overlay';
         overlay.innerHTML = `
-            <div class="game-over-title">Düştün! 🎈</div>
-            <div class="game-over-score">Skor: ${this.score}</div>
-            ${isNew ? '<div class="game-over-new">🎉 YENİ REKOR!</div>' : `<div class="game-over-highscore">🏆 Rekor: ${hs}</div>`}
-            <button class="game-over-btn" id="jmp-restart">↻ Tekrar Oyna</button>
+            <div class="game-over-title">You Fell! 🎈</div>
+            <div class="game-over-score">Score: ${this.score}</div>
+            ${isNew ? '<div class="game-over-new">🎉 NEW RECORD!</div>' : `<div class="game-over-highscore">🏆 Record: ${hs}</div>`}
+            <button class="game-over-btn" id="jmp-restart">↻ Play Again</button>
         `;
         container.appendChild(overlay);
         overlay.querySelector('#jmp-restart').addEventListener('click', () => {

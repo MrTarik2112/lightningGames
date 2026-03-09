@@ -214,19 +214,23 @@ class BuildCache {
   constructor() {
     this.cacheDir = CONFIG.cacheDir;
     this.metadataFile = path.join(this.cacheDir, 'metadata.json');
+    this.nodeModulesCacheDir = path.join(this.cacheDir, 'node_modules');
+    this.electronCacheDir = path.join(this.cacheDir, 'electron');
     this.ensureCacheDir();
     this.metadata = this.loadMetadata();
   }
 
   ensureCacheDir() {
     if (!fs.existsSync(this.cacheDir)) fs.mkdirSync(this.cacheDir, { recursive: true });
+    if (!fs.existsSync(this.nodeModulesCacheDir)) fs.mkdirSync(this.nodeModulesCacheDir, { recursive: true });
+    if (!fs.existsSync(this.electronCacheDir)) fs.mkdirSync(this.electronCacheDir, { recursive: true });
   }
 
   loadMetadata() {
     try {
       if (fs.existsSync(this.metadataFile)) return JSON.parse(fs.readFileSync(this.metadataFile, 'utf8'));
     } catch {}
-    return { caches: {}, stats: { hits: 0, misses: 0 } };
+    return { caches: {}, stats: { hits: 0, misses: 0 }, lastBuild: null, lastHash: null };
   }
 
   saveMetadata() {
@@ -259,9 +263,33 @@ class BuildCache {
     if (fs.existsSync(this.cacheDir)) {
       fs.rmSync(this.cacheDir, { recursive: true, force: true });
       fs.mkdirSync(this.cacheDir, { recursive: true });
-      this.metadata = { caches: {}, stats: { hits: 0, misses: 0 } };
+      fs.mkdirSync(this.nodeModulesCacheDir, { recursive: true });
+      fs.mkdirSync(this.electronCacheDir, { recursive: true });
+      this.metadata = { caches: {}, stats: { hits: 0, misses: 0 }, lastBuild: null, lastHash: null };
       this.saveMetadata();
     }
+  }
+
+  // Check if rebuild is needed based on source hash
+  needsRebuild() {
+    const currentHash = getDirectoryHash(projectRoot);
+    const lastHash = this.metadata.lastHash;
+    if (currentHash !== lastHash) {
+      this.metadata.lastHash = currentHash;
+      this.saveMetadata();
+      return true;
+    }
+    return false;
+  }
+
+  // Get cached node_modules path
+  getNodeModulesCachePath() {
+    return this.nodeModulesCacheDir;
+  }
+
+  // Get Electron cache path
+  getElectronCachePath() {
+    return this.electronCacheDir;
   }
 }
 
@@ -388,11 +416,22 @@ class WindowsBuildExecutor extends BuildExecutor {
     this.logWrite(`\n  Platform: Windows Portable`);
     this.logWrite(`\n  Compression: ${this.config.compression.name} (${this.config.compression.setting})`);
     
+    // Set up environment with cache paths
+    const env = {
+      ...process.env,
+      NODE_ENV: 'production',
+      ELECTRON_CACHE: buildCache.getElectronCachePath(),
+      ELECTRON_BUILDER_CACHE: buildCache.getElectronCachePath(),
+      npm_config_prefer_offline: 'true',
+      npm_config_no_audit: 'true',
+      npm_config_progress: 'false'
+    };
+
     const builderPath = path.join(projectRoot, 'node_modules', '.bin', 'electron-builder.cmd');
     const args = ['--win', 'portable', '--config.compression', this.config.compression.setting];
 
     return new Promise((resolve, reject) => {
-      const proc = spawn(builderPath, args, { shell: true, cwd: projectRoot, env: { ...process.env, NODE_ENV: 'production' } });
+      const proc = spawn(builderPath, args, { shell: true, cwd: projectRoot, env });
       let stdout = '', stderr = '';
       const progress = new NeonProgress(100);
 
@@ -435,30 +474,34 @@ class WSLBuildExecutor extends BuildExecutor {
 
     const wslSourcePath = `/mnt/c${projectRoot.substring(2).replace(/\\/g, '/')}`;
     const linuxBuildPath = `~/lightning-games-build-${Date.now()}`;
-    const cachePath = `~/.cache/${CONFIG.projectName}/node_modules`;
+    const cachePath = `~/.cache/${CONFIG.projectName}`;
 
     const commands = [
       `echo "🐧 Starting Linux build in WSL..."`,
       `export DEBIAN_FRONTEND=noninteractive`,
       `export ELECTRON_CACHE=~/.cache/electron`,
       `export ELECTRON_BUILDER_CACHE=~/.cache/electron-builder`,
+      `export npm_config_prefer_offline=true`,
+      `export npm_config_no_audit=true`,
+      `export npm_config_progress=false`,
+      `export npm_config_loglevel=error`,
       `rm -rf "${linuxBuildPath}"`,
       `mkdir -p "${linuxBuildPath}"`,
-      `mkdir -p ~/.cache/${CONFIG.projectName}`,
+      `mkdir -p "${cachePath}"`,
       `echo "📂 Copying project to Linux filesystem..."`,
-      `rsync -aW --inplace --exclude='node_modules' --exclude='dist' --exclude='BuildLogs' --exclude='.git' --exclude='.cache' "${wslSourcePath}/" "${linuxBuildPath}/"`,
-      `if [ -d "${cachePath}" ]; then echo "📦 Restoring cached node_modules..."; cp -r "${cachePath}" "${linuxBuildPath}/node_modules"; fi`,
+      `rsync -aW --inplace --exclude='node_modules' --exclude='dist' --exclude='BuildLogs' --exclude='.git' --exclude='.cache' --exclude='.crush' "${wslSourcePath}/" "${linuxBuildPath}/" 2>&1 | head -5`,
+      `if [ -d "${cachePath}/node_modules" ]; then echo "📦 Restoring cached node_modules..."; cp -r "${cachePath}/node_modules" "${linuxBuildPath}/"; fi`,
       `cd "${linuxBuildPath}"`,
-      `echo "📥 Installing dependencies..."`,
-      `/usr/bin/npm ci --no-optional --progress=false --prefer-offline 2>&1 | head -20`,
+      `echo "📥 Installing dependencies (parallel)..."`,
+      `/usr/bin/npm ci --no-optional --prefer-offline --no-fund --no-audit 2>&1 | tail -5`,
       `echo "🔨 Building AppImage..."`,
-      `/usr/bin/npx electron-builder@24.13.3 --linux AppImage --config.compression=${this.config.compression.setting} 2>&1`,
+      `/usr/bin/npx electron-builder@24.13.3 --linux AppImage --config.compression=${this.config.compression.setting} 2>&1 | grep -E "(packaging|building|complete|error|failed)" || true`,
       `echo "💾 Caching node_modules for future builds..."`,
-      `rm -rf ~/.cache/${CONFIG.projectName}/node_modules`,
-      `cp -r "${linuxBuildPath}/node_modules" ~/.cache/${CONFIG.projectName}/`,
+      `rm -rf "${cachePath}/node_modules"`,
+      `cp -r "${linuxBuildPath}/node_modules" "${cachePath}/" 2>/dev/null || true`,
       `echo "📋 Copying artifacts to Windows..."`,
       `mkdir -p "${wslSourcePath}/dist"`,
-      `find "${linuxBuildPath}/dist" -name "*.AppImage" -exec cp -v {} "${wslSourcePath}/dist/" \\;`,
+      `find "${linuxBuildPath}/dist" -name "*.AppImage" -exec cp -v {} "${wslSourcePath}/dist/" \\; 2>&1 | head -5`,
       `rm -rf "${linuxBuildPath}"`,
       `echo "✅ Linux build complete!"`
     ];
@@ -474,7 +517,7 @@ class WSLBuildExecutor extends BuildExecutor {
         this.logWrite(output);
         if (output.includes('Copying project')) log.step('Copying project to Linux filesystem...');
         if (output.includes('Restoring cached')) log.step('Restoring cached node_modules...');
-        if (output.includes('Installing dependencies')) log.step('Installing dependencies...');
+        if (output.includes('Installing dependencies')) log.step('Installing dependencies (parallel)...');
         if (output.includes('Building AppImage')) log.step('Building AppImage...');
         if (output.includes('Caching node_modules')) log.step('Caching node_modules...');
         if (output.includes('Copying artifacts')) log.step('Copying artifacts to Windows...');
@@ -499,7 +542,7 @@ class DockerBuildExecutor extends BuildExecutor {
     this.logWrite(`\n  Platform: Linux AppImage (Docker)`);
     this.logWrite(`\n  Compression: ${this.config.compression.name} (${this.config.compression.setting})`);
     const containerName = `${CONFIG.projectName}-build-${Date.now()}`;
-    const dockerCmd = `docker run --rm --name "${containerName}" -v "${projectRoot}:/project" -w /project ${CONFIG.dockerImage} bash -c "npm ci && npx electron-builder --linux AppImage --config.compression=${this.config.compression.setting}"`;
+    const dockerCmd = `docker run --rm --name "${containerName}" -v "${projectRoot}:/project" -w /project -e NODE_ENV=production -e npm_config_prefer_offline=true -e npm_config_no_audit=true -e npm_config_progress=false ${CONFIG.dockerImage} bash -c "npm ci --no-optional --prefer-offline && npx electron-builder --linux AppImage --config.compression=${this.config.compression.setting}"`;
 
     return new Promise((resolve, reject) => {
       const proc = spawn('docker', dockerCmd.split(' '), { shell: true, cwd: projectRoot });
@@ -529,11 +572,24 @@ class LinuxNativeBuildExecutor extends BuildExecutor {
     log.step(`${icons.linux} Starting native Linux build...`);
     this.logWrite(`\n  Platform: Linux AppImage (Native)`);
     this.logWrite(`\n  Compression: ${this.config.compression.name} (${this.config.compression.setting})`);
+    
+    // Set up environment with cache paths and optimizations
+    const env = {
+      ...process.env,
+      NODE_ENV: 'production',
+      ELECTRON_CACHE: buildCache.getElectronCachePath(),
+      ELECTRON_BUILDER_CACHE: buildCache.getElectronCachePath(),
+      npm_config_prefer_offline: 'true',
+      npm_config_no_audit: 'true',
+      npm_config_progress: 'false',
+      npm_config_loglevel: 'error'
+    };
+
     const builderPath = path.join(projectRoot, 'node_modules', '.bin', 'electron-builder');
     const args = ['--linux', 'AppImage', '--config.compression', this.config.compression.setting];
 
     return new Promise((resolve, reject) => {
-      const proc = spawn(builderPath, args, { shell: true, cwd: projectRoot, env: { ...process.env, NODE_ENV: 'production' } });
+      const proc = spawn(builderPath, args, { shell: true, cwd: projectRoot, env });
       let stdout = '', stderr = '';
 
       proc.stdout.on('data', (data) => { 
@@ -742,6 +798,20 @@ async function main() {
     }
     fs.mkdirSync(distDir, { recursive: true });
 
+    // ===================== PRE-BUILD OPTIMIZATION =====================
+    log.section('Pre-Build Optimization');
+    
+    // Check if rebuild is needed
+    const needsRebuild = buildCache.needsRebuild();
+    if (!needsRebuild && fs.existsSync(path.join(projectRoot, 'node_modules'))) {
+      log.success('Source code unchanged - using cached dependencies');
+      buildCache.metadata.stats.hits++;
+    } else {
+      log.info('Source code changed or first build - will reinstall dependencies');
+      buildCache.metadata.stats.misses++;
+    }
+    buildCache.saveMetadata();
+
     // ===================== BUILD LOG =====================
     const logDir = path.join(projectRoot, CONFIG.logDir);
     if (!fs.existsSync(logDir)) fs.mkdirSync(logDir, { recursive: true });
@@ -798,6 +868,14 @@ async function main() {
 
     console.log();
     console.log(`  Total time: ${formatDuration(buildDuration)}`);
+
+    // Cache statistics
+    const finalCacheStats = buildCache.getStats();
+    console.log();
+    console.log(`  ${neon.dim}Cache Statistics:${neon.reset}`);
+    console.log(`    • Total size: ${finalCacheStats.totalSize}`);
+    console.log(`    • Hit rate: ${finalCacheStats.hitRate}`);
+    console.log(`    • Cached builds: ${finalCacheStats.cacheCount}`);
 
     // Artifacts
     if (artifacts.length > 0) {

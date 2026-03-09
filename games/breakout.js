@@ -157,7 +157,7 @@ class BreakoutGame {
                         b.status = 0;
                         this.score += (this.brickRowCount - r) * 10;
                         if (this.score >= 50) {
-                            window.gameManager.unlockAchievement('precision', 'Hassasiyet', 'Breakout\'ta hiç top kaybetmeden 50 puan yaptın.', '🎯', true);
+                            window.gameManager.unlockAchievement('precision', 'Precision', 'Scored 50 in Breakout without losing a ball.', '🎯', true);
                         }
                         this._spawnParticles(this.ball.x, this.ball.y, b.color, 20);
                         if (window.gameManager) window.gameManager.shakeScreen(0.2);
@@ -212,10 +212,10 @@ class BreakoutGame {
         const overlay = document.createElement('div');
         overlay.className = 'game-over-overlay';
         overlay.innerHTML = `
-            <div class="game-over-title">${this.win ? 'TEBRİKLER! OYUN BİTTİ' : 'Oyun Bitti!'}</div>
-            <div class="game-over-score">Skor: ${this.score}</div>
-            ${isNew ? '<div class="game-over-new">🎉 YENİ REKOR!</div>' : `<div class="game-over-highscore">🏆 Rekor: ${hs}</div>`}
-            <button class="game-over-btn" id="breakout-restart">↻ Tekrar Oyna</button>
+            <div class="game-over-title">${this.win ? 'CONGRATULATIONS! GAME OVER' : 'Game Over!'}</div>
+            <div class="game-over-score">Score: ${this.score}</div>
+            ${isNew ? '<div class="game-over-new">🎉 NEW RECORD!</div>' : `<div class="game-over-highscore">🏆 Record: ${hs}</div>`}
+            <button class="game-over-btn" id="breakout-restart">↻ Play Again</button>
         `;
         container.appendChild(overlay);
         overlay.querySelector('#breakout-restart').addEventListener('click', () => {

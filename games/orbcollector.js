@@ -1,4 +1,4 @@
-// Orb Collector - move with ok tuşları, sarı küreleri topla, kırmızı mayınlardan kaç
+// Orb Collector - move with arrow keys, collect yellow orbs, avoid red mines
 class OrbCollectorGame {
     constructor() {
         this.canvas = null;
@@ -187,10 +187,10 @@ class OrbCollectorGame {
         const overlay = document.createElement('div');
         overlay.className = 'game-over-overlay';
         overlay.innerHTML = `
-            <div class="game-over-title">Toplama Bitti</div>
-            <div class="game-over-score">Skor: ${this.score}</div>
-            ${isNew ? '<div class="game-over-new">🎉 YENİ REKOR!</div>' : `<div class="game-over-highscore">🏆 Rekor: ${hs}</div>`}
-            <button class="game-over-btn" id="orbcollector-restart">↻ Tekrar Oyna</button>
+            <div class="game-over-title">Collection Complete</div>
+            <div class="game-over-score">Score: ${this.score}</div>
+            ${isNew ? '<div class="game-over-new">🎉 NEW RECORD!</div>' : `<div class="game-over-highscore">🏆 Record: ${hs}</div>`}
+            <button class="game-over-btn" id="orbcollector-restart">↻ Play Again</button>
         `;
         container.appendChild(overlay);
         overlay.querySelector('#orbcollector-restart').addEventListener('click', () => {

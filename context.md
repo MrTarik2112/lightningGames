@@ -229,7 +229,7 @@ card.style.transform = `rotateX(${-dy / 8}deg) rotateY(${dx / 8}deg) translateZ(
 | 11 | `runner` | Neon Runner | 🦖 | arcade | 880x540 | Overcome obstacles |
 | 12 | `game2048` | 2048 | ✨ | puzzle | 880x540 | Number merging |
 | 13 | `flappy` | Flappy Bird | 🐦 | arcade | 880x540 | Flight simulation |
-| 14 | `minesweeper` | Mayın Tarlası | 💣 | puzzle | 880x540 | Logic puzzle |
+| 14 | `minesweeper` | Minesweeper | 💣 | puzzle | 880x540 | Logic puzzle |
 | 15 | `pong` | Squash Pong | 🏓 | classic | 880x540 | Single player pong |
 | 16 | `neonduel` | Neon Duel | ⚔️ | classic | 880x540 | 2 Player Local Duel |
 | 17 | `breakout` | Breakout | 🧱 | classic | 880x540 | Brick breaking |
