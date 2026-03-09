@@ -76,8 +76,8 @@ You're working. You need a 2-minute break. You want to play a quick game.
 
 ✅ **< 200ms launch time** from anywhere  
 ✅ **40 handcrafted games** with neon aesthetics  
-✅ **37 achievements** to unlock  
-✅ **4 complete themes** to customize  
+✅ **100+ achievements** to unlock  
+✅ **11 complete themes** to customize  
 ✅ **Zero installation** - portable executable  
 ✅ **No internet required** - 100% offline  
 ✅ **No accounts** - no login, no signup  
@@ -191,7 +191,7 @@ This works even when Lightning Games is minimized to the system tray. Press it f
 
 **Choose Your Theme**
 1. Click the gear icon (⚙️) in the top-right
-2. Select from 4 themes: Neon, Retro, Minimal, Forest
+2. Select from 11 themes: Neon, Retro, Minimal, Forest, Ocean, Sunset, Purple Haze, Matrix, Cyberpunk, Dark Blue, Fire
 3. Theme applies instantly - no reload needed
 
 **Adjust Audio**
@@ -443,7 +443,7 @@ lightningGames/
 │   └── ...
 │
 ├── styles/              # CSS design system
-│   └── main.css         # 1,200+ lines, 4 themes
+│   └── main.css         # 1,200+ lines, 11 themes
 │
 ├── scripts/             # Build utilities
 │   ├── build.js         # Interactive build wizard
@@ -492,9 +492,8 @@ with neon visuals and synthesized audio
 </td>
 <td width="33%" valign="top" align="center">
 
-### 🏆 37 Achievements
-11 Normal • 15 Ultra  
-3 Time-Based • 1 Hidden • 1 Godly
+### 🏆 100+ Achievements
+11 Normal • 15 Ultra • 3 Time-Based • 1 Hidden • 1 Godly • 69+ Game-Specific & Progression
 
 Toast notifications with fanfare  
 Persistent tracking across sessions
@@ -1524,7 +1523,7 @@ The crown jewel of Lightning Games. A complete tower defense experience with str
 
 ## 🏅 Achievement System
 
-**37 achievements** across multiple rarity tiers. Achievements trigger neon toast popups with a synthesized fanfare sound.
+**100+ achievements** across multiple rarity tiers. Achievements trigger neon toast popups with a synthesized fanfare sound.
 
 ### Achievement Tiers
 
