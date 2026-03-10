@@ -2335,8 +2335,8 @@ bun run dist
 
 2. **Platform Selection**
    - [1] Windows Portable
-   - [2] Linux AppImage (WSL)
-   - [3] Both Platforms
+   - [2] Linux AppImage (WSL) - Via WSL Linux filesystem
+   - [3] Both Platforms - Windows + Linux
 
 3. **Compression Level**
    - [1] Store (~140MB, ~5s) - No compression
@@ -2349,12 +2349,19 @@ bun run dist
 
 ### Compression Comparison
 
-| Level | Windows | Linux | Time | Use Case |
-|-------|---------|-------|------|----------|
+| Level | Windows | Linux AppImage | Time | Use Case |
+|-------|---------|--------|------|----------|
 | Store | 274 MB | 140 MB | ~5s | Quick testing |
 | Normal | 105 MB | 99 MB | ~50s | Development |
 | Maximum | 85 MB | 75 MB | ~90s | Release |
 | ULTRA MEGA | 65 MB | 55 MB | ~3m | Final production |
+
+**Linux Build Notes:**
+- Builds via WSL using native Linux filesystem
+- Avoids all `/mnt/c` permission issues
+- Requires: WSL, rsync, npm, electron-builder
+- Build time: ~50-60s (includes npm install)
+- Output: `dist/Lightning Games-X.Y.Z.AppImage`
 
 ### Version Auto-Update
 
@@ -2405,17 +2412,109 @@ The build wizard automatically detects which package manager to use:
 - Bun: 3-5x faster dependency installation
 - Same output: Identical build artifacts
 
+**WSL Integration:**
+- Automatically detects WSL availability
+- Checks for rsync in WSL
+- Provides installation guide if dependencies missing
+- Runs builds in WSL's native Linux filesystem
+
 ### Build Output
 
 All builds are saved to `dist/`:
 
 ```
 dist/
-├── Lightning Games X.Y.Z.exe          # Windows portable
-├── Lightning Games-X.Y.Z.AppImage     # Linux AppImage
+├── Lightning Games X.Y.Z.exe          # Windows portable executable
+├── Lightning Games-X.Y.Z.AppImage     # Linux AppImage executable
 ├── win-unpacked/                      # Windows unpacked files
 └── linux-unpacked/                    # Linux unpacked files
 ```
+
+**Windows Build:**
+- Single portable .exe file
+- No installation required
+- Runs directly on Windows
+
+**Linux Build (via WSL):**
+- Single AppImage executable
+- No installation required
+- Runs on any Linux distribution
+- Built in WSL, copied to Windows dist/
+
+### Recent Fixes (v6.1) - LINUX WSL BUILD COMPLETE ✅
+
+**MAJOR MILESTONE: Linux AppImage builds now fully working via WSL!**
+
+- ✨ **WSL Linux Filesystem Build** - Bypasses all `/mnt/c` permission issues
+  - Copies project to WSL native Linux filesystem (`$HOME`)
+  - Runs `npm install` and `electron-builder` in Linux environment
+  - Copies resulting AppImage back to Windows `dist/` folder
+  - Cleans up temporary build directory
+  - **Result**: Zero permission errors, reliable builds
+  
+- ✨ **Bash Script Execution** - Fixed shell escaping issues
+  - Creates temporary bash script file instead of inline commands
+  - Avoids complex quote escaping in nested shells
+  - Proper path expansion with `$HOME` instead of `~`
+  - Clean error handling and logging
+  
+- ✨ **Rsync Integration** - Efficient file copying
+  - Checks for rsync availability in WSL
+  - Excludes node_modules, dist, BuildLogs, .git
+  - Fast incremental copying
+  - Automatic installation guide if missing
+  
+- ✨ **UI Text Corrections** - Reflects actual implementation
+  - Changed "Linux AppImage (Docker)" → "Linux AppImage (WSL)"
+  - Updated platform selection messages
+  - Removed unused Docker detection code
+  
+- ✨ **Build Verification** - Confirms successful artifact creation
+  - Detects AppImage files in dist/
+  - Shows file size and location
+  - Validates build completion
+  
+- 🐛 **Fixed Permission Denied (Error 126)** - Root cause was NTFS filesystem
+  - Windows filesystem mounted at `/mnt/c` doesn't support Unix permissions
+  - `chmod` commands ineffective on NTFS
+  - Solution: Build in WSL's native Linux filesystem
+  
+- 🐛 **Fixed Shell Escaping Issues** - Complex nested quotes
+  - Original approach: `wsl bash -c 'command && command && ...'`
+  - Problem: Quote escaping became impossible with many commands
+  - Solution: Write commands to temporary bash script file
+  
+- 🐛 **Fixed Path Expansion** - Tilde expansion in bash
+  - Original: `~/lightning-games-build-*` (not expanded in script)
+  - Fixed: `$HOME/lightning-games-build-*` (properly expanded)
+
+**Test Results:**
+- ✅ Linux AppImage: 104.56 MB (Store compression)
+- ✅ Build time: ~58 seconds
+- ✅ Zero permission errors
+- ✅ Artifact successfully copied to Windows dist/
+- ✅ Temporary files cleaned up
+
+**How It Works:**
+```
+1. User runs: npm run dist
+2. Select platform: [2] Linux AppImage (WSL)
+3. Select compression: [1] Store
+4. Build wizard creates temp bash script
+5. Script runs in WSL:
+   - Copy project to $HOME/lightning-games-build-*
+   - npm install (in Linux filesystem)
+   - npx electron-builder --linux AppImage
+   - Copy AppImage back to Windows dist/
+   - Clean up temp directory
+6. Result: dist/Lightning Games-X.Y.Z.AppImage
+```
+
+**Requirements:**
+- WSL installed and working
+- rsync available in WSL (auto-check with install guide)
+- npm available in WSL
+- electron-builder available (installed via npm)
 
 ### Recent Fixes (v6.0)
 
