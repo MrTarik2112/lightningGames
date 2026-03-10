@@ -5,17 +5,6 @@
 
     const GAME_CARDS_CONFIG = [
         {
-            id: 'doom3d',
-            icon: '💀',
-            name: 'DOOM 3D',
-            desc: 'First-person demon slayer',
-            category: 'arcade',
-            color: '--accent-red',
-            glowColor: 'rgba(255, 68, 102, 0.12)',
-            borderColor: 'rgba(255, 68, 102, 0.35)',
-            shadowColor: '0 0 30px rgba(255, 68, 102, 0.2), 0 0 60px rgba(255, 68, 102, 0.06)'
-        },
-        {
             id: 'snake',
             icon: '🐍',
             name: 'Snake',
@@ -1917,14 +1906,6 @@
         location.reload();
     }
     
-    // WebGL Test Functionality
-    const btnWebGLTest = document.getElementById('btn-webgl-test');
-    if (btnWebGLTest) {
-        btnWebGLTest.addEventListener('click', () => {
-            runWebGLDiagnostic();
-        });
-    }
-    
     // Export Data Functionality
     const btnExportData = document.getElementById('btn-export-data');
     const dataExportModal = document.getElementById('data-export-modal');
@@ -2192,101 +2173,3 @@
     }
 
 })();
-
-// WebGL Diagnostic Function
-function runWebGLDiagnostic() {
-    const results = [];
-    
-    try {
-        // Basic WebGL support check
-        const canvas = document.createElement('canvas');
-        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-        
-        if (!gl) {
-            results.push('❌ WebGL is not supported');
-            results.push('💡 Try enabling hardware acceleration in your browser');
-        } else {
-            results.push('✅ WebGL is supported');
-            
-            // Get WebGL information
-            results.push(`📋 WebGL Version: ${gl.getParameter(gl.VERSION)}`);
-            results.push(`🏭 Vendor: ${gl.getParameter(gl.VENDOR)}`);
-            results.push(`🖥️ Renderer: ${gl.getParameter(gl.RENDERER)}`);
-            results.push(`📐 Max Texture Size: ${gl.getParameter(gl.MAX_TEXTURE_SIZE)}`);
-            results.push(`🎨 Max Viewport: ${gl.getParameter(gl.MAX_VIEWPORT_DIMS)}`);
-            
-            // Check for WebGL2
-            const gl2 = canvas.getContext('webgl2');
-            if (gl2) {
-                results.push('✅ WebGL2 is also supported');
-            } else {
-                results.push('⚠️ WebGL2 is not supported (WebGL1 should work)');
-            }
-            
-            // Check Three.js
-            if (typeof THREE !== 'undefined') {
-                results.push(`✅ Three.js loaded (version ${THREE.REVISION})`);
-                
-                // Try creating a basic Three.js renderer
-                try {
-                    const testRenderer = new THREE.WebGLRenderer({ canvas: canvas });
-                    results.push('✅ Three.js WebGL renderer creation successful');
-                    testRenderer.dispose();
-                } catch (threeError) {
-                    results.push(`❌ Three.js renderer failed: ${threeError.message}`);
-                }
-            } else {
-                results.push('❌ Three.js not loaded');
-            }
-        }
-        
-        // System information
-        results.push('');
-        results.push('🖥️ System Information:');
-        results.push(`Platform: ${navigator.platform}`);
-        results.push(`User Agent: ${navigator.userAgent}`);
-        results.push(`Hardware Concurrency: ${navigator.hardwareConcurrency} cores`);
-        results.push(`Memory: ${navigator.deviceMemory || 'Unknown'} GB`);
-        
-    } catch (error) {
-        results.push(`❌ Diagnostic failed: ${error.message}`);
-    }
-    
-    // Display results in a modal
-    const resultText = results.join('\n');
-    
-    // Create diagnostic modal
-    const modal = document.createElement('div');
-    modal.className = 'settings-modal';
-    modal.innerHTML = `
-        <div class="settings-backdrop"></div>
-        <div class="settings-panel" style="max-width: 600px;">
-            <div class="settings-header">
-                <h2 class="settings-title">🔍 WebGL Diagnostic Results</h2>
-                <button class="settings-close" onclick="this.closest('.settings-modal').remove()">✕</button>
-            </div>
-            <div class="settings-content">
-                <pre style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; 
-                           color: var(--text-primary); font-family: 'JetBrains Mono', monospace; 
-                           font-size: 12px; line-height: 1.4; white-space: pre-wrap; 
-                           max-height: 400px; overflow-y: auto;">${resultText}</pre>
-                <div style="margin-top: 15px; text-align: center;">
-                    <button onclick="navigator.clipboard.writeText(\`${resultText.replace(/`/g, '\\`')}\`).then(() => alert('Copied to clipboard!'))" 
-                            class="settings-btn" style="margin-right: 10px;">📋 Copy Results</button>
-                    <button onclick="this.closest('.settings-modal').remove()" 
-                            class="settings-btn">Close</button>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    document.body.appendChild(modal);
-    
-    // Close on backdrop click
-    modal.querySelector('.settings-backdrop').addEventListener('click', () => {
-        modal.remove();
-    });
-    
-    console.log('WebGL Diagnostic Results:');
-    console.log(resultText);
-}
