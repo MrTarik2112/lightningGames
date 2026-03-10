@@ -1585,6 +1585,17 @@
     gm.totalAchievementsCount = ALL_ACHIEVEMENTS.length;
     renderGameCards();
 
+    // Tutorial Button
+    const btnTutorial = document.getElementById('btn-tutorial');
+    if (btnTutorial) {
+        btnTutorial.addEventListener('click', () => {
+            settingsModal.classList.add('hidden');
+            if (window.tutorialSystem) {
+                window.tutorialSystem.start();
+            }
+        });
+    }
+
     // Event Delegation for Games Grid - Left Click
     gamesGrid.addEventListener('click', (e) => {
         const gameCard = e.target.closest('.game-card');

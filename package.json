@@ -1,6 +1,6 @@
 {
   "name": "lightning-games",
-  "version": "2.2.2",
+  "version": "3.6.4",
   "description": "⚡ Lightning Games - Quick game launcher that lives in your system tray",
   "main": "main.js",
   "scripts": {

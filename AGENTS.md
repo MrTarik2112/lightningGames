@@ -1,7 +1,7 @@
 # ⚡ Lightning Games - Complete Technical Documentation
 
-> **Version:** 3.5  
-> **Last Updated:** 2026-03-09  
+> **Version:** 3.6.4  
+> **Last Updated:** 2026-03-10  
 > **Author:** Tarik  
 > **Status:** Production Ready  
 > **Package Manager:** Bun + npm (auto-detect)  
@@ -2084,9 +2084,149 @@ npx electron-builder --win portable
 
 ---
 
-## 🛠️ 18. Recent Fixes & Updates
+## 🛠️ 24. Recent Fixes & Updates
 
-### v3.4 (2026-03-09) - DIFFICULTY SYSTEM ENHANCEMENTS & BUN MIGRATION
+### v3.6.4 (2026-03-10) - PREMIUM ANIMATION SYSTEM
+- **Advanced Animations**: Professional-grade animations for all elements
+  - Tooltip: Pop animation with bounce easing (0.6s)
+  - Spotlight: Continuous glow pulse animation (2s)
+  - Title: Slide down animation with bounce easing
+  - Description: Fade in animation with delay (0.2s)
+  - Keyboard hints: Slide up animation with delay (0.3s)
+  - Keyboard hint items: Staggered slide animations (0.1s-0.4s delays)
+  - Controls: Slide up animation with delay (0.4s)
+  - Buttons: Hover animation with smooth lift effect
+  - Close button: Slide right animation with rotate on hover
+  - Confetti: Enhanced fall animation with 720deg rotation (2.5s)
+  - Progress bar: Smooth fill transition (0.8s) with glow pulse
+- **Animation Easing Functions**:
+  - Bounce easing: `cubic-bezier(0.34, 1.56, 0.64, 1)` for pop effects
+  - Smooth easing: `cubic-bezier(0.22, 1, 0.36, 1)` for transitions
+  - Standard easing: `ease-out` for fades
+- **Staggered Animations**:
+  - Keyboard hints appear one by one
+  - Smooth cascade effect
+  - Professional timing
+- **Continuous Animations**:
+  - Spotlight glow pulse (infinite)
+  - Progress bar glow pulse (infinite)
+  - Keyboard key bounce (infinite)
+- **Performance**:
+  - GPU-accelerated animations
+  - 60fps maintained
+  - Smooth transitions
+  - No jank or stuttering
+
+### v3.6.3 (2026-03-10) - BACKDROP VISIBILITY FIX
+- **Background Visibility Fix**: Removed dark backdrop for better content visibility
+  - Backdrop: Transparent background instead of black overlay
+  - Spotlight: Reduced shadow opacity (0.85 → 0.6) for subtle darkening
+  - Result: Original app content remains visible behind tutorial
+- **Blur Optimization**:
+  - Removed backdrop blur completely
+  - Tooltip blur: 20px → 8px (less intrusive)
+  - Background: 0.98 → 0.95 opacity (more transparent)
+- **Visual Balance**:
+  - Spotlight provides focus without hiding content
+  - Tutorial overlay is informative but not obstructive
+  - Better user experience with visible background
+
+### v3.6.2 (2026-03-10) - TUTORIAL UI REFINEMENT
+- **Tooltip Size Optimization**: Reduced tooltip size for better visibility
+  - Max-width: 420px → 360px
+  - Padding: 28px → 20px
+  - More compact and elegant design
+- **Typography Refinement**:
+  - Title: 20px → 18px
+  - Description: 15px → 13px
+  - Better readability with smaller text
+- **Keyboard Hints Optimization**:
+  - Grid columns: 130px → 110px
+  - Padding: 14px → 10px
+  - More compact layout
+- **Progress Bar Refinement**:
+  - Height: 6px → 5px
+  - Reduced glow for cleaner look
+- **Button Optimization**:
+  - Padding: 12px 14px → 10px 12px
+  - Font size: 13px → 12px
+  - Smaller but still clickable
+- **Backdrop Adjustment**:
+  - Blur: 10px → 6px (less blur, clearer content)
+  - Opacity: 0.75 → 0.8 (slightly darker)
+- **Close Button**:
+  - Size: 28px → 24px
+  - Font size: 24px → 20px
+- **Responsive Design**:
+  - Mobile optimizations
+  - Better spacing on small screens
+  - Improved touch targets
+
+### v3.6.1 (2026-03-10) - TUTORIAL VISUAL FIX & ENHANCEMENT
+- **Spotlight Visibility Fix**: Fixed issue where spotlight area was blurred
+  - Implemented box-shadow technique for spotlight effect
+  - Removed blur from spotlight area while keeping backdrop blurred
+  - Spotlight now shows crystal-clear content
+- **Visual Enhancements**:
+  - Spotlight border increased to 3px with stronger glow
+  - Tooltip styling improved with better contrast
+  - Keyboard hints redesigned with gradient background
+  - Progress bar enhanced with 3-color gradient
+  - Buttons redesigned with better hover effects
+  - Close button improved with rotation animation
+  - Confetti enhanced with more particles and colors
+- **Animation Improvements**:
+  - Spotlight pulse animation more pronounced
+  - Tooltip fade-in animation added
+  - Button hover animations smoother
+  - Confetti rotation increased to 720deg
+- **Responsive Design**:
+  - Mobile layout optimized
+  - Tablet layout improved
+  - Desktop layout refined
+- **Accessibility**:
+  - Reduced motion support enhanced
+  - prefers-reduced-motion media query added
+  - High contrast maintained
+
+### v3.6.0 (2026-03-10) - ADVANCED INTERACTIVE TUTORIAL SYSTEM
+- **Comprehensive Tutorial System**: Fully interactive, animated, step-by-step guide
+  - 14 detailed tutorial steps covering all features
+  - Smooth animations and transitions (fadeIn, slideUp, slideDown, bounce, etc.)
+  - Spotlight effect highlighting relevant UI elements
+  - Context-sensitive tooltips with dynamic positioning
+  - Progress bar showing tutorial completion
+  - Keyboard shortcuts display with visual indicators
+  - Confetti celebration on completion
+  - Tutorial progress persistence (localStorage)
+  - Restart capability for completed tutorials
+  - Sound effects integration
+- **Tutorial Features**:
+  - Game gallery and card system explanation
+  - Favorites system walkthrough
+  - Search functionality demonstration
+  - Category filtering guide
+  - Random game feature
+  - Settings and themes customization
+  - Keyboard shortcuts reference
+  - Achievements system overview
+  - Statistics tracking explanation
+  - Global hotkey (Ctrl+Alt+G) information
+- **Visual Effects**:
+  - Neon glow effects on focused elements
+  - Pulsing animations for attention
+  - Smooth spotlight transitions
+  - Animated progress bar
+  - Keyboard key animations
+  - Confetti particle effects
+- **Accessibility**:
+  - Skip button for quick exit
+  - Back/Next navigation
+  - Clear progress indication
+  - Readable descriptions
+  - Accessible from Settings menu
+
+### v3.5 (2026-03-10) - KEYBOARD NAVIGATION SYSTEM
 - **Difficulty System**: Complete overhaul with comprehensive logging
   - Added settings reload in `startGame()` to ensure latest difficulty is applied
   - Enhanced logging in GameManager, Tower Defense, and Launcher
