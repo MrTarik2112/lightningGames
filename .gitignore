@@ -10,6 +10,7 @@ styles/tailwind-output.css
 styles/tailwind-output.css.map
 
 # Build artifacts
+<<<<<<< HEAD
 
 BuildLogs/
 
@@ -20,3 +21,11 @@ temp_*
 /~
 ~/
 ~
+=======
+dist/
+BuildLogs/
+
+# Temporary files
+temp_*
+*.log
+>>>>>>> LinuxBuild

@@ -67,7 +67,15 @@ function formatDuration(ms) {
 function hasWSL() {
   if (!isWindows) return false;
   try {
-    execSync('wsl --list', { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] });
+    // Check if wsl.exe exists
+    execSync('where wsl', { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] });
+    
+    // Try to run a simple command with timeout
+    execSync('wsl echo "test"', { 
+      encoding: 'utf8', 
+      stdio: ['pipe', 'pipe', 'pipe'],
+      timeout: 5000
+    });
     return true;
   } catch {
     return false;
@@ -83,7 +91,7 @@ function runCommand(cmd, args, options = {}) {
   return new Promise((resolve, reject) => {
     const proc = spawn(cmd, args, {
       cwd: projectRoot,
-      stdio: 'inherit',
+      stdio: ['inherit', 'inherit', 'inherit'],  // Allow stdin passthrough for sudo password
       shell: true,
       ...options
     });
@@ -95,6 +103,32 @@ function runCommand(cmd, args, options = {}) {
 
     proc.on('error', reject);
   });
+}
+
+// ===================== CHECK LINUX DEPENDENCIES =====================
+async function checkLinuxDependencies() {
+  log.section('Checking Linux Dependencies');
+  
+  const deps = ['dpkg', 'fakeroot'];
+  const missing = [];
+  
+  for (const dep of deps) {
+    try {
+      execSync(`wsl which ${dep}`, { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] });
+      log.success(`${dep} found`);
+    } catch {
+      missing.push(dep);
+      log.warning(`${dep} not found`);
+    }
+  }
+  
+  if (missing.length > 0) {
+    log.error(`Missing dependencies: ${missing.join(', ')}`);
+    log.info(`Install with: wsl sudo apt-get install -y ${missing.join(' ')}`);
+    return false;
+  }
+  
+  return true;
 }
 
 // ===================== BUILD WINDOWS =====================
@@ -140,32 +174,85 @@ async function buildLinux(compression, compressionName) {
   
   if (!hasWSL()) {
     log.error('WSL not available - skipping Linux build');
+    log.info('Install WSL: https://docs.microsoft.com/en-us/windows/wsl/install');
+    return false;
+  }
+
+  // Check for rsync
+  try {
+    execSync('wsl which rsync', { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] });
+  } catch {
+    log.error('rsync not found in WSL');
+    log.info('Install rsync: wsl sudo apt-get install -y rsync');
     return false;
   }
 
   const pm = pmDetector.getPreferred();
-  const builderCmd = pm === 'bun' ? 'bunx electron-builder' : 'npx electron-builder';
   const icon = pm === 'bun' ? '⚡' : '📦';
   
   log.info(`Using ${icon} ${neon.yellow}${pm}${neon.reset} for build`);
-  
-  // ULTRA MEGA mode
-  if (compressionName === 'ULTRA MEGA') {
-    log.info(`${neon.magenta}💎 ULTRA MEGA MODE ACTIVATED${neon.reset}`);
-    log.step(`Running: wsl bash -c "cd /mnt/c/... && ${builderCmd} --linux AppImage --config.compression=maximum"`);
-  } else {
-    log.step(`Running: wsl bash -c "cd /mnt/c/... && ${builderCmd} --linux AppImage --config.compression=${compression}"`);
-  }
+  log.info('Building in WSL Linux filesystem (avoids permission issues)');
   
   try {
-    const wslPath = `/mnt/c${projectRoot.substring(2).replace(/\\/g, '/')}`;
-    const cmd = `wsl bash -c "cd '${wslPath}' && ${builderCmd} --linux AppImage --config.compression=${compression}"`;
+    // Convert Windows path to WSL path
+    const wslSourcePath = `/mnt/c${projectRoot.substring(2).replace(/\\/g, '/')}`;
+    const timestamp = Date.now();
+    const linuxBuildPath = `$HOME/lightning-games-build-${timestamp}`;
     
-    await runCommand(cmd, [], { shell: true });
+    // Create a temporary bash script to avoid escaping issues
+    const scriptContent = `#!/bin/bash
+set -e
+
+echo "🐧 Starting Linux build in WSL..."
+export DEBIAN_FRONTEND=noninteractive
+
+# Clean up any previous build
+rm -rf "${linuxBuildPath}"
+mkdir -p "${linuxBuildPath}"
+
+echo "📂 Copying project to Linux filesystem..."
+rsync -a --exclude='node_modules' --exclude='dist' --exclude='BuildLogs' --exclude='.git' "${wslSourcePath}/" "${linuxBuildPath}/"
+
+cd "${linuxBuildPath}"
+
+echo "📥 Installing dependencies..."
+npm install
+
+echo "🔨 Building AppImage..."
+npx electron-builder --linux AppImage --config.compression=${compression}
+
+echo "📋 Copying artifacts back to Windows..."
+mkdir -p "${wslSourcePath}/dist"
+find "${linuxBuildPath}/dist" -name "*.AppImage" -exec cp -v {} "${wslSourcePath}/dist/" \\;
+
+echo "🧹 Cleaning up..."
+rm -rf "${linuxBuildPath}"
+
+echo "✅ Linux build complete!"
+`;
+
+    // Write script to temp file
+    const scriptPath = path.join(projectRoot, 'temp_build_linux.sh');
+    fs.writeFileSync(scriptPath, scriptContent);
+    
+    // Convert script path to WSL path
+    const wslScriptPath = `/mnt/c${scriptPath.substring(2).replace(/\\/g, '/')}`;
+    
+    log.step(`Running build script in WSL...`);
+    await runCommand('wsl', ['bash', wslScriptPath], { shell: false });
+    
+    // Clean up script
+    fs.unlinkSync(scriptPath);
+    
     log.success('Linux build complete');
     return true;
   } catch (err) {
     log.error(`Linux build failed: ${err.message}`);
+    log.info('Troubleshooting:');
+    log.info('1. Verify WSL: wsl --list --verbose');
+    log.info('2. Check npm in WSL: wsl npm --version');
+    log.info('3. Install rsync: wsl sudo apt-get install -y rsync');
+    log.info('4. Manual build: wsl bash -c "cd ~ && mkdir test && cd test && npm init -y && npm install electron-builder"');
     return false;
   }
 }
@@ -260,7 +347,7 @@ async function main() {
     const wslAvailable = hasWSL();
 
     console.log(`  ${neon.bold}[1]${neon.reset} 🪟  Windows Portable       ${neon.dim}Single .exe file${neon.reset}`);
-    console.log(`  ${neon.bold}[2]${neon.reset} 🐧  Linux AppImage (WSL)   ${!wslAvailable ? neon.red + '[WSL not available]' : neon.dim + 'Via WSL Ubuntu'}${neon.reset}`);
+    console.log(`  ${neon.bold}[2]${neon.reset} 🐧  Linux AppImage (WSL)   ${!wslAvailable ? neon.red + '[WSL not available]' : neon.dim + 'Via WSL Linux filesystem'}${neon.reset}`);
     console.log(`  ${neon.bold}[3]${neon.reset} ⚡  Both Platforms         ${!wslAvailable ? neon.red + '[WSL required]' : neon.dim + 'Windows + Linux'}${neon.reset}`);
     console.log();
 
