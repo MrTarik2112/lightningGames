@@ -31,7 +31,6 @@
 - 📊 **Stats Tracking** - Play time, games played, unique games, consecutive streaks
 - 🎨 **Neon Aesthetics** - Glassmorphism UI, particle effects, smooth animations
 - 🔐 **Privacy** - 100% offline, no telemetry, no external connections
-- ⌨️ **Keyboard Navigation** - Full keyboard support with arrow keys, shortcuts, and help system
 
 ### Tech Stack
 | Component | Technology | Version | Purpose |
@@ -1921,132 +1920,7 @@ Users can adjust in Settings panel:
 
 ---
 
-## ⌨️ 19. Keyboard Navigation System - Complete Accessibility
-
-Lightning Games includes a comprehensive keyboard navigation system that provides full accessibility without requiring a mouse.
-
-### Navigation Modes
-
-**Mouse Mode (Default)**:
-- Standard mouse interaction
-- Hover effects and click handlers
-- Automatic mode switching
-
-**Keyboard Mode (Activated)**:
-- Visual focus indicators with neon glow
-- Grid-aware navigation
-- Context-sensitive hints
-- Smart element positioning
-
-### Keyboard Shortcuts Reference
-
-#### Navigation
-| Shortcut | Action | Description |
-|----------|--------|-------------|
-| `Tab` | Next element | Navigate to next focusable element |
-| `Shift+Tab` | Previous element | Navigate to previous focusable element |
-| `↑` `↓` `←` `→` | Grid navigation | Navigate in 2D grid with intelligent positioning |
-| `Enter` | Activate | Launch game, click button, or start navigation |
-| `Space` | Activate | Alternative activation key |
-| `Esc` | Exit/Close | Exit navigation mode or close application |
-
-#### Quick Actions
-| Shortcut | Action | Description |
-|----------|--------|-------------|
-| `F` | Toggle favorite | Add/remove game from favorites (when navigating) |
-| `/` | Focus search | Jump to search input field |
-| `R` | Random game | Launch a random game |
-| `S` | Settings | Open settings modal |
-| `H` or `?` | Help | Show keyboard shortcuts help |
-
-#### Category Switching
-| Shortcut | Category | Description |
-|----------|----------|-------------|
-| `1` | All | Show all games |
-| `2` | Arcade | Show arcade games only |
-| `3` | Puzzle | Show puzzle games only |
-| `4` | Classic | Show classic games only |
-| `5` | Strategy | Show strategy games only |
-| `6` | Favorites | Show favorite games only |
-
-### Navigation Features
-
-**Grid-Aware Movement**:
-- Arrow keys find nearest elements in the specified direction
-- Maintains spatial relationships between game cards
-- Handles dynamic grid layouts and filtering
-
-**Visual Feedback**:
-- Focused elements get cyan outline with glow effect
-- Pulsing animation indicates keyboard focus
-- Context hints show available actions
-
-**Smart Mode Switching**:
-- Mouse movement automatically disables keyboard mode
-- Keyboard input automatically enables keyboard mode
-- Seamless transition between input methods
-
-**Focus Persistence**:
-- Maintains focus during search filtering
-- Preserves position during category switching
-- Handles dynamic content updates
-
-### Implementation Details
-
-```javascript
-// Keyboard navigation state
-let keyboardNavigationEnabled = false;
-let currentFocusIndex = -1;
-let focusableElements = [];
-
-// Grid navigation algorithm
-function navigateKeyboard(direction) {
-    // Find nearest element in specified direction
-    // Uses spatial positioning for grid navigation
-    // Falls back to sequential for non-grid elements
-}
-
-// Visual focus management
-function setKeyboardFocus(index) {
-    // Apply focus styling
-    // Show context hints
-    // Scroll into view if needed
-}
-```
-
-**CSS Focus Styling**:
-```css
-.keyboard-focused {
-    outline: 2px solid var(--accent-cyan) !important;
-    outline-offset: 2px;
-    box-shadow: 0 0 20px rgba(0, 220, 255, 0.4) !important;
-    transform: scale(1.02) !important;
-}
-
-.keyboard-focused::before {
-    /* Animated glow effect */
-    animation: keyboardPulse 1.5s infinite;
-}
-```
-
-### Accessibility Benefits
-
-- **Motor Impairments**: Full keyboard operation without mouse
-- **Visual Impairments**: High contrast focus indicators
-- **Cognitive**: Consistent navigation patterns and visual cues
-- **Universal**: Works with assistive technologies
-
-### Usage Tips
-
-1. **Starting Navigation**: Press Tab, Enter, or any arrow key
-2. **Game Selection**: Navigate to game card and press Enter
-3. **Quick Search**: Press / to jump to search field
-4. **Category Switching**: Use number keys 1-6 for instant switching
-5. **Getting Help**: Press H or ? for complete shortcut reference
-
----
-
-## 📝 20. How to Add a New Game
+## 📝 14. How to Add a New Game
 
 ### Step-by-Step Guide
 
@@ -2129,7 +2003,7 @@ if (gameId === 'mygame' && score >= 500) {
 
 ---
 
-## 🔧 21. Development Workflow
+## 🔧 15. Development Workflow
 
 ### Local Development
 
@@ -2167,7 +2041,7 @@ npx electron-builder --win portable
 
 ---
 
-## 📦 22. Dependencies
+## 📦 16. Dependencies
 
 | Package | Version | Purpose |
 |---------|---------|---------|
@@ -2180,7 +2054,7 @@ npx electron-builder --win portable
 
 ---
 
-## 🎯 23. Quick Reference
+## 🎯 17. Quick Reference
 
 | Task | Command |
 |------|----------|
@@ -2210,29 +2084,7 @@ npx electron-builder --win portable
 
 ---
 
-## 🛠️ 24. Recent Fixes & Updates
-
-### v3.5 (2026-03-10) - KEYBOARD NAVIGATION SYSTEM
-- **Comprehensive Keyboard Navigation**: Full keyboard support for accessibility
-  - Arrow keys for grid navigation with intelligent positioning
-  - Tab/Shift+Tab for sequential navigation
-  - Enter/Space for activation, F for favorites
-  - Quick shortcuts: / for search, R for random, S for settings
-  - Number keys 1-6 for category switching
-  - H or ? for help modal with all shortcuts
-  - Escape to exit navigation or close app
-  - Visual focus indicators with neon glow effects
-  - Context-sensitive hints showing available actions
-  - Smart mouse/keyboard mode switching
-  - Grid-aware navigation that finds nearest elements
-  - Maintains focus state during re-renders and filtering
-- **Accessibility Features**: 
-  - High contrast focus indicators
-  - Screen reader friendly navigation
-  - Keyboard-only operation support
-  - Visual feedback for all interactions
-- **Help System**: Interactive help modal (H or ?) showing all shortcuts
-- **Documentation**: Added keyboard navigation to technical docs
+## 🛠️ 18. Recent Fixes & Updates
 
 ### v3.4 (2026-03-09) - DIFFICULTY SYSTEM ENHANCEMENTS & BUN MIGRATION
 - **Difficulty System**: Complete overhaul with comprehensive logging
