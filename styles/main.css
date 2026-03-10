@@ -66,6 +66,195 @@ body {
 }
 
 /* ===========================
+   Keyboard Navigation Styles
+   =========================== */
+.keyboard-focused {
+  outline: 2px solid var(--accent-cyan) !important;
+  outline-offset: 2px;
+  box-shadow: 0 0 20px rgba(0, 220, 255, 0.4) !important;
+  transform: scale(1.02) !important;
+  z-index: 100 !important;
+  position: relative;
+}
+
+.keyboard-focused::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  background: linear-gradient(45deg, var(--accent-cyan), var(--accent-magenta));
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0.3;
+  animation: keyboardPulse 1.5s infinite;
+}
+
+@keyframes keyboardPulse {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.02); }
+}
+
+.keyboard-hint {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.8);
+  color: var(--accent-cyan);
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid var(--accent-cyan);
+  box-shadow: var(--glow-cyan);
+  z-index: 1000;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all var(--transition-normal);
+}
+
+.keyboard-hint.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.keyboard-shortcut {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin: 0 2px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+/* Keyboard Help Modal */
+.keyboard-help-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.keyboard-help-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+}
+
+.keyboard-help-content {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--glow-cyan);
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.keyboard-help-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border-glass);
+}
+
+.keyboard-help-header h2 {
+  margin: 0;
+  color: var(--accent-cyan);
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.keyboard-help-close {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 24px;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all var(--transition-fast);
+}
+
+.keyboard-help-close:hover {
+  color: var(--accent-red);
+  background: rgba(255, 68, 102, 0.1);
+}
+
+.keyboard-help-body {
+  padding: 24px;
+}
+
+.keyboard-help-section {
+  margin-bottom: 24px;
+}
+
+.keyboard-help-section:last-child {
+  margin-bottom: 0;
+}
+
+.keyboard-help-section h3 {
+  color: var(--accent-magenta);
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(255, 0, 170, 0.2);
+}
+
+.keyboard-help-shortcuts {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.keyboard-help-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.keyboard-help-item .keyboard-shortcut {
+  background: rgba(0, 220, 255, 0.1);
+  border: 1px solid rgba(0, 220, 255, 0.3);
+  color: var(--accent-cyan);
+  font-weight: 500;
+  min-width: 24px;
+  text-align: center;
+}
+
+.keyboard-help-item span:last-child {
+  color: var(--text-secondary);
+  flex: 1;
+}
+
+/* ===========================
    App Container
    =========================== */
 /* ===========================
