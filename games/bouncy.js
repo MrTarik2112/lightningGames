@@ -17,6 +17,7 @@ class BouncyGame {
 
         this.mouseDown = false;
         this.mousePos = { x: 0, y: 0 };
+        this.slingshotStart = null;
 
         this._mouseDownHandler = null;
         this._mouseMoveHandler = null;
@@ -74,18 +75,33 @@ class BouncyGame {
             if (this.gameOver) return;
             this.mouseDown = true;
             const rect = this.canvas.getBoundingClientRect();
-            this.mousePos.x = (e.clientX - rect.left) * (this.canvas.width / rect.width);
-            this.mousePos.y = (e.clientY - rect.top) * (this.canvas.height / rect.height);
+            this.slingshotStart = {
+                x: (e.clientX - rect.left) * (this.canvas.width / rect.width),
+                y: (e.clientY - rect.top) * (this.canvas.height / rect.height)
+            };
+            this.mousePos.x = this.slingshotStart.x;
+            this.mousePos.y = this.slingshotStart.y;
         };
 
         this._mouseMoveHandler = (e) => {
+            if (!this.mouseDown) return;
             const rect = this.canvas.getBoundingClientRect();
             this.mousePos.x = (e.clientX - rect.left) * (this.canvas.width / rect.width);
             this.mousePos.y = (e.clientY - rect.top) * (this.canvas.height / rect.height);
         };
 
         this._mouseUpHandler = () => {
+            if (this.mouseDown && this.slingshotStart) {
+                const dx = this.slingshotStart.x - this.mousePos.x;
+                const dy = this.slingshotStart.y - this.mousePos.y;
+                const dist = Math.hypot(dx, dy);
+                if (dist > 20) {
+                    this.ball.vx += dx * 3;
+                    this.ball.vy += dy * 3;
+                }
+            }
             this.mouseDown = false;
+            this.slingshotStart = null;
         };
 
         this._keyHandler = (e) => {
@@ -213,17 +229,6 @@ class BouncyGame {
         if (this.ball.y - this.ball.radius < 0) {
             this.ball.y = this.ball.radius;
             this.ball.vy *= -this.bounce;
-        }
-
-        // Slingshot when mouse held
-        if (this.mouseDown) {
-            const dx = this.mousePos.x - this.ball.x;
-            const dy = this.mousePos.y - this.ball.y;
-            const dist = Math.hypot(dx, dy);
-            if (dist > 30) {
-                this.ball.vx += dx * 2 * dt;
-                this.ball.vy += dy * 2 * dt;
-            }
         }
 
         // Move stars
