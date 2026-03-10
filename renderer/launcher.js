@@ -720,13 +720,21 @@
 
             card.appendChild(cardContent);
 
-            // Removed individual card.addEventListener('mouseenter', ...)
-            // Removed individual card.addEventListener('click', ...)
-            // Removed individual card.addEventListener('mousemove', ...)
-            // Removed individual card.addEventListener('mouseleave', ...)
-
             gamesGrid.appendChild(card);
         });
+
+        // Update keyboard navigation after rendering
+        if (keyboardNavigationEnabled) {
+            setTimeout(() => {
+                updateFocusableElements();
+                // Maintain focus if possible
+                if (currentFocusIndex >= 0 && currentFocusIndex < focusableElements.length) {
+                    setKeyboardFocus(currentFocusIndex);
+                } else if (focusableElements.length > 0) {
+                    setKeyboardFocus(0);
+                }
+            }, 50);
+        }
 
         updateFooterStats();
         renderRecentlyPlayed();
@@ -917,6 +925,9 @@
     const categoryTabs = document.querySelectorAll('.category-tab');
     categoryTabs.forEach(tab => {
         tab.addEventListener('click', () => {
+            // Disable keyboard navigation when clicking category tabs
+            disableKeyboardNavigation();
+            
             categoryTabs.forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
             currentCategory = tab.dataset.category;
@@ -925,37 +936,606 @@
         });
     });
 
+    // Keyboard Navigation System
+    let keyboardNavigationEnabled = false;
+    let currentFocusIndex = -1;
+    let focusableElements = [];
+    let keyboardHintTimeout = null;
+
+    // Keyboard navigation helper functions
+    function getFocusableElements() {
+        const elements = [];
+        
+        // Game cards
+        const gameCards = Array.from(gamesGrid.querySelectorAll('.game-card:not(.hidden)'));
+        elements.push(...gameCards.map(card => ({ element: card, type: 'game-card', gameId: card.dataset.gameId })));
+        
+        // Tab buttons
+        const tabs = Array.from(document.querySelectorAll('.category-tab'));
+        elements.push(...tabs.map(tab => ({ element: tab, type: 'tab', category: tab.dataset.category })));
+        
+        // Search input
+        if (gameSearch && !gameSearch.classList.contains('hidden')) {
+            elements.push({ element: gameSearch, type: 'search' });
+        }
+        
+        // Control buttons
+        const controlButtons = [
+            { selector: '#btn-settings', type: 'button', action: 'settings' },
+            { selector: '#btn-random', type: 'button', action: 'random' },
+            { selector: '#btn-close', type: 'button', action: 'close' }
+        ];
+        
+        controlButtons.forEach(btn => {
+            const element = document.querySelector(btn.selector);
+            if (element && !element.classList.contains('hidden')) {
+                elements.push({ element, type: btn.type, action: btn.action });
+            }
+        });
+        
+        return elements;
+    }
+
+    function updateFocusableElements() {
+        focusableElements = getFocusableElements();
+    }
+
+    function showKeyboardHint(text, duration = 2000) {
+        let hint = document.querySelector('.keyboard-hint');
+        if (!hint) {
+            hint = document.createElement('div');
+            hint.className = 'keyboard-hint';
+            document.body.appendChild(hint);
+        }
+        
+        hint.textContent = text;
+        hint.classList.add('show');
+        
+        clearTimeout(keyboardHintTimeout);
+        keyboardHintTimeout = setTimeout(() => {
+            hint.classList.remove('show');
+        }, duration);
+    }
+
+    function setKeyboardFocus(index) {
+        // Remove previous focus
+        focusableElements.forEach(item => {
+            item.element.classList.remove('keyboard-focused');
+        });
+        
+        if (index >= 0 && index < focusableElements.length) {
+            currentFocusIndex = index;
+            const focusItem = focusableElements[index];
+            focusItem.element.classList.add('keyboard-focused');
+            
+            // Scroll into view if needed
+            focusItem.element.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'nearest',
+                inline: 'nearest'
+            });
+            
+            // Show context hint
+            let hintText = '';
+            switch (focusItem.type) {
+                case 'game-card':
+                    const config = GAME_CARDS_CONFIG.find(g => g.id === focusItem.gameId);
+                    hintText = `${config?.name || 'Game'} - Press Enter to play, F to favorite`;
+                    break;
+                case 'tab':
+                    hintText = `${focusItem.category} tab - Press Enter to switch`;
+                    break;
+                case 'search':
+                    hintText = 'Search games - Type to filter';
+                    break;
+                case 'button':
+                    hintText = `${focusItem.action} button - Press Enter to activate`;
+                    break;
+            }
+            
+            if (hintText) {
+                showKeyboardHint(hintText);
+            }
+        } else {
+            currentFocusIndex = -1;
+        }
+    }
+
+    function navigateKeyboard(direction) {
+        if (!keyboardNavigationEnabled) {
+            keyboardNavigationEnabled = true;
+            updateFocusableElements();
+            showKeyboardHint('Keyboard navigation enabled - Use arrow keys to navigate, Tab/Shift+Tab, Enter to select, Esc to exit');
+        }
+        
+        updateFocusableElements();
+        
+        if (focusableElements.length === 0) return;
+        
+        let newIndex = currentFocusIndex;
+        
+        switch (direction) {
+            case 'next':
+                newIndex = (currentFocusIndex + 1) % focusableElements.length;
+                break;
+            case 'prev':
+                newIndex = currentFocusIndex <= 0 ? focusableElements.length - 1 : currentFocusIndex - 1;
+                break;
+            case 'up':
+                // For grid navigation - find element above
+                if (currentFocusIndex >= 0) {
+                    const currentElement = focusableElements[currentFocusIndex];
+                    if (currentElement.type === 'game-card') {
+                        const currentRect = currentElement.element.getBoundingClientRect();
+                        let bestMatch = -1;
+                        let bestDistance = Infinity;
+                        
+                        for (let i = 0; i < focusableElements.length; i++) {
+                            const item = focusableElements[i];
+                            if (item.type === 'game-card' && i !== currentFocusIndex) {
+                                const rect = item.element.getBoundingClientRect();
+                                if (rect.bottom <= currentRect.top) {
+                                    const distance = Math.abs(rect.left - currentRect.left) + (currentRect.top - rect.bottom);
+                                    if (distance < bestDistance) {
+                                        bestDistance = distance;
+                                        bestMatch = i;
+                                    }
+                                }
+                            }
+                        }
+                        
+                        if (bestMatch >= 0) {
+                            newIndex = bestMatch;
+                        }
+                    } else {
+                        newIndex = Math.max(0, currentFocusIndex - 1);
+                    }
+                }
+                break;
+            case 'down':
+                // For grid navigation - find element below
+                if (currentFocusIndex >= 0) {
+                    const currentElement = focusableElements[currentFocusIndex];
+                    if (currentElement.type === 'game-card') {
+                        const currentRect = currentElement.element.getBoundingClientRect();
+                        let bestMatch = -1;
+                        let bestDistance = Infinity;
+                        
+                        for (let i = 0; i < focusableElements.length; i++) {
+                            const item = focusableElements[i];
+                            if (item.type === 'game-card' && i !== currentFocusIndex) {
+                                const rect = item.element.getBoundingClientRect();
+                                if (rect.top >= currentRect.bottom) {
+                                    const distance = Math.abs(rect.left - currentRect.left) + (rect.top - currentRect.bottom);
+                                    if (distance < bestDistance) {
+                                        bestDistance = distance;
+                                        bestMatch = i;
+                                    }
+                                }
+                            }
+                        }
+                        
+                        if (bestMatch >= 0) {
+                            newIndex = bestMatch;
+                        }
+                    } else {
+                        newIndex = Math.min(focusableElements.length - 1, currentFocusIndex + 1);
+                    }
+                }
+                break;
+            case 'left':
+                // For grid navigation - find element to the left
+                if (currentFocusIndex >= 0) {
+                    const currentElement = focusableElements[currentFocusIndex];
+                    if (currentElement.type === 'game-card') {
+                        const currentRect = currentElement.element.getBoundingClientRect();
+                        let bestMatch = -1;
+                        let bestDistance = Infinity;
+                        
+                        for (let i = 0; i < focusableElements.length; i++) {
+                            const item = focusableElements[i];
+                            if (item.type === 'game-card' && i !== currentFocusIndex) {
+                                const rect = item.element.getBoundingClientRect();
+                                if (rect.right <= currentRect.left && Math.abs(rect.top - currentRect.top) < 100) {
+                                    const distance = currentRect.left - rect.right + Math.abs(rect.top - currentRect.top);
+                                    if (distance < bestDistance) {
+                                        bestDistance = distance;
+                                        bestMatch = i;
+                                    }
+                                }
+                            }
+                        }
+                        
+                        if (bestMatch >= 0) {
+                            newIndex = bestMatch;
+                        }
+                    } else {
+                        newIndex = Math.max(0, currentFocusIndex - 1);
+                    }
+                }
+                break;
+            case 'right':
+                // For grid navigation - find element to the right
+                if (currentFocusIndex >= 0) {
+                    const currentElement = focusableElements[currentFocusIndex];
+                    if (currentElement.type === 'game-card') {
+                        const currentRect = currentElement.element.getBoundingClientRect();
+                        let bestMatch = -1;
+                        let bestDistance = Infinity;
+                        
+                        for (let i = 0; i < focusableElements.length; i++) {
+                            const item = focusableElements[i];
+                            if (item.type === 'game-card' && i !== currentFocusIndex) {
+                                const rect = item.element.getBoundingClientRect();
+                                if (rect.left >= currentRect.right && Math.abs(rect.top - currentRect.top) < 100) {
+                                    const distance = rect.left - currentRect.right + Math.abs(rect.top - currentRect.top);
+                                    if (distance < bestDistance) {
+                                        bestDistance = distance;
+                                        bestMatch = i;
+                                    }
+                                }
+                            }
+                        }
+                        
+                        if (bestMatch >= 0) {
+                            newIndex = bestMatch;
+                        }
+                    } else {
+                        newIndex = Math.min(focusableElements.length - 1, currentFocusIndex + 1);
+                    }
+                }
+                break;
+        }
+        
+        setKeyboardFocus(newIndex);
+        sfx.play('hover');
+    }
+
+    function activateCurrentFocus() {
+        if (currentFocusIndex >= 0 && currentFocusIndex < focusableElements.length) {
+            const focusItem = focusableElements[currentFocusIndex];
+            
+            switch (focusItem.type) {
+                case 'game-card':
+                    const config = GAME_CARDS_CONFIG.find(g => g.id === focusItem.gameId);
+                    if (config) {
+                        openGame(focusItem.gameId, config.name, config.icon);
+                    }
+                    break;
+                case 'tab':
+                    focusItem.element.click();
+                    break;
+                case 'search':
+                    focusItem.element.focus();
+                    keyboardNavigationEnabled = false;
+                    setKeyboardFocus(-1);
+                    break;
+                case 'button':
+                    focusItem.element.click();
+                    break;
+            }
+        }
+    }
+
+    function toggleFavoriteCurrentFocus() {
+        if (currentFocusIndex >= 0 && currentFocusIndex < focusableElements.length) {
+            const focusItem = focusableElements[currentFocusIndex];
+            
+            if (focusItem.type === 'game-card') {
+                gm.toggleFavorite(focusItem.gameId);
+                sfx.play('select');
+                renderGameCards(gameSearch.value);
+                // Maintain focus after re-render
+                setTimeout(() => {
+                    updateFocusableElements();
+                    setKeyboardFocus(currentFocusIndex);
+                }, 100);
+            }
+        }
+    }
+
+    function disableKeyboardNavigation() {
+        keyboardNavigationEnabled = false;
+        focusableElements.forEach(item => {
+            item.element.classList.remove('keyboard-focused');
+        });
+        currentFocusIndex = -1;
+        
+        const hint = document.querySelector('.keyboard-hint');
+        if (hint) {
+            hint.classList.remove('show');
+        }
+    }
+
     // Keyboard
     document.addEventListener('keydown', (e) => {
+    // Keyboard
+    document.addEventListener('keydown', (e) => {
+        // Don't interfere with input fields (except when they're not focused)
+        if (document.activeElement && 
+            (document.activeElement.tagName === 'INPUT' || 
+             document.activeElement.tagName === 'TEXTAREA' || 
+             document.activeElement.contentEditable === 'true') &&
+            document.activeElement !== gameSearch) {
+            return;
+        }
+
+        // Global shortcuts
         if (e.key === 'Escape') {
+            if (keyboardNavigationEnabled) {
+                disableKeyboardNavigation();
+                return;
+            }
+            
             if (!gameView.classList.contains('hidden')) {
                 showLauncher();
             } else {
                 window.electronAPI.closeWindow();
             }
+            return;
         }
 
-        // Keyboard navigation for game search
-        if (e.key === 'Enter') {
-            // If game over overlay exists, restart game
-            const gameOverOverlay = document.querySelector('.game-over-overlay');
-            if (gameOverOverlay && !gameView.classList.contains('hidden')) {
-                const restartBtn = gameOverOverlay.querySelector('[id$="-restart"]');
-                if (restartBtn) {
-                    restartBtn.click();
-                    return;
+        // Only handle keyboard navigation in launcher view
+        if (!gameView.classList.contains('hidden')) {
+            // In game view, only handle Enter for restart
+            if (e.key === 'Enter') {
+                const gameOverOverlay = document.querySelector('.game-over-overlay');
+                if (gameOverOverlay) {
+                    const restartBtn = gameOverOverlay.querySelector('[id$="-restart"]');
+                    if (restartBtn) {
+                        restartBtn.click();
+                        return;
+                    }
                 }
             }
+            return;
+        }
 
-            // If search is focused, open first game
-            if (document.activeElement === gameSearch) {
-                const firstCard = gamesGrid.querySelector('.game-card');
-                if (firstCard) {
-                    firstCard.click();
+        // Keyboard navigation in launcher
+        switch (e.key) {
+            case 'Tab':
+                e.preventDefault();
+                if (e.shiftKey) {
+                    navigateKeyboard('prev');
+                } else {
+                    navigateKeyboard('next');
                 }
-            }
+                break;
+                
+            case 'ArrowUp':
+                e.preventDefault();
+                navigateKeyboard('up');
+                break;
+                
+            case 'ArrowDown':
+                e.preventDefault();
+                navigateKeyboard('down');
+                break;
+                
+            case 'ArrowLeft':
+                e.preventDefault();
+                navigateKeyboard('left');
+                break;
+                
+            case 'ArrowRight':
+                e.preventDefault();
+                navigateKeyboard('right');
+                break;
+                
+            case 'Enter':
+                e.preventDefault();
+                if (keyboardNavigationEnabled) {
+                    activateCurrentFocus();
+                } else {
+                    // If search is focused, open first game
+                    if (document.activeElement === gameSearch) {
+                        const firstCard = gamesGrid.querySelector('.game-card');
+                        if (firstCard) {
+                            firstCard.click();
+                        }
+                    } else {
+                        // Start keyboard navigation with first element
+                        navigateKeyboard('next');
+                    }
+                }
+                break;
+                
+            case ' ': // Spacebar
+                e.preventDefault();
+                if (keyboardNavigationEnabled) {
+                    activateCurrentFocus();
+                } else {
+                    navigateKeyboard('next');
+                }
+                break;
+                
+            case 'f':
+            case 'F':
+                if (keyboardNavigationEnabled) {
+                    e.preventDefault();
+                    toggleFavoriteCurrentFocus();
+                }
+                break;
+                
+            case '/':
+                e.preventDefault();
+                gameSearch.focus();
+                disableKeyboardNavigation();
+                break;
+                
+            case 'r':
+            case 'R':
+                if (!keyboardNavigationEnabled || e.ctrlKey) {
+                    e.preventDefault();
+                    const btnRandom = document.getElementById('btn-random');
+                    if (btnRandom) btnRandom.click();
+                }
+                break;
+                
+            case 's':
+            case 'S':
+                if (!keyboardNavigationEnabled || e.ctrlKey) {
+                    e.preventDefault();
+                    const btnSettings = document.getElementById('btn-settings');
+                    if (btnSettings) btnSettings.click();
+                }
+                break;
+                
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+            case '5':
+            case '6':
+                if (!keyboardNavigationEnabled) {
+                    e.preventDefault();
+                    const tabIndex = parseInt(e.key) - 1;
+                    const tabs = document.querySelectorAll('.category-tab');
+                    if (tabs[tabIndex]) {
+                        tabs[tabIndex].click();
+                    }
+                }
+                break;
+                
+            case 'h':
+            case 'H':
+            case '?':
+                if (!keyboardNavigationEnabled) {
+                    e.preventDefault();
+                    showKeyboardHelp();
+                }
+                break;
         }
     });
+
+    function showKeyboardHelp() {
+        const helpModal = document.createElement('div');
+        helpModal.className = 'keyboard-help-modal';
+        helpModal.innerHTML = `
+            <div class="keyboard-help-backdrop"></div>
+            <div class="keyboard-help-content">
+                <div class="keyboard-help-header">
+                    <h2>⌨️ Keyboard Shortcuts</h2>
+                    <button class="keyboard-help-close">×</button>
+                </div>
+                <div class="keyboard-help-body">
+                    <div class="keyboard-help-section">
+                        <h3>Navigation</h3>
+                        <div class="keyboard-help-shortcuts">
+                            <div class="keyboard-help-item">
+                                <span class="keyboard-shortcut">Tab</span>
+                                <span class="keyboard-shortcut">Shift+Tab</span>
+                                <span>Navigate between elements</span>
+                            </div>
+                            <div class="keyboard-help-item">
+                                <span class="keyboard-shortcut">↑</span>
+                                <span class="keyboard-shortcut">↓</span>
+                                <span class="keyboard-shortcut">←</span>
+                                <span class="keyboard-shortcut">→</span>
+                                <span>Navigate in grid</span>
+                            </div>
+                            <div class="keyboard-help-item">
+                                <span class="keyboard-shortcut">Enter</span>
+                                <span class="keyboard-shortcut">Space</span>
+                                <span>Activate selected item</span>
+                            </div>
+                            <div class="keyboard-help-item">
+                                <span class="keyboard-shortcut">Esc</span>
+                                <span>Exit navigation / Close app</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="keyboard-help-section">
+                        <h3>Quick Actions</h3>
+                        <div class="keyboard-help-shortcuts">
+                            <div class="keyboard-help-item">
+                                <span class="keyboard-shortcut">F</span>
+                                <span>Toggle favorite (when navigating)</span>
+                            </div>
+                            <div class="keyboard-help-item">
+                                <span class="keyboard-shortcut">/</span>
+                                <span>Focus search</span>
+                            </div>
+                            <div class="keyboard-help-item">
+                                <span class="keyboard-shortcut">R</span>
+                                <span>Random game</span>
+                            </div>
+                            <div class="keyboard-help-item">
+                                <span class="keyboard-shortcut">S</span>
+                                <span>Settings</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="keyboard-help-section">
+                        <h3>Categories</h3>
+                        <div class="keyboard-help-shortcuts">
+                            <div class="keyboard-help-item">
+                                <span class="keyboard-shortcut">1</span>
+                                <span>All games</span>
+                            </div>
+                            <div class="keyboard-help-item">
+                                <span class="keyboard-shortcut">2</span>
+                                <span>Arcade</span>
+                            </div>
+                            <div class="keyboard-help-item">
+                                <span class="keyboard-shortcut">3</span>
+                                <span>Puzzle</span>
+                            </div>
+                            <div class="keyboard-help-item">
+                                <span class="keyboard-shortcut">4</span>
+                                <span>Classic</span>
+                            </div>
+                            <div class="keyboard-help-item">
+                                <span class="keyboard-shortcut">5</span>
+                                <span>Strategy</span>
+                            </div>
+                            <div class="keyboard-help-item">
+                                <span class="keyboard-shortcut">6</span>
+                                <span>Favorites</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="keyboard-help-section">
+                        <h3>Help</h3>
+                        <div class="keyboard-help-shortcuts">
+                            <div class="keyboard-help-item">
+                                <span class="keyboard-shortcut">H</span>
+                                <span class="keyboard-shortcut">?</span>
+                                <span>Show this help</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(helpModal);
+        
+        // Close handlers
+        const closeBtn = helpModal.querySelector('.keyboard-help-close');
+        const backdrop = helpModal.querySelector('.keyboard-help-backdrop');
+        
+        const closeModal = () => {
+            helpModal.remove();
+        };
+        
+        closeBtn.addEventListener('click', closeModal);
+        backdrop.addEventListener('click', closeModal);
+        
+        // Close on Escape
+        const handleEscape = (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+                document.removeEventListener('keydown', handleEscape);
+            }
+        };
+        document.addEventListener('keydown', handleEscape);
+        
+        sfx.play('select');
+    }
 
     // Window hide/show events from Electron
     window.electronAPI.onWindowHiding(() => {
@@ -999,7 +1579,38 @@
         }
         searchTimeout = setTimeout(() => {
             renderGameCards(e.target.value);
+            // Update focusable elements after search
+            if (keyboardNavigationEnabled) {
+                updateFocusableElements();
+                // Reset focus to first game card if current focus is invalid
+                if (currentFocusIndex >= focusableElements.length) {
+                    setKeyboardFocus(0);
+                }
+            }
         }, 150);
+    });
+
+    // Search input keyboard handling
+    gameSearch.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            gameSearch.blur();
+            gameSearch.value = '';
+            if (searchClear) {
+                searchClear.classList.add('hidden');
+            }
+            renderGameCards('');
+        } else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            // Start keyboard navigation from search
+            navigateKeyboard('next');
+        }
+    });
+
+    gameSearch.addEventListener('blur', () => {
+        // Re-enable keyboard navigation when search loses focus
+        if (gameSearch.value === '') {
+            updateFocusableElements();
+        }
     });
 
     // Search clear button
@@ -1541,6 +2152,9 @@
     // Tabs
     tabBtns.forEach(btn => {
         btn.addEventListener('click', () => {
+            // Disable keyboard navigation when clicking tabs
+            disableKeyboardNavigation();
+            
             tabBtns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             const tab = btn.dataset.tab;
@@ -1594,6 +2208,9 @@
         const config = GAME_CARDS_CONFIG.find(g => g.id === gameId);
         if (!config) return;
 
+        // Disable keyboard navigation when clicking
+        disableKeyboardNavigation();
+
         if (e.target.classList.contains('btn-favorite')) {
             e.stopPropagation();
             gm.toggleFavorite(gameId);
@@ -1611,6 +2228,10 @@
 
         e.preventDefault();
         const gameId = gameCard.dataset.gameId;
+        
+        // Disable keyboard navigation when right-clicking
+        disableKeyboardNavigation();
+        
         gm.toggleFavorite(gameId);
         sfx.play('select');
         renderGameCards(gameSearch.value);
@@ -1619,6 +2240,10 @@
     gamesGrid.addEventListener('mouseover', (e) => {
         const gameCard = e.target.closest('.game-card');
         if (gameCard) {
+            // Disable keyboard navigation on mouse hover
+            if (keyboardNavigationEnabled) {
+                disableKeyboardNavigation();
+            }
             sfx.play('hover');
         }
     });
