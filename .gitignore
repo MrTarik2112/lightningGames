@@ -1,10 +1,18 @@
 nul
 
+# Node modules & dependencies
+node_modules/
+package-lock.json
+bun.lockb
+
 # Tailwind CSS
 styles/tailwind-output.css
 styles/tailwind-output.css.map
 
-# Node modules
-node_modules/
-package-lock.json
-bun.lockb
+# Build artifacts
+dist/
+BuildLogs/
+
+# Temporary files
+temp_*
+*.log
