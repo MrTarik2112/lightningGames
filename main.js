@@ -10,6 +10,12 @@ app.commandLine.appendSwitch('disable-background-timer-throttle');
 app.commandLine.appendSwitch('disable-renderer-backgrounding');
 app.commandLine.appendSwitch('force-color-profile', 'srgb');
 
+// WebGL Support - Additional flags for better compatibility
+app.commandLine.appendSwitch('enable-webgl');
+app.commandLine.appendSwitch('enable-webgl2');
+app.commandLine.appendSwitch('ignore-gpu-blacklist');
+app.commandLine.appendSwitch('disable-gpu-sandbox');
+
 // Disable DNS prefetching and external DNS requests
 app.commandLine.appendSwitch('disable-dns-prefetch');
 app.commandLine.appendSwitch('disable-features', 'DnsOverHttps,SecureDns');

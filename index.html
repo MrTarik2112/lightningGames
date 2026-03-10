@@ -464,6 +464,12 @@
               <h3 class="settings-section-title">Data Management</h3>
               
               <div class="settings-field">
+                <button id="btn-webgl-test" class="settings-btn">
+                  🔍 Test WebGL Support
+                </button>
+              </div>
+              
+              <div class="settings-field">
                 <button id="btn-export-data" class="settings-btn">
                   💾 Export All Data
                 </button>
@@ -578,17 +584,24 @@
     </div>
   </div>
 
-  <script src="renderer/gameManager.js"></script>
-  <script src="games/snake.js"></script>
-  <script src="games/tetris.js"></script>
-  <script src="games/game2048.js"></script>
-  <script src="games/flappy.js"></script>
-  <script src="games/minesweeper.js"></script>
-  <script src="games/pong.js"></script>
-  <script src="games/breakout.js"></script>
-  <script src="games/space.js"></script>
+  <!-- Three.js Library (for 3D games) -->
+  <script>
+    // Three.js load verification
+    console.log('🔍 Checking Three.js load status...');
+    window.addEventListener('load', () => {
+      if (typeof THREE !== 'undefined') {
+        console.log('✅ Three.js loaded successfully!');
+        console.log('✅ Three.js version:', THREE.REVISION);
+      } else {
+        console.error('❌ Three.js failed to load from CDN!');
+        console.error('❌ Check internet connection or CDN availability');
+      }
+    });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 
-  <!-- New Games -->
+  <script src="renderer/gameManager.js"></script>
+  <script src="games/doom3d.js"></script>
   <script src="games/asteroids.js"></script>
   <script src="games/frogger.js"></script>
   <script src="games/memory.js"></script>
