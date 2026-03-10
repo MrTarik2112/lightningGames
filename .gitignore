@@ -10,13 +10,27 @@ styles/tailwind-output.css
 styles/tailwind-output.css.map
 
 # Build artifacts
-
+dist/
 BuildLogs/
 
 # Temporary files
-temp_extracted
 temp_*
-*.log
-/~
+temp_lg/
+temp_extracted/
+
+# VS Code
+.vscode/
+
+# User home directory
 ~/
-~
+~/**
+
+# Temporary build directories
+lightning-games-build-*/
+
+# Log files
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
