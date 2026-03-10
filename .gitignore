@@ -4,6 +4,7 @@ nul
 node_modules/
 package-lock.json
 bun.lockb
+.bun-cache/
 
 # Tailwind CSS
 styles/tailwind-output.css
