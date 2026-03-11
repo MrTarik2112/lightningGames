@@ -1,6 +1,6 @@
 # ⚡ Lightning Games - Complete Technical Documentation
 
-> **Version:** 3.6.4  
+> **Version:** 3.7.1  
 > **Last Updated:** 2026-03-10  
 > **Author:** Tarik  
 > **Status:** Production Ready  
@@ -21,7 +21,7 @@
 - **Performance**: GPU-accelerated rendering, frame-independent physics
 
 ### Key Features
-- 🎮 **40 Games** - 24 Arcade, 10 Puzzle, 3 Classic, 1 Strategy, 2 Creative
+- 🎮 **41 Games** - 25 Arcade, 10 Puzzle, 3 Classic, 1 Strategy, 2 Creative
 - 🎯 **Achievement System** - 37 unlockable achievements with rarity tiers
 - 🏆 **High Scores** - Per-game persistent scoring with global leaderboard tracking
 - 🌓 **4 Themes** - Neon (default), Retro, Minimal, Forest with instant switching
@@ -82,9 +82,10 @@ lightningGames/
 │   ├── .gitattributes           # Git configuration
 │   └── context.md               # Project context reference
 │
-├── 🎮 games/ (40 Game Implementations)
-│   ├── Arcade Games (24)
+├── 🎮 games/ (41 Game Implementations)
+│   ├── Arcade Games (25)
 │   │   ├── snake.js             # Classic snake -- eat, grow, survive
+│   │   ├── pacman.js            # Smooth Pac-Man with 4 ghosts, power pellets
 │   │   ├── cyberdash.js         # Side-scrolling obstacle dodger
 │   │   ├── tetris.js            # Block stacking with combos
 │   │   ├── asteroids.js         # Thrust-physics space survival
@@ -277,8 +278,8 @@ lightningGames/
 ```
 
 ### File Statistics
-- **Total Lines of Code**: ~8,500
-- **Game Files**: 40 (avg 150-300 lines each)
+- **Total Lines of Code**: ~8,700
+- **Game Files**: 41 (avg 150-300 lines each)
 - **Largest Game**: Tower Defense (1,300+ lines)
 - **Renderer Code**: ~2,000 lines
 - **Styles**: ~1,200 lines
@@ -601,13 +602,13 @@ class ParticleSystem {
 
 ---
 
-## 🎮 4. Complete Game List (40 Games) - Detailed Reference
+## 🎮 4. Complete Game List (41 Games) - Detailed Reference
 
 All games run on an **880x540 HTML5 Canvas** with synthesized audio and neon visuals.
 
 ### Game Registry by Category
 
-#### Arcade Games (24 Total)
+#### Arcade Games (25 Total)
 Fast-paced, reflex-based gameplay with increasing difficulty curves.
 
 | # | ID | Name | Icon | Difficulty | Mechanics | Best For |
@@ -636,6 +637,7 @@ Fast-paced, reflex-based gameplay with increasing difficulty curves.
 | 22 | `orbitdefense` | Orbit Defense | 🛡️ | ⭐⭐⭐ | Defense, positioning | Strategy |
 | 23 | `gravityflip` | Gravity Flip | 🔄 | ⭐⭐⭐ | Gravity mechanics, navigation | Puzzle-action |
 | 24 | `tapdash` | Tap Dash | 👆 | ⭐⭐ | Quick taps, rhythm | Casual |
+| 25 | `pacman` | Pac-Man | 👻 | ⭐⭐⭐ | Smooth movement, 4 smart ghosts, power pellets, fruit system | Classic arcade |
 
 #### Puzzle Games (10 Total)
 Strategic, thinking-based gameplay with no time pressure (mostly).
@@ -857,7 +859,7 @@ A comprehensive achievement system with rarity tiers, unlock conditions, and pro
 | **Hidden** | Secret | <5% | Unlocked through specific actions |
 | **Godly** | Legendary | <1% | Requires completing all achievements |
 
-### Normal Achievements (11 Total)
+### Normal Achievements (12 Total)
 
 Unlock these through regular gameplay. Most players will unlock 5-8 of these.
 
@@ -872,6 +874,7 @@ Unlock these through regular gameplay. Most players will unlock 5-8 of these.
 | `minesweeper_win` | Mine Expert | Cleared a challenging minefield | 💣 | Win a Minesweeper game |
 | `runner_high` | Fast Runner | Scored 500 in Neon Runner | 🦖 | Score 500+ in Neon Runner |
 | `frogger_master` | Frogger Master | Crossed the road in Frogger! | 👑 | Win a Frogger game |
+| `pacman_100` | Pellet Eater | Scored 100 points in Pac-Man | 👻 | Score 100+ in Pac-Man |
 | `warmup` | Warmup Done | Played a total of 10 games | 🔥 | Play 10 games total |
 | `first_rock` | First Rock | Destroyed an asteroid for the first time | 🪨 | Destroy 1 asteroid in Asteroids |
 
@@ -916,6 +919,7 @@ Require high scores, speed, or specific accomplishments.
 | `high_jumper` | High Jumper | Reached 10000 height in Neon Jump | 🚀 | Reach 10000 height in Neon Jump |
 | `simons_rival` | Simon's Rival | Scored 20 points in Memotron | 🧠 | Score 20+ in Memotron |
 | `mole_slayer` | Mole Slayer | Scored 200 points in Whack-A-Mole | 🔨 | Score 200+ in Whack-A-Mole |
+| `pacman_500` | Ghost Hunter | Scored 500 points in Pac-Man | 👻 | Score 500+ in Pac-Man |
 | `indestructible` | Indestructible | Survived 3 minutes in Asteroids | 💎 | Survive 180s in Asteroids |
 | `precision` | Precision | Scored 50 in Breakout without losing a ball | 🎯 | Score 50+ in Breakout without loss |
 | `triple_threat` | Triple Threat | Won Tic-Tac-Toe under 10 seconds | 🔥 | Win Tic-Tac-Toe in <10s |
@@ -1274,7 +1278,7 @@ input:focus, textarea:focus {
 
 ## 🎮 9. Game Interface Contract & Implementation
 
-Every game in Lightning Games must implement a standardized interface. This ensures compatibility with the GameManager and consistent behavior across all 40 games.
+Every game in Lightning Games must implement a standardized interface. This ensures compatibility with the GameManager and consistent behavior across all 41 games.
 
 ### Required Interface
 

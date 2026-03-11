@@ -400,6 +400,17 @@
             borderColor: 'rgba(0, 212, 255, 0.35)',
             shadowColor: '0 0 30px rgba(0, 212, 255, 0.2), 0 0 60px rgba(0, 212, 255, 0.06)'
         },
+        {
+            id: 'pacman',
+            icon: '👻',
+            name: 'Pac-Man',
+            desc: 'Eat pellets, avoid ghosts',
+            category: 'arcade',
+            color: '#ffff00',
+            glowColor: 'rgba(255, 255, 0, 0.12)',
+            borderColor: 'rgba(255, 255, 0, 0.35)',
+            shadowColor: '0 0 30px rgba(255, 255, 0, 0.2), 0 0 60px rgba(255, 255, 0, 0.06)'
+        },
 
     ];
 
@@ -525,6 +536,16 @@
         { id: 'slow_and_steady', title: 'Slow and Steady', desc: 'Play a single game for over 10 minutes.', icon: '🐢', hidden: true },
         { id: 'multitasker', title: 'Multitasker', desc: 'Switch between 5 different games in 2 minutes.', icon: '🎭', hidden: true },
 
+        // ===== PAC-MAN ACHIEVEMENTS =====
+        { id: 'pacman_100', title: 'Pellet Eater', desc: 'Scored 100 points in Pac-Man.', icon: '👻' },
+        { id: 'pacman_500', title: 'Ghost Hunter', desc: 'Scored 500 points in Pac-Man.', icon: '👻', ultra: true },
+        { id: 'pacman_1000', title: 'Pac-Master', desc: 'Scored 1000 points in Pac-Man.', icon: '👻', ultra: true },
+        { id: 'pacman_2000', title: 'Pac-Legend', desc: 'Scored 2000 points in Pac-Man.', icon: '👻', legendary: true },
+        { id: 'ghost_eater', title: 'Ghost Eater', desc: 'Eat 10 ghosts with power-ups in Pac-Man.', icon: '💫', ultra: true },
+        { id: 'power_up_master', title: 'Power-Up Master', desc: 'Activate power-up 20 times in Pac-Man.', icon: '⚡', ultra: true },
+        { id: 'level_5_pacman', title: 'Level 5 Survivor', desc: 'Reach level 5 in Pac-Man.', icon: '🎯', ultra: true },
+        { id: 'pacman_extreme', title: 'Extreme Pac-Man', desc: 'Beat Pac-Man on Extreme difficulty.', icon: '🔥', legendary: true },
+
     ];
 
     // Elements
@@ -626,6 +647,8 @@
             if (window.bgPulse) window.bgPulse(null, null, [255, 255, 255]);
         });
     });
+
+    // Settings Tabs Navigation - REMOVED (using single scrollable panel now)
 
     // Sound Effects Bridge
     const sfx = {
@@ -2703,5 +2726,13 @@
             sfx.play('achievement');
         });
     }
+
+    // Register Pac-Man game
+    gm.registerGame('pacman', PacMan, {
+        canvasWidth: 880,
+        canvasHeight: 540,
+        title: 'Pac-Man',
+        icon: '👻'
+    });
 
 })();

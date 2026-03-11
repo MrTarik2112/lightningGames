@@ -1,19 +1,16 @@
-// Orb Collector - move with arrow keys, collect yellow orbs, avoid red mines
+// Orb Collector - Tamamen yeniden yazıldı - SIFIR SALLANMA
 class OrbCollectorGame {
     constructor() {
         this.canvas = null;
         this.ctx = null;
-        this.player = { x: 0, y: 0, r: 14, vx: 0, vy: 0 };
-        this.speed = 260;
-        this.friction = 0.86;
+        this.player = { x: 440, y: 270, r: 14 };
+        this.speed = 4; // Sabit hız - dt ile çarpmıyoruz
         this.keys = { up: false, down: false, left: false, right: false };
         this.orbs = [];
         this.mines = [];
         this.particles = [];
         this.score = 0;
         this.gameOver = false;
-        this._keyDown = null;
-        this._keyUp = null;
         this.spawnTimer = 0;
     }
 
@@ -24,39 +21,41 @@ class OrbCollectorGame {
         this.gameOver = false;
         this.player.x = canvas.width / 2;
         this.player.y = canvas.height / 2;
-        this.player.vx = 0;
-        this.player.vy = 0;
         this.orbs = [];
         this.mines = [];
         this.particles = [];
         this.spawnTimer = 0;
-        this._bindKeys();
+        
+        // Event listeners
+        this.keyDownHandler = (e) => this.handleKeyDown(e);
+        this.keyUpHandler = (e) => this.handleKeyUp(e);
+        document.addEventListener('keydown', this.keyDownHandler);
+        document.addEventListener('keyup', this.keyUpHandler);
+        
+        // İlk orb ve mine'ları spawn et
+        for (let i = 0; i < 3; i++) this.spawnOrb();
+        for (let i = 0; i < 2; i++) this.spawnMine();
     }
 
-    _bindKeys() {
-        if (this._keyDown) {
-            document.removeEventListener('keydown', this._keyDown);
-            document.removeEventListener('keyup', this._keyUp);
-        }
-        this._keyDown = (e) => {
-            if (this.gameOver) return;
-            if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') this.keys.up = true;
-            if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') this.keys.down = true;
-            if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') this.keys.left = true;
-            if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') this.keys.right = true;
-        };
-        this._keyUp = (e) => {
-            if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') this.keys.up = false;
-            if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') this.keys.down = false;
-            if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') this.keys.left = false;
-            if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') this.keys.right = false;
-        };
-        document.addEventListener('keydown', this._keyDown);
-        document.addEventListener('keyup', this._keyUp);
+    handleKeyDown(e) {
+        if (this.gameOver) return;
+        const key = e.key.toLowerCase();
+        if (key === 'arrowup' || key === 'w') { this.keys.up = true; e.preventDefault(); }
+        if (key === 'arrowdown' || key === 's') { this.keys.down = true; e.preventDefault(); }
+        if (key === 'arrowleft' || key === 'a') { this.keys.left = true; e.preventDefault(); }
+        if (key === 'arrowright' || key === 'd') { this.keys.right = true; e.preventDefault(); }
     }
 
-    _spawnOrb() {
-        const margin = 24;
+    handleKeyUp(e) {
+        const key = e.key.toLowerCase();
+        if (key === 'arrowup' || key === 'w') this.keys.up = false;
+        if (key === 'arrowdown' || key === 's') this.keys.down = false;
+        if (key === 'arrowleft' || key === 'a') this.keys.left = false;
+        if (key === 'arrowright' || key === 'd') this.keys.right = false;
+    }
+
+    spawnOrb() {
+        const margin = 30;
         this.orbs.push({
             x: margin + Math.random() * (this.canvas.width - margin * 2),
             y: margin + Math.random() * (this.canvas.height - margin * 2),
@@ -64,8 +63,8 @@ class OrbCollectorGame {
         });
     }
 
-    _spawnMine() {
-        const margin = 24;
+    spawnMine() {
+        const margin = 30;
         this.mines.push({
             x: margin + Math.random() * (this.canvas.width - margin * 2),
             y: margin + Math.random() * (this.canvas.height - margin * 2),
@@ -74,17 +73,13 @@ class OrbCollectorGame {
         });
     }
 
-    _spawnParticles(x, y, color, count = 10) {
-        const maxParticles = 120;
-        if (this.particles.length > maxParticles) return;
+    spawnParticles(x, y, color, count = 10) {
         for (let i = 0; i < count; i++) {
             this.particles.push({
                 x, y,
-                vx: (Math.random() - 0.5) * 220,
-                vy: (Math.random() - 0.5) * 220,
+                vx: (Math.random() - 0.5) * 8,
+                vy: (Math.random() - 0.5) * 8,
                 life: 1,
-                decay: 1.5 + Math.random(),
-                size: Math.random() * 3 + 2,
                 color
             });
         }
@@ -94,89 +89,93 @@ class OrbCollectorGame {
         if (this.gameOver) return;
 
         const p = this.player;
-        if (this.keys.up) p.vy -= this.speed * dt;
-        if (this.keys.down) p.vy += this.speed * dt;
-        if (this.keys.left) p.vx -= this.speed * dt;
-        if (this.keys.right) p.vx += this.speed * dt;
+        
+        // Pozisyonu kaydet (debug için)
+        const oldX = p.x;
+        const oldY = p.y;
+        
+        // ULTRA BASİT HAREKET - DT KULLANMIYORUZ
+        if (this.keys.up) p.y -= this.speed;
+        if (this.keys.down) p.y += this.speed;
+        if (this.keys.left) p.x -= this.speed;
+        if (this.keys.right) p.x += this.speed;
 
-        p.vx *= this.friction;
-        p.vy *= this.friction;
-        p.x += p.vx * dt * 60 / 16;
-        p.y += p.vy * dt * 60 / 16;
-
-        const margin = p.r + 4;
+        // Sınırlar
+        const margin = p.r;
         if (p.x < margin) p.x = margin;
         if (p.x > this.canvas.width - margin) p.x = this.canvas.width - margin;
         if (p.y < margin) p.y = margin;
         if (p.y > this.canvas.height - margin) p.y = this.canvas.height - margin;
 
+        // Spawn timer
         this.spawnTimer += dt;
-        if (this.spawnTimer > 0.8) {
+        if (this.spawnTimer > 1) {
             this.spawnTimer = 0;
-            if (this.orbs.length < 4) this._spawnOrb();
-            if (this.mines.length < 5 && Math.random() < 0.5) this._spawnMine();
+            if (this.orbs.length < 4) this.spawnOrb();
+            if (this.mines.length < 5) this.spawnMine();
         }
 
-        // Mines pulsate
-        this.mines.forEach(m => m.phase += dt * 3);
+        // Mine animasyonu
+        this.mines.forEach(m => m.phase += 0.05);
 
-        // Collect orbs
+        // Orb toplama
+        let orbCollected = false;
         for (let i = this.orbs.length - 1; i >= 0; i--) {
             const o = this.orbs[i];
-            const dx = o.x - p.x;
-            const dy = o.y - p.y;
-            const dist = Math.hypot(dx, dy);
+            const dist = Math.hypot(o.x - p.x, o.y - p.y);
             if (dist < p.r + o.r) {
                 this.orbs.splice(i, 1);
                 this.score += 15;
+                this.spawnParticles(o.x, o.y, '#ffdd55', 12);
                 if (window.soundManager) window.soundManager.playEat();
-                this._spawnParticles(o.x, o.y, '#ffdd55', 16);
-                if (window.gameManager) window.gameManager.shakeScreen(0.2);
+                orbCollected = true;
+                
+                // Debug log
+                console.log('Orb collected! Player pos:', p.x.toFixed(2), p.y.toFixed(2));
             }
         }
 
-        // Hit mines
+        // Mine çarpışması
         for (let m of this.mines) {
-            const dx = m.x - p.x;
-            const dy = m.y - p.y;
-            const dist = Math.hypot(dx, dy);
+            const dist = Math.hypot(m.x - p.x, m.y - p.y);
             if (dist < p.r + m.r * 0.8) {
-                this._triggerGameOver();
+                this.endGame();
                 break;
             }
         }
 
-        // Update particles
+        // Partiküller
         for (let i = this.particles.length - 1; i >= 0; i--) {
             const pa = this.particles[i];
-            pa.x += pa.vx * dt;
-            pa.y += pa.vy * dt;
-            pa.life -= pa.decay * dt;
+            pa.x += pa.vx;
+            pa.y += pa.vy;
+            pa.life -= 0.02;
             if (pa.life <= 0) this.particles.splice(i, 1);
         }
+        
+        // Debug: Pozisyon değişimini kontrol et
+        if (orbCollected && (Math.abs(p.x - oldX) > this.speed || Math.abs(p.y - oldY) > this.speed)) {
+            console.warn('ANORMAL HAREKET TESPIT EDİLDİ!', 
+                'Delta X:', (p.x - oldX).toFixed(2), 
+                'Delta Y:', (p.y - oldY).toFixed(2));
+        }
     }
 
-    _triggerGameOver() {
+    endGame() {
         if (this.gameOver) return;
         this.gameOver = true;
+        this.spawnParticles(this.player.x, this.player.y, '#ff4466', 20);
         if (window.soundManager) window.soundManager.playDeath();
-        this._spawnParticles(this.player.x, this.player.y, '#ff4466', 28);
         if (window.gameManager) {
-            window.gameManager.shakeScreen(1);
             window.gameManager.checkAndUpdateHighScore('orbcollector', this.score);
         }
-        if (this._keyDown) {
-            document.removeEventListener('keydown', this._keyDown);
-            document.removeEventListener('keyup', this._keyUp);
-            this._keyDown = null;
-            this._keyUp = null;
-        }
-        this._showGameOverOverlay();
+        this.showGameOver();
     }
 
-    _showGameOverOverlay() {
+    showGameOver() {
         const container = document.querySelector('.game-canvas-container');
         if (!container) return;
+        
         const existing = container.querySelector('.game-over-overlay');
         if (existing) existing.remove();
 
@@ -193,19 +192,23 @@ class OrbCollectorGame {
             <button class="game-over-btn" id="orbcollector-restart">↻ Play Again</button>
         `;
         container.appendChild(overlay);
-        overlay.querySelector('#orbcollector-restart').addEventListener('click', () => {
-            if (window.gameManager) window.gameManager.resetCurrentGame();
-        });
+        
+        const btn = overlay.querySelector('#orbcollector-restart');
+        if (btn) {
+            btn.addEventListener('click', () => {
+                if (window.gameManager) window.gameManager.resetCurrentGame();
+            });
+        }
     }
 
     draw() {
         const { ctx, canvas } = this;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+        
+        // Arka plan
         ctx.fillStyle = '#060616';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // Mild grid
+        // Grid
         ctx.strokeStyle = 'rgba(255,255,255,0.03)';
         ctx.lineWidth = 1;
         for (let x = 0; x < canvas.width; x += 40) {
@@ -258,18 +261,33 @@ class OrbCollectorGame {
             ctx.globalAlpha = Math.max(0, p.life);
             ctx.fillStyle = p.color;
             ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+            ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
             ctx.fill();
         });
         ctx.globalAlpha = 1;
+
+        // Score
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 20px Arial';
+        ctx.textAlign = 'left';
+        ctx.fillText(`Score: ${this.score}`, 20, 30);
     }
 
-    getScore() { return this.score; }
-    isGameOver() { return this.gameOver; }
-    pause() { /* hareket yokken de sorun yok */ }
-    resume() { /* nothing */ }
+    getScore() {
+        return this.score;
+    }
+
+    isGameOver() {
+        return this.gameOver;
+    }
+
+    destroy() {
+        document.removeEventListener('keydown', this.keyDownHandler);
+        document.removeEventListener('keyup', this.keyUpHandler);
+    }
 }
 
+// Oyunu kaydet
 if (window.gameManager) {
     window.gameManager.registerGame('orbcollector', OrbCollectorGame, {
         name: 'Orb Collector',
@@ -277,4 +295,3 @@ if (window.gameManager) {
         canvasHeight: 540
     });
 }
-
