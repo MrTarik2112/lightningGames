@@ -627,30 +627,7 @@
         });
     });
 
-    // Settings Tabs Navigation
-    const settingsTabs = document.querySelectorAll('.settings-tab');
-    const settingsContents = document.querySelectorAll('.settings-content');
-    
-    settingsTabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            const tabName = tab.dataset.tab;
-            
-            // Remove active from all tabs
-            settingsTabs.forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            
-            // Hide all content
-            settingsContents.forEach(content => content.classList.remove('active'));
-            
-            // Show selected content
-            const selectedContent = document.getElementById(`tab-${tabName}`);
-            if (selectedContent) {
-                selectedContent.classList.add('active');
-            }
-            
-            if (window.soundManager) window.soundManager.playSelect();
-        });
-    });
+    // Settings Tabs Navigation - REMOVED (using single scrollable panel now)
 
     // Sound Effects Bridge
     const sfx = {

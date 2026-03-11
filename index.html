@@ -405,17 +405,296 @@
           <button id="settings-close" class="settings-close" title="Close">✕</button>
         </div>
         
-        <!-- Settings Tabs -->
-        <div class="settings-tabs">
-          <button class="settings-tab active" data-tab="display">🎨 Display</button>
-          <button class="settings-tab" data-tab="audio">🔊 Audio</button>
-          <button class="settings-tab" data-tab="gameplay">🎮 Gameplay</button>
-          <button class="settings-tab" data-tab="interface">📱 Interface</button>
-          <button class="settings-tab" data-tab="data">💾 Data</button>
+        <div class="settings-content">
+          <!-- Display Section -->
+          <div class="settings-section">
+            <h3 class="settings-section-title">Visual Effects</h3>
+            <label class="settings-toggle">
+              <input type="checkbox" id="settings-reduced-motion">
+              <span class="settings-toggle-indicator"></span>
+              <span class="settings-toggle-label">Reduce motion</span>
+            </label>
+          </div>
+
+          <!-- Themes -->
+          <div class="settings-section">
+            <h3 class="settings-section-title">Themes (11)</h3>
+            <div class="theme-grid" style="grid-template-columns: repeat(5, 1fr); gap: 8px;">
+              <button class="theme-btn active" data-theme="default" title="Neon">
+                <span class="theme-preview" style="background: #050512; border: 1px solid #00d4ff;"></span>
+                <span class="theme-label">Neon</span>
+              </button>
+              <button class="theme-btn" data-theme="retro" title="Retro">
+                <span class="theme-preview" style="background: #1a1a00; border: 1px solid #ffaa00;"></span>
+                <span class="theme-label">Retro</span>
+              </button>
+              <button class="theme-btn" data-theme="minimal" title="Minimal">
+                <span class="theme-preview" style="background: #000000; border: 1px solid #ffffff;"></span>
+                <span class="theme-label">Minimal</span>
+              </button>
+              <button class="theme-btn" data-theme="forest" title="Forest">
+                <span class="theme-preview" style="background: #001a0a; border: 1px solid #00ff88;"></span>
+                <span class="theme-label">Forest</span>
+              </button>
+              <button class="theme-btn" data-theme="ocean" title="Ocean">
+                <span class="theme-preview" style="background: #001a2e; border: 1px solid #00d4ff;"></span>
+                <span class="theme-label">Ocean</span>
+              </button>
+              <button class="theme-btn" data-theme="sunset" title="Sunset">
+                <span class="theme-preview" style="background: #2e1a00; border: 1px solid #ff6b35;"></span>
+                <span class="theme-label">Sunset</span>
+              </button>
+              <button class="theme-btn" data-theme="purple" title="Purple">
+                <span class="theme-preview" style="background: #1a001a; border: 1px solid #b537f2;"></span>
+                <span class="theme-label">Purple</span>
+              </button>
+              <button class="theme-btn" data-theme="matrix" title="Matrix">
+                <span class="theme-preview" style="background: #000000; border: 1px solid #00ff00;"></span>
+                <span class="theme-label">Matrix</span>
+              </button>
+              <button class="theme-btn" data-theme="cyberpunk" title="Cyberpunk">
+                <span class="theme-preview" style="background: #0a0a0a; border: 1px solid #ff00ff;"></span>
+                <span class="theme-label">Cyber</span>
+              </button>
+              <button class="theme-btn" data-theme="darkblue" title="Dark Blue">
+                <span class="theme-preview" style="background: #0a0a1e; border: 1px solid #4d94ff;"></span>
+                <span class="theme-label">D.Blue</span>
+              </button>
+              <button class="theme-btn" data-theme="fire" title="Fire">
+                <span class="theme-preview" style="background: #1a0000; border: 1px solid #ff4500;"></span>
+                <span class="theme-label">Fire</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Visual Sliders -->
+          <div class="settings-section">
+            <h3 class="settings-section-title">Visual Effects</h3>
+            <div class="settings-field">
+              <div class="settings-field-header">
+                <span class="settings-field-label">Screen Shake</span>
+                <span class="settings-field-value" id="settings-shake-value">100%</span>
+              </div>
+              <input type="range" id="settings-shake-intensity" min="0" max="1" step="0.1" value="1">
+            </div>
+            <div class="settings-field">
+              <div class="settings-field-header">
+                <span class="settings-field-label">Resolution Scale</span>
+                <span class="settings-field-value" id="settings-scale-value">90%</span>
+              </div>
+              <input type="range" id="settings-render-scale" min="0.7" max="1" step="0.05" value="0.9">
+            </div>
+            <div class="settings-field">
+              <div class="settings-field-header">
+                <span class="settings-field-label">Particle Density</span>
+                <span class="settings-field-value" id="settings-particle-value">100%</span>
+              </div>
+              <input type="range" id="settings-particle-density" min="0" max="1" step="0.1" value="1">
+            </div>
+            <div class="settings-field">
+              <div class="settings-field-header">
+                <span class="settings-field-label">Glow Intensity</span>
+                <span class="settings-field-value" id="settings-glow-value">100%</span>
+              </div>
+              <input type="range" id="settings-glow-intensity" min="0" max="1" step="0.1" value="1">
+            </div>
+            <div class="settings-field">
+              <div class="settings-field-header">
+                <span class="settings-field-label">Animation Speed</span>
+                <span class="settings-field-value" id="settings-anim-value">100%</span>
+              </div>
+              <input type="range" id="settings-anim-speed" min="0.5" max="2" step="0.1" value="1">
+            </div>
+            <div class="settings-field">
+              <label class="settings-checkbox">
+                <input type="checkbox" id="settings-show-fps">
+                <span>Show FPS Counter</span>
+              </label>
+            </div>
+            <div class="settings-field">
+              <label class="settings-checkbox">
+                <input type="checkbox" id="settings-screen-flash">
+                <span>Screen Flash Effects</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Audio Section -->
+          <div class="settings-section">
+            <h3 class="settings-section-title">Audio</h3>
+            <div class="settings-field">
+              <div class="settings-field-header">
+                <span class="settings-field-label">SFX Volume</span>
+                <span class="settings-field-value" id="settings-sfx-value">100%</span>
+              </div>
+              <input type="range" id="settings-sfx-volume" min="0" max="1" step="0.1" value="1">
+            </div>
+            <div class="settings-field">
+              <div class="settings-field-header">
+                <span class="settings-field-label">Music Volume</span>
+                <span class="settings-field-value" id="settings-music-value">50%</span>
+              </div>
+              <input type="range" id="settings-music-volume" min="0" max="1" step="0.1" value="0.5">
+            </div>
+            <div class="settings-field">
+              <label class="settings-checkbox">
+                <input type="checkbox" id="settings-mute-on-blur" checked>
+                <span>Mute on Blur</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Gameplay Section -->
+          <div class="settings-section">
+            <h3 class="settings-section-title">Gameplay</h3>
+            <div class="settings-field">
+              <label class="settings-checkbox">
+                <input type="checkbox" id="settings-auto-pause">
+                <span>Auto-Pause on Blur</span>
+              </label>
+            </div>
+            <div class="settings-field">
+              <label class="settings-checkbox">
+                <input type="checkbox" id="settings-confirm-exit">
+                <span>Confirm Exit</span>
+              </label>
+            </div>
+            <div class="settings-field">
+              <label class="settings-checkbox">
+                <input type="checkbox" id="settings-show-timer" checked>
+                <span>Show Timer</span>
+              </label>
+            </div>
+            <div class="settings-field">
+              <div class="settings-field-header">
+                <span class="settings-field-label">Difficulty</span>
+              </div>
+              <select id="settings-difficulty" class="settings-select">
+                <option value="easy">Easy</option>
+                <option value="normal" selected>Normal</option>
+                <option value="hard">Hard</option>
+                <option value="extreme">Extreme</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Interface Section -->
+          <div class="settings-section">
+            <h3 class="settings-section-title">Interface</h3>
+            <div class="settings-field">
+              <label class="settings-checkbox">
+                <input type="checkbox" id="settings-compact-mode">
+                <span>Compact Mode</span>
+              </label>
+            </div>
+            <div class="settings-field">
+              <label class="settings-checkbox">
+                <input type="checkbox" id="settings-show-descriptions" checked>
+                <span>Show Descriptions</span>
+              </label>
+            </div>
+            <div class="settings-field">
+              <label class="settings-checkbox">
+                <input type="checkbox" id="settings-achievement-notifications" checked>
+                <span>Achievement Notifications</span>
+              </label>
+            </div>
+            <div class="settings-field">
+              <div class="settings-field-header">
+                <span class="settings-field-label">Card Size</span>
+                <span class="settings-field-value" id="settings-card-size-value">100%</span>
+              </div>
+              <input type="range" id="settings-card-size" min="0.8" max="1.2" step="0.1" value="1">
+            </div>
+            <div class="settings-field">
+              <div class="settings-field-header">
+                <span class="settings-field-label">Grid Layout</span>
+              </div>
+              <select id="settings-grid-layout" class="settings-select">
+                <option value="auto">Auto</option>
+                <option value="2">2 Columns</option>
+                <option value="3">3 Columns</option>
+                <option value="4" selected>4 Columns</option>
+                <option value="5">5 Columns</option>
+                <option value="6">6 Columns</option>
+              </select>
+            </div>
+            <div class="settings-field">
+              <label class="settings-checkbox">
+                <input type="checkbox" id="settings-dark-mode">
+                <span>Dark Mode</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Data Section -->
+          <div class="settings-section">
+            <h3 class="settings-section-title">Help</h3>
+            <div class="settings-field">
+              <button id="btn-tutorial" class="settings-btn">📚 Tutorial</button>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h3 class="settings-section-title">Data</h3>
+            <div class="settings-field">
+              <button id="btn-export-data" class="settings-btn">💾 Export</button>
+            </div>
+            <div class="settings-field">
+              <button id="btn-import-data" class="settings-btn">📂 Import</button>
+              <input type="file" id="import-file-input" accept=".json" style="display: none;">
+            </div>
+            <div class="settings-field">
+              <button id="btn-screenshot-highscore" class="settings-btn">📸 Screenshot</button>
+            </div>
+            <div class="settings-field">
+              <button id="btn-share-achievements" class="settings-btn">🏆 Share</button>
+            </div>
+          </div>
+
+          <div class="settings-section" style="border-color: var(--accent-red);">
+            <h3 class="settings-section-title" style="color: var(--accent-red);">⚠️ Danger</h3>
+            <div class="settings-field">
+              <button id="btn-hard-reset" class="settings-btn" style="background: linear-gradient(135deg, #ff4466, #ff6b35);">🔥 Hard Reset</button>
+            </div>
+          </div>
         </div>
-        
-        <!-- Display Tab Content -->
-        <div class="settings-content active" id="tab-display" data-tab-content="display">
+      </div>
+    </div>
+  </div>
+
+  <!-- Data Export Modal -->
+  <div id="data-export-modal" class="data-modal">
+    <div class="data-content">
+      <div class="data-icon">💾</div>
+      <h2 class="data-title">Export Data</h2>
+      <p class="data-description">Your data will be saved as JSON.</p>
+      <div class="data-info" id="export-data-info"></div>
+      <div class="data-actions">
+        <button id="data-export-cancel" class="data-btn-cancel">Cancel</button>
+        <button id="data-export-download" class="data-btn-confirm">Download</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Data Import Modal -->
+  <div id="data-import-modal" class="data-modal">
+    <div class="data-content">
+      <div class="data-icon">📂</div>
+      <h2 class="data-title">Import Data</h2>
+      <p class="data-description">Select a JSON file to restore your data.</p>
+      <div class="data-info" id="import-data-preview">
+        <p style="color: var(--text-muted); text-align: center;">No file selected</p>
+      </div>
+      <div class="data-actions">
+        <button id="data-import-cancel" class="data-btn-cancel">Cancel</button>
+        <button id="data-import-confirm" class="data-btn-confirm" disabled>Import</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Import Success Toast -->
+  <div id="import-success-toast" class="import-success">✅ Data imported!</div>
           <div class="settings-section">
             <h3 class="settings-section-title">Visual Effects</h3>
             <label class="settings-toggle">
@@ -754,53 +1033,7 @@
   </div>
 
   <!-- Import Success Toast -->
-  <div id="import-success-toast" class="import-success">
-    ✅ Data imported successfully!
-  </div>
-
-  <!-- Hard Reset Confirmation Modal -->
-  <div id="reset-modal" class="reset-modal">
-    <div class="reset-content">
-      <div class="reset-icon">🔥</div>
-      <h2 class="reset-title">HARD RESET</h2>
-      <p class="reset-warning">
-        This will permanently delete ALL your data including:<br>
-        High scores, achievements, favorites, and settings.
-      </p>
-      
-      <div class="reset-steps">
-        <div class="reset-step" id="reset-step-1">
-          <div class="reset-step-num">1</div>
-          <span class="reset-step-text">Click "Continue" to start</span>
-        </div>
-        <div class="reset-step" id="reset-step-2">
-          <div class="reset-step-num">2</div>
-          <span class="reset-step-text">Type "RESET" to confirm</span>
-        </div>
-        <div class="reset-step" id="reset-step-3">
-          <div class="reset-step-num">3</div>
-          <span class="reset-step-text">Wait 5 seconds countdown</span>
-        </div>
-      </div>
-      
-      <div id="reset-confirm-area" class="reset-actions" style="display: none;">
-        <input type="text" id="reset-confirm-input" placeholder="Type RESET" 
-               style="flex: 2; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); 
-                      background: rgba(255,255,255,0.1); color: var(--text-primary); text-align: center;">
-        <button id="reset-btn-cancel" class="reset-btn-cancel">Cancel</button>
-      </div>
-      
-      <div id="reset-countdown-area" style="display: none;">
-        <div class="reset-countdown" id="reset-countdown">5</div>
-        <p style="color: var(--text-secondary); font-size: 12px;">Resetting...</p>
-      </div>
-      
-      <div id="reset-actions-initial" class="reset-actions">
-        <button id="reset-btn-cancel-initial" class="reset-btn-cancel">Cancel</button>
-        <button id="reset-btn-continue" class="reset-btn-confirm">Continue</button>
-      </div>
-    </div>
-  </div>
+  <div id="import-success-toast" class="import-success">✅ Data imported!</div>
 
   <script src="renderer/gameManager.js"></script>
   <script src="games/snake.js"></script>
