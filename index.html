@@ -414,7 +414,8 @@
           <button class="settings-tab" data-tab="data">💾 Data</button>
         </div>
         
-        <div class="settings-content">
+        <!-- Display Tab Content -->
+        <div class="settings-content active" id="tab-display" data-tab-content="display">
           <div class="settings-section">
             <h3 class="settings-section-title">Visual Effects</h3>
             <label class="settings-toggle">
@@ -487,7 +488,6 @@
               <input type="range" id="settings-render-scale" min="0.7" max="1" step="0.05" value="0.9">
             </div>
             
-            <!-- NEW SETTINGS -->
             <div class="settings-section">
               <h3 class="settings-section-title">Visual Effects</h3>
               
@@ -529,184 +529,194 @@
                 </label>
               </div>
             </div>
-            
-            <div class="settings-section">
-              <h3 class="settings-section-title">Audio Settings</h3>
-              
-              <div class="settings-field">
-                <div class="settings-field-header">
-                  <span class="settings-field-label">Sound Effects Volume</span>
-                  <span class="settings-field-value" id="settings-sfx-value">100%</span>
-                </div>
-                <input type="range" id="settings-sfx-volume" min="0" max="1" step="0.1" value="1">
+          </div>
+        </div>
+
+        <!-- Audio Tab Content -->
+        <div class="settings-content" id="tab-audio" data-tab-content="audio">
+          <div class="settings-section">
+            <h3 class="settings-section-title">Sound Effects Volume</h3>
+            <div class="settings-field">
+              <div class="settings-field-header">
+                <span class="settings-field-label">Sound Effects Volume</span>
+                <span class="settings-field-value" id="settings-sfx-value">100%</span>
               </div>
-              
-              <div class="settings-field">
-                <div class="settings-field-header">
-                  <span class="settings-field-label">Music Volume</span>
-                  <span class="settings-field-value" id="settings-music-value">50%</span>
-                </div>
-                <input type="range" id="settings-music-volume" min="0" max="1" step="0.1" value="0.5">
-              </div>
-              
-              <div class="settings-field">
-                <label class="settings-checkbox">
-                  <input type="checkbox" id="settings-mute-on-blur" checked>
-                  <span>Mute When Window Loses Focus</span>
-                </label>
-              </div>
+              <input type="range" id="settings-sfx-volume" min="0" max="1" step="0.1" value="1">
             </div>
-            
-            <div class="settings-section">
-              <h3 class="settings-section-title">Gameplay</h3>
-              
-              <div class="settings-field">
-                <label class="settings-checkbox">
-                  <input type="checkbox" id="settings-auto-pause">
-                  <span>Auto-Pause on Window Blur</span>
-                </label>
+          </div>
+          
+          <div class="settings-section">
+            <h3 class="settings-section-title">Music Volume</h3>
+            <div class="settings-field">
+              <div class="settings-field-header">
+                <span class="settings-field-label">Music Volume</span>
+                <span class="settings-field-value" id="settings-music-value">50%</span>
               </div>
-              
-              <div class="settings-field">
-                <label class="settings-checkbox">
-                  <input type="checkbox" id="settings-confirm-exit">
-                  <span>Confirm Before Exiting Game</span>
-                </label>
-              </div>
-              
-              <div class="settings-field">
-                <label class="settings-checkbox">
-                  <input type="checkbox" id="settings-show-timer" checked>
-                  <span>Show Game Timer</span>
-                </label>
-              </div>
-              
-              <div class="settings-field">
-                <div class="settings-field-header">
-                  <span class="settings-field-label">Game Difficulty</span>
-                </div>
-                <select id="settings-difficulty" class="settings-select">
-                  <option value="easy">Easy</option>
-                  <option value="normal" selected>Normal</option>
-                  <option value="hard">Hard</option>
-                  <option value="extreme">Extreme</option>
-                </select>
-              </div>
+              <input type="range" id="settings-music-volume" min="0" max="1" step="0.1" value="0.5">
             </div>
-            
-            <div class="settings-section">
-              <h3 class="settings-section-title">Interface</h3>
-              
-              <div class="settings-field">
-                <label class="settings-checkbox">
-                  <input type="checkbox" id="settings-compact-mode">
-                  <span>Compact Card View</span>
-                </label>
-              </div>
-              
-              <div class="settings-field">
-                <label class="settings-checkbox">
-                  <input type="checkbox" id="settings-show-descriptions" checked>
-                  <span>Show Game Descriptions</span>
-                </label>
-              </div>
-              
-              <div class="settings-field">
-                <label class="settings-checkbox">
-                  <input type="checkbox" id="settings-achievement-notifications" checked>
-                  <span>Achievement Notifications</span>
-                </label>
-              </div>
-              
-              <div class="settings-field">
-                <div class="settings-field-header">
-                  <span class="settings-field-label">Card Size</span>
-                  <span class="settings-field-value" id="settings-card-size-value">100%</span>
-                </div>
-                <input type="range" id="settings-card-size" min="0.8" max="1.2" step="0.1" value="1">
-              </div>
-              
-              <div class="settings-field">
-                <div class="settings-field-header">
-                  <span class="settings-field-label">Grid Layout</span>
-                </div>
-                <select id="settings-grid-layout" class="settings-select">
-                  <option value="auto">Auto (Responsive)</option>
-                  <option value="2">2 Columns</option>
-                  <option value="3">3 Columns</option>
-                  <option value="4" selected>4 Columns</option>
-                  <option value="5">5 Columns</option>
-                  <option value="6">6 Columns</option>
-                </select>
-              </div>
-              
-              <div class="settings-field">
-                <label class="settings-checkbox">
-                  <input type="checkbox" id="settings-dark-mode">
-                  <span>Dark Mode (Override Theme)</span>
-                </label>
-              </div>
-            </div>
-            
-            <div class="settings-section">
-              <h3 class="settings-section-title">Help & Tutorial</h3>
-              
-              <div class="settings-field">
-                <button id="btn-tutorial" class="settings-btn">
-                  📚 Start Interactive Tutorial
-                </button>
-              </div>
-            </div>
-            
-            <div class="settings-section">
-              <h3 class="settings-section-title">Share & Export</h3>
-              
-              <div class="settings-field">
-                <button id="btn-screenshot-highscore" class="settings-btn">
-                  📸 Screenshot High Score
-                </button>
-              </div>
-              
-              <div class="settings-field">
-                <button id="btn-share-achievements" class="settings-btn">
-                  🏆 Share Achievements
-                </button>
-              </div>
-            </div>
-            
-            <div class="settings-section">
-              <h3 class="settings-section-title">Data Management</h3>
-              
-              <div class="settings-field">
-                <button id="btn-export-data" class="settings-btn">
-                  💾 Export All Data
-                </button>
-              </div>
-              
-              <div class="settings-field">
-                <button id="btn-import-data" class="settings-btn">
-                  📂 Import Data
-                </button>
-                <input type="file" id="import-file-input" accept=".json" style="display: none;">
-              </div>
-            </div>
-            
-            <div class="settings-section" style="border-color: var(--accent-red);">
-              <h3 class="settings-section-title" style="color: var(--accent-red);">⚠️ Danger Zone</h3>
-              
-              <div class="settings-field">
-                <button id="btn-hard-reset" class="settings-btn" style="background: linear-gradient(135deg, #ff4466, #ff6b35);">
-                  🔥 Hard Reset (Delete All Data)
-                </button>
-              </div>
+          </div>
+          
+          <div class="settings-section">
+            <div class="settings-field">
+              <label class="settings-checkbox">
+                <input type="checkbox" id="settings-mute-on-blur" checked>
+                <span>Mute When Window Loses Focus</span>
+              </label>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- Data Export Modal -->
+        <!-- Gameplay Tab Content -->
+        <div class="settings-content" id="tab-gameplay" data-tab-content="gameplay">
+          <div class="settings-section">
+            <h3 class="settings-section-title">Gameplay Options</h3>
+            
+            <div class="settings-field">
+              <label class="settings-checkbox">
+                <input type="checkbox" id="settings-auto-pause">
+                <span>Auto-Pause on Window Blur</span>
+              </label>
+            </div>
+            
+            <div class="settings-field">
+              <label class="settings-checkbox">
+                <input type="checkbox" id="settings-confirm-exit">
+                <span>Confirm Before Exiting Game</span>
+              </label>
+            </div>
+            
+            <div class="settings-field">
+              <label class="settings-checkbox">
+                <input type="checkbox" id="settings-show-timer" checked>
+                <span>Show Game Timer</span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="settings-section">
+            <h3 class="settings-section-title">Game Difficulty</h3>
+            <div class="settings-field">
+              <select id="settings-difficulty" class="settings-select">
+                <option value="easy">Easy</option>
+                <option value="normal" selected>Normal</option>
+                <option value="hard">Hard</option>
+                <option value="extreme">Extreme</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interface Tab Content -->
+        <div class="settings-content" id="tab-interface" data-tab-content="interface">
+          <div class="settings-section">
+            <h3 class="settings-section-title">Interface Options</h3>
+            
+            <div class="settings-field">
+              <label class="settings-checkbox">
+                <input type="checkbox" id="settings-compact-mode">
+                <span>Compact Card View</span>
+              </label>
+            </div>
+            
+            <div class="settings-field">
+              <label class="settings-checkbox">
+                <input type="checkbox" id="settings-show-descriptions" checked>
+                <span>Show Game Descriptions</span>
+              </label>
+            </div>
+            
+            <div class="settings-field">
+              <label class="settings-checkbox">
+                <input type="checkbox" id="settings-achievement-notifications" checked>
+                <span>Achievement Notifications</span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="settings-section">
+            <h3 class="settings-section-title">Card Size</h3>
+            <div class="settings-field">
+              <div class="settings-field-header">
+                <span class="settings-field-label">Card Size</span>
+                <span class="settings-field-value" id="settings-card-size-value">100%</span>
+              </div>
+              <input type="range" id="settings-card-size" min="0.8" max="1.2" step="0.1" value="1">
+            </div>
+          </div>
+          
+          <div class="settings-section">
+            <h3 class="settings-section-title">Grid Layout</h3>
+            <div class="settings-field">
+              <select id="settings-grid-layout" class="settings-select">
+                <option value="auto">Auto (Responsive)</option>
+                <option value="2">2 Columns</option>
+                <option value="3">3 Columns</option>
+                <option value="4" selected>4 Columns</option>
+                <option value="5">5 Columns</option>
+                <option value="6">6 Columns</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="settings-section">
+            <div class="settings-field">
+              <label class="settings-checkbox">
+                <input type="checkbox" id="settings-dark-mode">
+                <span>Dark Mode (Override Theme)</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Data Tab Content -->
+        <div class="settings-content" id="tab-data" data-tab-content="data">
+          <div class="settings-section">
+            <h3 class="settings-section-title">Help & Tutorial</h3>
+            <div class="settings-field">
+              <button id="btn-tutorial" class="settings-btn">
+                📚 Start Interactive Tutorial
+              </button>
+            </div>
+          </div>
+          
+          <div class="settings-section">
+            <h3 class="settings-section-title">Share & Export</h3>
+            <div class="settings-field">
+              <button id="btn-screenshot-highscore" class="settings-btn">
+                📸 Screenshot High Score
+              </button>
+            </div>
+            <div class="settings-field">
+              <button id="btn-share-achievements" class="settings-btn">
+                🏆 Share Achievements
+              </button>
+            </div>
+          </div>
+          
+          <div class="settings-section">
+            <h3 class="settings-section-title">Data Management</h3>
+            <div class="settings-field">
+              <button id="btn-export-data" class="settings-btn">
+                💾 Export All Data
+              </button>
+            </div>
+            <div class="settings-field">
+              <button id="btn-import-data" class="settings-btn">
+                📂 Import Data
+              </button>
+              <input type="file" id="import-file-input" accept=".json" style="display: none;">
+            </div>
+          </div>
+          
+          <div class="settings-section" style="border-color: var(--accent-red);">
+            <h3 class="settings-section-title" style="color: var(--accent-red);">⚠️ Danger Zone</h3>
+            <div class="settings-field">
+              <button id="btn-hard-reset" class="settings-btn" style="background: linear-gradient(135deg, #ff4466, #ff6b35);">
+                🔥 Hard Reset (Delete All Data)
+              </button>
+            </div>
+          </div>
+        </div>
   <div id="data-export-modal" class="data-modal">
     <div class="data-content">
       <div class="data-icon">💾</div>

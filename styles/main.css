@@ -5129,6 +5129,21 @@ input,
   animation: fadeIn 0.2s ease;
 }
 
+/* Alternative: Using data attribute selector */
+.settings-content {
+  display: none;
+  max-height: 500px;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.settings-content.active {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: fadeIn 0.2s ease;
+}
+
 /* Enhanced Section Styling */
 .settings-section {
   background: rgba(255, 255, 255, 0.02);
