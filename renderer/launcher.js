@@ -627,6 +627,17 @@
         });
     });
 
+    // Settings Tabs Navigation
+    const settingsTabs = document.querySelectorAll('.settings-tab');
+    settingsTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const tabName = tab.dataset.tab;
+            settingsTabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            if (window.soundManager) window.soundManager.playSelect();
+        });
+    });
+
     // Sound Effects Bridge
     const sfx = {
         play(type) {
