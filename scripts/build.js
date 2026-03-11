@@ -221,7 +221,7 @@ npm install
 echo "🔨 Building AppImage..."
 npx electron-builder --linux AppImage --config.compression=${compression}
 
-echo "📋 Copying artifacts back to Windows..."
+echo "📋 Copying build artifacts back to Windows..."
 mkdir -p "${wslSourcePath}/dist"
 find "${linuxBuildPath}/dist" -name "*.AppImage" -exec cp -v {} "${wslSourcePath}/dist/" \\;
 
@@ -295,7 +295,7 @@ async function main() {
   const pmIcon = pm === 'bun' ? '⚡' : '📦';
   
   console.log();
-  console.log(`${neon.cyan}${neon.bold}⚡ Lightning Games Build Wizard${neon.reset}`);
+  console.log(`${neon.cyan}${neon.bold}⚡ Lightning Games Build Wizard  🪄${neon.reset}`);
   console.log(`${neon.dim}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${neon.reset}`);
   console.log(`${neon.dim}Package Manager: ${pmIcon} ${pm}${neon.reset}`);
   console.log();
