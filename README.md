@@ -7,7 +7,7 @@
 </p>
 
 <h1 align="center">
-  ⚡ Lightning Games
+  ⚡ Lightning Games ⚡ 
 </h1>
 
 <p align="center">
