@@ -12,14 +12,14 @@
 
 <p align="center">
   <b>A premium neon-themed game arcade that lives in your system tray.</b><br/>
-  <sub>40 handcrafted games • One global hotkey • Zero friction • 100% offline</sub>
+  <sub>41 handcrafted games • One global hotkey • Zero friction • 100% offline</sub>
 </p>
 
 <br/>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-3.4-00d4ff?style=for-the-badge&logo=semver&logoColor=white" alt="Version" />
-  <img src="https://img.shields.io/badge/games-40-ff00aa?style=for-the-badge&logoColor=white" alt="Games" />
+  <img src="https://img.shields.io/badge/version-2.2.4-00d4ff?style=for-the-badge&logo=semver&logoColor=white" alt="Version" />
+  <img src="https://img.shields.io/badge/games-41-ff00aa?style=for-the-badge&logoColor=white" alt="Games" />
   <img src="https://img.shields.io/badge/achievements-100+-ffcc00?style=for-the-badge&logoColor=white" alt="Achievements" />
   <img src="https://img.shields.io/badge/themes-11-00ff88?style=for-the-badge&logoColor=white" alt="Themes" />
   <img src="https://img.shields.io/badge/launch%20time-%3C200ms-00d4ff?style=for-the-badge&logoColor=white" alt="Launch Time" />
@@ -75,7 +75,7 @@ You're working. You need a 2-minute break. You want to play a quick game.
 #### What You Get
 
 ✅ **< 200ms launch time** from anywhere  
-✅ **40 handcrafted games** with neon aesthetics  
+✅ **41 handcrafted games** with neon aesthetics  
 ✅ **100+ achievements** to unlock  
 ✅ **11 complete themes** to customize  
 ✅ **Zero installation** - portable executable  
@@ -519,7 +519,7 @@ Complete UI transformation
 <tr>
 <td width="50%" valign="top">
 
-#### Arcade Games (24)
+#### Arcade Games (25)
 Fast-paced, reflex-based gameplay
 
 - 🐍 **Snake** - Classic eat and grow
@@ -546,6 +546,7 @@ Fast-paced, reflex-based gameplay
 - 🛡️ **Orbit Defense** - Defense game
 - 🔄 **Gravity Flip** - Gravity mechanics
 - 👆 **Tap Dash** - Quick taps
+- 👻 **Pac-Man** - Smooth movement, 4 smart ghosts, power pellets, fruit system
 
 </td>
 <td width="50%" valign="top">
@@ -923,11 +924,11 @@ All stats persist in localStorage and never leave your machine.
 
 ## 🎮 Game Library - Complete Catalog
 
-**40 handcrafted games** across 5 categories. Every game runs on an **880x540 HTML5 Canvas** with synthesized audio and neon visuals.
+**41 handcrafted games** across 5 categories. Every game runs on an **880x540 HTML5 Canvas** with synthesized audio and neon visuals.
 
 ### 🎯 Quick Navigation
 
-[Arcade (24)](#arcade-24-games) • [Puzzle (10)](#puzzle-10-games) • [Classic (3)](#classic-3-games) • [Strategy (1)](#strategy-1-game) • [Creative (2)](#creative-2-games)
+[Arcade (25)](#arcade-25-games) • [Puzzle (10)](#puzzle-10-games) • [Classic (3)](#classic-3-games) • [Strategy (1)](#strategy-1-game) • [Creative (2)](#creative-2-games)
 
 ---
 
