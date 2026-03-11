@@ -734,38 +734,559 @@
 
     function renderStats() {
         const unlocked = gm.achievements || [];
+        const totalGames = GAME_CARDS_CONFIG.length;
+        const uniqueGames = (gm.uniqueGamesPlayed || []).length;
+        const totalPlaytime = gm.totalPlayTime || 0;
+        
+        // Calculate total and average scores
+        let totalScore = 0;
+        let scoreCount = 0;
+        GAME_CARDS_CONFIG.forEach(config => {
+            const score = gm.getHighScore(config.id);
+            if (score > 0) {
+                totalScore += score;
+                scoreCount++;
+            }
+        });
+        const avgScore = scoreCount > 0 ? Math.floor(totalScore / scoreCount) : 0;
+        
+        // Calculate games per hour (estimate based on playtime)
+        const hoursPlayed = totalPlaytime / 3600;
+        const gamesPerHour = hoursPlayed > 0 ? (gm.totalGamesPlayed / hoursPlayed).toFixed(1) : 0;
+        
+        // Calculate active days (estimate from unique games)
+        const activeDays = uniqueGames > 0 ? Math.max(1, Math.floor(uniqueGames / 2)) : 0;
+        
+        // Update stat cards with progress bars
         statTotalPlayed.textContent = gm.totalGamesPlayed;
         statAchievementsCount.textContent = `${unlocked.length}/${ALL_ACHIEVEMENTS.length}`;
         
         // Update new stat cards
-        const statFavorites = document.getElementById('stat-favorites');
-        const statPlaytime = document.getElementById('stat-playtime');
-        if (statFavorites) {
-            statFavorites.textContent = (gm.favorites || []).length;
+        const statTotalScore = document.getElementById('stat-total-score');
+        const statAvgScore = document.getElementById('stat-avg-score');
+        const statGamesPerHour = document.getElementById('stat-games-hour');
+        const statDaysActive = document.getElementById('stat-days-active');
+        
+        if (statTotalScore) statTotalScore.textContent = totalScore.toLocaleString();
+        if (statAvgScore) statAvgScore.textContent = avgScore.toLocaleString();
+        if (statGamesPerHour) statGamesPerHour.textContent = gamesPerHour;
+        if (statDaysActive) statDaysActive.textContent = activeDays;
+        
+        // Update stat progress bars
+        const totalProgress = document.getElementById('stat-total-progress');
+        const achievementsProgress = document.getElementById('stat-achievements-progress');
+        const favoritesProgress = document.getElementById('stat-favorites-progress');
+        const playtimeProgress = document.getElementById('stat-playtime-progress');
+        const uniqueProgress = document.getElementById('stat-unique-progress');
+        const streakProgress = document.getElementById('stat-streak-progress');
+        const totalScoreProgress = document.getElementById('stat-total-score-progress');
+        const avgScoreProgress = document.getElementById('stat-avg-score-progress');
+        const gamesHourProgress = document.getElementById('stat-games-hour-progress');
+        const daysActiveProgress = document.getElementById('stat-days-active-progress');
+        
+        if (totalProgress) {
+            const totalPercent = Math.min((gm.totalGamesPlayed / 100) * 100, 100);
+            totalProgress.style.width = `${totalPercent}%`;
         }
+        
+        if (achievementsProgress) {
+            const achievementPercent = (unlocked.length / ALL_ACHIEVEMENTS.length) * 100;
+            achievementsProgress.style.width = `${achievementPercent}%`;
+        }
+        
+        if (totalScoreProgress) {
+            const scorePercent = Math.min((totalScore / 10000) * 100, 100);
+            totalScoreProgress.style.width = `${scorePercent}%`;
+        }
+        
+        if (avgScoreProgress) {
+            const avgPercent = Math.min((avgScore / 1000) * 100, 100);
+            avgScoreProgress.style.width = `${avgPercent}%`;
+        }
+        
+        if (gamesHourProgress) {
+            const gamesHourPercent = Math.min((parseFloat(gamesPerHour) / 10) * 100, 100);
+            gamesHourProgress.style.width = `${gamesHourPercent}%`;
+        }
+        
+        if (daysActiveProgress) {
+            const daysActivePercent = Math.min((activeDays / 30) * 100, 100);
+            daysActiveProgress.style.width = `${daysActivePercent}%`;
+        }
+        
+        // Update favorites
+        const statFavorites = document.getElementById('stat-favorites');
+        if (statFavorites) {
+            const favCount = (gm.favorites || []).length;
+            statFavorites.textContent = favCount;
+            if (favoritesProgress) {
+                const favPercent = (favCount / totalGames) * 100;
+                favoritesProgress.style.width = `${favPercent}%`;
+            }
+        }
+        
+        // Update playtime
+        const statPlaytime = document.getElementById('stat-playtime');
         if (statPlaytime) {
-            const totalMinutes = Math.floor((gm.totalPlayTime || 0) / 60);
+            const totalMinutes = Math.floor(totalPlaytime / 60);
             const hours = Math.floor(totalMinutes / 60);
             const mins = totalMinutes % 60;
             statPlaytime.textContent = hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
+            if (playtimeProgress) {
+                const playtimePercent = Math.min((totalMinutes / 180) * 100, 100);
+                playtimeProgress.style.width = `${playtimePercent}%`;
+            }
         }
-
+        
+        // Update unique games
+        const statUniqueGames = document.getElementById('stat-unique-games');
+        if (statUniqueGames) {
+            statUniqueGames.textContent = uniqueGames;
+            if (uniqueProgress) {
+                const uniquePercent = (uniqueGames / totalGames) * 100;
+                uniqueProgress.style.width = `${uniquePercent}%`;
+            }
+        }
+        
+        // Update streak
+        const statStreak = document.getElementById('stat-streak');
+        if (statStreak) {
+            const streak = gm.consecutiveGames || 0;
+            statStreak.textContent = streak;
+            if (streakProgress) {
+                const streakPercent = Math.min((streak / 10) * 100, 100);
+                streakProgress.style.width = `${streakPercent}%`;
+            }
+        }
+        
+        // Update hero stats
+        updateHeroStats(gm.totalGamesPlayed, unlocked.length, totalPlaytime, gm.consecutiveGames || 0);
+        
+        // Render all sections
+        renderQuickSummary();
+        renderTopGames();
+        renderRecentActivity();
+        renderCategoryStats();
+        renderPlayTimeChart();
+        renderAchievementProgress(unlocked);
+        renderMilestones();
+        renderAchievementsList(unlocked);
+        setupAchievementFilter();
+    }
+    
+    function updateHeroStats(totalGames, achievements, playtime, streak) {
+        const heroTotalGames = document.getElementById('hero-total-games');
+        const heroAchievements = document.getElementById('hero-achievements');
+        const heroAchievementsPercent = document.getElementById('hero-achievements-percent');
+        const heroPlaytime = document.getElementById('hero-playtime');
+        const heroStreak = document.getElementById('hero-streak');
+        
+        if (heroTotalGames) heroTotalGames.textContent = totalGames.toLocaleString();
+        if (heroAchievements) heroAchievements.textContent = achievements;
+        if (heroAchievementsPercent) {
+            const percent = (achievements / ALL_ACHIEVEMENTS.length) * 100;
+            heroAchievementsPercent.textContent = `${percent.toFixed(1)}%`;
+        }
+        if (heroPlaytime) {
+            const totalMinutes = Math.floor(playtime / 60);
+            const hours = Math.floor(totalMinutes / 60);
+            const mins = totalMinutes % 60;
+            heroPlaytime.textContent = hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
+        }
+        if (heroStreak) heroStreak.textContent = streak;
+    }
+    
+    function renderTopGames() {
+        const topGamesList = document.getElementById('top-games-list');
+        if (!topGamesList) return;
+        
+        // Get all games with high scores
+        const gamesWithScores = GAME_CARDS_CONFIG
+            .map(config => ({
+                ...config,
+                highScore: gm.getHighScore(config.id) || 0
+            }))
+            .filter(game => game.highScore > 0)
+            .sort((a, b) => b.highScore - a.highScore)
+            .slice(0, 10);
+        
+        if (gamesWithScores.length === 0) {
+            topGamesList.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 20px;">No high scores yet. Start playing!</div>';
+            return;
+        }
+        
+        topGamesList.innerHTML = '';
+        gamesWithScores.forEach((game, index) => {
+            const item = document.createElement('div');
+            item.className = 'top-game-item';
+            
+            let rankClass = '';
+            if (index === 0) rankClass = 'gold';
+            else if (index === 1) rankClass = 'silver';
+            else if (index === 2) rankClass = 'bronze';
+            
+            // Determine score level
+            let scoreLevel = '';
+            if (game.highScore >= 1000) scoreLevel = '🔥';
+            else if (game.highScore >= 500) scoreLevel = '⭐';
+            else if (game.highScore >= 100) scoreLevel = '👍';
+            
+            item.innerHTML = `
+                <div class="top-game-rank ${rankClass}">#${index + 1}</div>
+                <div class="top-game-icon">${game.icon}</div>
+                <div class="top-game-info">
+                    <div class="top-game-name">${game.name}</div>
+                    <div class="top-game-category">${game.category} ${scoreLevel}</div>
+                </div>
+                <div class="top-game-score">${game.highScore}</div>
+            `;
+            
+            item.addEventListener('click', () => {
+                openGame(game.id, game.name, game.icon);
+            });
+            
+            topGamesList.appendChild(item);
+        });
+    }
+    
+    function renderCategoryStats() {
+        const categoryStats = document.getElementById('category-stats');
+        if (!categoryStats) return;
+        
+        // Count games by category
+        const categories = {};
+        GAME_CARDS_CONFIG.forEach(game => {
+            if (!categories[game.category]) {
+                categories[game.category] = { count: 0, played: 0, totalScore: 0 };
+            }
+            categories[game.category].count++;
+            if ((gm.uniqueGamesPlayed || []).includes(game.id)) {
+                categories[game.category].played++;
+            }
+            // Add total score for category
+            const score = gm.getHighScore(game.id);
+            if (score > 0) {
+                categories[game.category].totalScore += score;
+            }
+        });
+        
+        categoryStats.innerHTML = '';
+        Object.entries(categories).forEach(([category, data]) => {
+            const percent = (data.played / data.count) * 100;
+            const card = document.createElement('div');
+            card.className = 'category-stat-card';
+            card.innerHTML = `
+                <div class="category-stat-header">
+                    <div class="category-stat-name">${category}</div>
+                    <div class="category-stat-count">${data.played}/${data.count}</div>
+                </div>
+                <div class="category-stat-bar">
+                    <div class="category-stat-fill" style="width: ${percent}%"></div>
+                </div>
+                <div class="category-stat-footer">
+                    <span class="category-stat-label">Total Score:</span>
+                    <span class="category-stat-score">${data.totalScore.toLocaleString()}</span>
+                </div>
+            `;
+            categoryStats.appendChild(card);
+        });
+    }
+    
+    function renderAchievementProgress(unlocked) {
+        // Count achievements by type
+        const normal = ALL_ACHIEVEMENTS.filter(a => !a.ultra && !a.hidden);
+        const ultra = ALL_ACHIEVEMENTS.filter(a => a.ultra);
+        const hidden = ALL_ACHIEVEMENTS.filter(a => a.hidden);
+        
+        const normalUnlocked = normal.filter(a => unlocked.includes(a.id)).length;
+        const ultraUnlocked = ultra.filter(a => unlocked.includes(a.id)).length;
+        const hiddenUnlocked = hidden.filter(a => unlocked.includes(a.id)).length;
+        
+        // Update progress bars
+        const normalProgress = document.getElementById('achievement-normal-progress');
+        const ultraProgress = document.getElementById('achievement-ultra-progress');
+        const hiddenProgress = document.getElementById('achievement-hidden-progress');
+        
+        const normalText = document.getElementById('achievement-normal-text');
+        const ultraText = document.getElementById('achievement-ultra-text');
+        const hiddenText = document.getElementById('achievement-hidden-text');
+        
+        if (normalProgress && normalText) {
+            const percent = normal.length > 0 ? (normalUnlocked / normal.length) * 100 : 0;
+            normalProgress.style.width = `${percent}%`;
+            normalText.textContent = `${normalUnlocked}/${normal.length} (${percent.toFixed(0)}%)`;
+        }
+        
+        if (ultraProgress && ultraText) {
+            const percent = ultra.length > 0 ? (ultraUnlocked / ultra.length) * 100 : 0;
+            ultraProgress.style.width = `${percent}%`;
+            ultraText.textContent = `${ultraUnlocked}/${ultra.length} (${percent.toFixed(0)}%)`;
+        }
+        
+        if (hiddenProgress && hiddenText) {
+            const percent = hidden.length > 0 ? (hiddenUnlocked / hidden.length) * 100 : 0;
+            hiddenProgress.style.width = `${percent}%`;
+            hiddenText.textContent = `${hiddenUnlocked}/${hidden.length} (${percent.toFixed(0)}%)`;
+        }
+    }
+    
+    function renderAchievementsList(unlocked, filter = 'all') {
         achievementsList.innerHTML = '';
-        ALL_ACHIEVEMENTS.forEach(a => {
+        
+        let filteredAchievements = ALL_ACHIEVEMENTS;
+        
+        if (filter === 'unlocked') {
+            filteredAchievements = ALL_ACHIEVEMENTS.filter(a => unlocked.includes(a.id));
+        } else if (filter === 'locked') {
+            filteredAchievements = ALL_ACHIEVEMENTS.filter(a => !unlocked.includes(a.id));
+        } else if (filter === 'ultra') {
+            filteredAchievements = ALL_ACHIEVEMENTS.filter(a => a.ultra);
+        } else if (filter === 'hidden') {
+            filteredAchievements = ALL_ACHIEVEMENTS.filter(a => a.hidden);
+        }
+        
+        filteredAchievements.forEach(a => {
             const isUnlocked = unlocked.includes(a.id);
             const item = document.createElement('div');
             item.className = `achievement-item ${isUnlocked ? 'unlocked' : ''} ${a.ultra ? 'ultra' : ''}`;
             const isHiddenLocked = a.hidden && !isUnlocked;
             const title = isHiddenLocked ? 'Hidden Achievement' : a.title;
             const icon = isHiddenLocked ? '❔' : a.icon;
+            
+            // Add rarity badge
+            let rarityBadge = '';
+            if (a.ultra) rarityBadge = '<span class="achievement-rarity-badge ultra">ULTRA</span>';
+            else if (a.hidden) rarityBadge = '<span class="achievement-rarity-badge hidden">HIDDEN</span>';
+            else rarityBadge = '<span class="achievement-rarity-badge normal">NORMAL</span>';
+            
             item.innerHTML = `
                 <span class="achievement-item-icon">${icon}</span>
                 <div class="achievement-item-text">
                     <span class="achievement-item-title">${title}</span>
-                    ${a.ultra ? '<span class="achievement-badge">ULTRA</span>' : ''}
+                    ${rarityBadge}
                 </div>
             `;
             achievementsList.appendChild(item);
+        });
+    }
+    
+    function setupAchievementFilter() {
+        const filterBtns = document.querySelectorAll('.achievement-filter-btn');
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const filter = btn.dataset.filter;
+                const unlocked = gm.achievements || [];
+                renderAchievementsList(unlocked, filter);
+            });
+        });
+    }
+    
+    function renderQuickSummary() {
+        const gameCounts = {};
+        (gm.uniqueGamesPlayed || []).forEach(gameId => {
+            gameCounts[gameId] = (gameCounts[gameId] || 0) + 1;
+        });
+        
+        let mostPlayedId = null;
+        let maxCount = 0;
+        Object.entries(gameCounts).forEach(([gameId, count]) => {
+            if (count > maxCount) {
+                maxCount = count;
+                mostPlayedId = gameId;
+            }
+        });
+        
+        const mostPlayedGame = mostPlayedId ? GAME_CARDS_CONFIG.find(g => g.id === mostPlayedId) : null;
+        
+        let bestGame = null;
+        let bestScore = 0;
+        GAME_CARDS_CONFIG.forEach(config => {
+            const score = gm.getHighScore(config.id);
+            if (score > bestScore) {
+                bestScore = score;
+                bestGame = config;
+            }
+        });
+        
+        // Find most recent game
+        let mostRecentGame = null;
+        let mostRecentTime = 0;
+        GAME_CARDS_CONFIG.forEach(config => {
+            const lastPlayed = (gm.lastPlayed && gm.lastPlayed[config.id]) || 0;
+            if (lastPlayed > mostRecentTime) {
+                mostRecentTime = lastPlayed;
+                mostRecentGame = config;
+            }
+        });
+        
+        const longestSession = Math.floor((gm.totalPlayTime || 0) / 60);
+        const daysPlayed = gm.uniqueGamesPlayed ? Math.max(1, Math.floor(gm.uniqueGamesPlayed.length / 3)) : 0;
+        
+        const quickMostPlayed = document.getElementById('quick-most-played-game');
+        const quickBestGame = document.getElementById('quick-best-game');
+        const quickBestScore = document.getElementById('quick-best-score');
+        const quickLastPlayed = document.getElementById('quick-last-played');
+        
+        if (quickMostPlayed) {
+            quickMostPlayed.textContent = mostPlayedGame ? `${mostPlayedGame.icon} ${mostPlayedGame.name}` : '-';
+        }
+        if (quickBestGame) {
+            quickBestGame.textContent = bestGame ? `${bestGame.icon} ${bestGame.name}` : '-';
+        }
+        if (quickBestScore) {
+            quickBestScore.textContent = bestScore.toLocaleString();
+        }
+        if (quickLastPlayed) {
+            if (mostRecentGame && mostRecentTime > 0) {
+                const timeAgo = Date.now() - mostRecentTime;
+                const minutes = Math.floor(timeAgo / 60000);
+                const hours = Math.floor(minutes / 60);
+                const days = Math.floor(hours / 24);
+                
+                let timeText = '';
+                if (days > 0) timeText = `${days}d ago`;
+                else if (hours > 0) timeText = `${hours}h ago`;
+                else if (minutes > 0) timeText = `${minutes}m ago`;
+                else timeText = 'Just now';
+                
+                quickLastPlayed.textContent = `${mostRecentGame.icon} ${timeText}`;
+            } else {
+                quickLastPlayed.textContent = '-';
+            }
+        }
+    }
+    
+    function renderRecentActivity() {
+        const recentActivityList = document.getElementById('recent-activity-list');
+        if (!recentActivityList) return;
+        
+        const recentGames = GAME_CARDS_CONFIG
+            .map(config => ({
+                ...config,
+                lastPlayed: (gm.lastPlayed && gm.lastPlayed[config.id]) || 0,
+                highScore: gm.getHighScore(config.id) || 0
+            }))
+            .filter(game => game.lastPlayed > 0)
+            .sort((a, b) => b.lastPlayed - a.lastPlayed)
+            .slice(0, 10);
+        
+        if (recentGames.length === 0) {
+            recentActivityList.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 20px;">No recent activity</div>';
+            return;
+        }
+        
+        recentActivityList.innerHTML = '';
+        recentGames.forEach(game => {
+            const item = document.createElement('div');
+            item.className = 'recent-activity-item';
+            
+            const timeAgo = Date.now() - game.lastPlayed;
+            const minutes = Math.floor(timeAgo / 60000);
+            const hours = Math.floor(minutes / 60);
+            const days = Math.floor(hours / 24);
+            
+            let timeText = '';
+            if (days > 0) timeText = `${days}d ago`;
+            else if (hours > 0) timeText = `${hours}h ago`;
+            else if (minutes > 0) timeText = `${minutes}m ago`;
+            else timeText = 'Just now';
+            
+            // Determine score level
+            let scoreLevel = '';
+            if (game.highScore >= 1000) scoreLevel = '🔥';
+            else if (game.highScore >= 500) scoreLevel = '⭐';
+            else if (game.highScore >= 100) scoreLevel = '👍';
+            
+            item.innerHTML = `
+                <div class="recent-activity-icon">${game.icon}</div>
+                <div class="recent-activity-info">
+                    <div class="recent-activity-game">${game.name}</div>
+                    <div class="recent-activity-details">${scoreLevel} Score: ${game.highScore} • ${game.category}</div>
+                </div>
+                <div class="recent-activity-time">${timeText}</div>
+            `;
+            
+            recentActivityList.appendChild(item);
+        });
+    }
+    
+    function renderPlayTimeChart() {
+        const playtimeChart = document.getElementById('playtime-chart');
+        if (!playtimeChart) return;
+        
+        const categoryPlaytime = {};
+        GAME_CARDS_CONFIG.forEach(game => {
+            if (!categoryPlaytime[game.category]) {
+                categoryPlaytime[game.category] = 0;
+            }
+            if ((gm.uniqueGamesPlayed || []).includes(game.id)) {
+                categoryPlaytime[game.category] += 1;
+            }
+        });
+        
+        const maxPlaytime = Math.max(...Object.values(categoryPlaytime), 1);
+        
+        playtimeChart.innerHTML = '';
+        Object.entries(categoryPlaytime).forEach(([category, playtime]) => {
+            const percent = (playtime / maxPlaytime) * 100;
+            const item = document.createElement('div');
+            item.className = 'playtime-chart-item';
+            item.innerHTML = `
+                <div class="playtime-chart-label">${category.toUpperCase()}</div>
+                <div class="playtime-chart-bar-container">
+                    <div class="playtime-chart-bar" style="width: ${percent}%">
+                        <span class="playtime-chart-value">${playtime} games</span>
+                    </div>
+                </div>
+            `;
+            playtimeChart.appendChild(item);
+        });
+    }
+    
+    function renderMilestones() {
+        const milestonesGrid = document.getElementById('milestones-grid');
+        if (!milestonesGrid) return;
+        
+        const milestones = [
+            { icon: '🎮', title: 'First Steps', desc: 'Play 10 games', current: gm.totalGamesPlayed, target: 10 },
+            { icon: '🏆', title: 'Achievement Hunter', desc: 'Unlock 10 achievements', current: (gm.achievements || []).length, target: 10 },
+            { icon: '⭐', title: 'Favorite Collector', desc: 'Add 5 favorites', current: (gm.favorites || []).length, target: 5 },
+            { icon: '⏱️', title: 'Time Traveler', desc: 'Play for 1 hour', current: Math.floor((gm.totalPlayTime || 0) / 60), target: 60 },
+            { icon: '🎯', title: 'Explorer', desc: 'Try 20 different games', current: (gm.uniqueGamesPlayed || []).length, target: 20 },
+            { icon: '🔥', title: 'Streak Master', desc: 'Reach 5 game streak', current: gm.consecutiveGames || 0, target: 5 },
+            { icon: '💯', title: 'Century Club', desc: 'Play 100 games', current: gm.totalGamesPlayed, target: 100 },
+            { icon: '👑', title: 'Champion', desc: 'Score 10,000 total points', current: GAME_CARDS_CONFIG.reduce((sum, g) => sum + (gm.getHighScore(g.id) || 0), 0), target: 10000 },
+            { icon: '⚡', title: 'Speedster', desc: 'Play 500 games', current: gm.totalGamesPlayed, target: 500 },
+            { icon: '🌟', title: 'Master', desc: 'Unlock 50 achievements', current: (gm.achievements || []).length, target: 50 },
+            { icon: '💎', title: 'Diamond', desc: 'Play for 10 hours', current: Math.floor((gm.totalPlayTime || 0) / 60), target: 600 },
+            { icon: '🚀', title: 'Rocket', desc: 'Score 50,000 total points', current: GAME_CARDS_CONFIG.reduce((sum, g) => sum + (gm.getHighScore(g.id) || 0), 0), target: 50000 }
+        ];
+        
+        milestonesGrid.innerHTML = '';
+        milestones.forEach(milestone => {
+            const percent = Math.min((milestone.current / milestone.target) * 100, 100);
+            const completed = milestone.current >= milestone.target;
+            
+            const card = document.createElement('div');
+            card.className = `milestone-card ${completed ? 'completed' : ''}`;
+            card.innerHTML = `
+                <div class="milestone-header">
+                    <div class="milestone-icon">${milestone.icon}</div>
+                    <div class="milestone-info">
+                        <div class="milestone-title">${milestone.title}</div>
+                        <div class="milestone-desc">${milestone.desc}</div>
+                    </div>
+                </div>
+                <div class="milestone-progress">
+                    <div class="milestone-progress-bar">
+                        <div class="milestone-progress-fill" style="width: ${percent}%"></div>
+                    </div>
+                    <div class="milestone-progress-text">${milestone.current} / ${milestone.target}</div>
+                </div>
+            `;
+            milestonesGrid.appendChild(card);
         });
     }
 
