@@ -32,6 +32,6 @@ lightning-games-build-*/
 # Log files
 *.log
 
-# OS files
+# OS files.
 .DS_Store
 Thumbs.db
