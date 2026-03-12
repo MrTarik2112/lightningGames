@@ -11,7 +11,7 @@ styles/tailwind-output.css
 styles/tailwind-output.css.map
 
 # Build artifacts
-dist/
+
 BuildLogs/
 
 # Temporary files

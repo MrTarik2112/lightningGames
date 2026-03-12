@@ -2,7 +2,7 @@
    Lightning Games v2.0 - Ultra Premium Design System
    =========================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 :root {
   --bg-primary: #06060f;
@@ -39,7 +39,7 @@
   --radius-xl: 20px;
   --radius-2xl: 24px;
 
-  --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font: 'Orbitron', 'Rajdhani', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'JetBrains Mono', 'Cascadia Code', monospace;
 
   --transition-flash: 0.1s ease;
@@ -402,6 +402,7 @@ body.theme-fire {
 }
 
 .title-text {
+  font-family: 'Orbitron', 'Rajdhani', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 14px;
   font-weight: 800;
   letter-spacing: 0.5px;
@@ -455,6 +456,7 @@ body.theme-fire {
 }
 
 .no-results-text {
+  font-family: 'Orbitron', 'Rajdhani', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 16px;
   font-weight: 500;
   letter-spacing: 0.5px;
@@ -631,6 +633,7 @@ body.theme-fire {
 }
 
 .launcher-title {
+  font-family: 'Orbitron', 'Rajdhani', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 24px;
   font-weight: 900;
   color: var(--text-primary);
@@ -811,6 +814,7 @@ body.theme-fire {
 }
 
 .section-title {
+  font-family: 'Orbitron', 'Rajdhani', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 12px;
   font-weight: 700;
   color: var(--text-muted);
@@ -867,6 +871,7 @@ body.theme-fire {
 }
 
 .recent-name {
+  font-family: 'Orbitron', 'Rajdhani', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 11px;
   font-weight: 700;
   color: var(--text-primary);
@@ -974,6 +979,7 @@ body.theme-fire {
 }
 
 .game-card-name {
+  font-family: 'Orbitron', 'Rajdhani', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 13px;
   font-weight: 700;
   color: var(--text-primary);
@@ -1180,7 +1186,16 @@ body.theme-fire {
   flex-direction: column;
 }
 
+.achievement-toast-title {
+  font-family: 'Orbitron', 'Rajdhani', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--accent-yellow);
+  letter-spacing: 0.5px;
+}
+
 .achievement-title {
+  font-family: 'Orbitron', 'Rajdhani', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 12px;
   font-weight: 800;
   color: var(--accent-yellow);
@@ -1302,6 +1317,7 @@ body.theme-fire {
 }
 
 .game-title-bar {
+  font-family: 'Orbitron', 'Rajdhani', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 15px;
   font-weight: 800;
   color: var(--text-primary);
@@ -1426,6 +1442,7 @@ body.theme-fire {
 }
 
 .stat-label {
+  font-family: 'Orbitron', 'Rajdhani', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 11px;
   font-weight: 700;
   color: var(--text-muted);
@@ -1578,7 +1595,8 @@ body.theme-fire {
   gap: 16px;
 }
 
-.stats-section-title {
+.stats.section-title {
+  font-family: 'Orbitron', 'Rajdhani', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 18px;
   font-weight: 600;
   color: var(--text-primary);
@@ -2210,6 +2228,7 @@ body.theme-fire {
 }
 
 .milestone-title {
+  font-family: 'Orbitron', 'Rajdhani', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 16px;
   font-weight: 700;
   color: var(--text-primary);
@@ -2498,6 +2517,7 @@ body.theme-fire {
 }
 
 .milestone-title {
+  font-family: 'Orbitron', 'Rajdhani', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 16px;
   font-weight: 700;
   color: var(--text-primary);
@@ -2676,6 +2696,7 @@ body.theme-fire {
 }
 
 .settings-title {
+  font-family: 'Orbitron', 'Rajdhani', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 16px;
   font-weight: 800;
   letter-spacing: 0.4px;
@@ -2735,7 +2756,8 @@ body.theme-fire {
   padding: 14px 14px 12px;
 }
 
-.settings-section-title {
+.settings.section-title {
+  font-family: 'Orbitron', 'Rajdhani', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 12px;
   font-weight: 700;
   color: var(--text-muted);
@@ -2996,6 +3018,7 @@ body.theme-fire {
 }
 
 .games-grid.compact-mode .game-card-name {
+  font-family: 'Orbitron', 'Rajdhani', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 13px;
 }
 
@@ -4241,6 +4264,7 @@ input,
 }
 
 .tutorial-title {
+  font-family: 'Orbitron', 'Rajdhani', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 24px;
   font-weight: 700;
   color: var(--accent-cyan);
@@ -5146,7 +5170,8 @@ input,
   background: rgba(255, 68, 102, 0.05);
 }
 
-.settings-section-title {
+.settings.section-title {
+  font-family: 'Orbitron', 'Rajdhani', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
@@ -5597,3 +5622,4 @@ input[type="range"]::-moz-range-thumb:hover {
     flex-direction: column;
   }
 }
+
