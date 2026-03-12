@@ -307,18 +307,52 @@ async function main() {
     console.log(`  ${neon.dim}Current version:${neon.reset} ${neon.yellow}${packageJson.version}${neon.reset}`);
     console.log();
 
-    const versionInput = await question(`  ${neon.cyan}Enter new version${neon.reset} (or press Enter to keep current): `);
-    const normalizedVersion = versionInput.trim().replace(/^[vV]/, '');
-    
+    // Parse current version for quick increment
+    const currentParts = packageJson.version.split('.').map(Number);
+    const nextPatch = `${currentParts[0]}.${currentParts[1]}.${currentParts[2] + 1}`;
+    const nextMinor = `${currentParts[0]}.${currentParts[1] + 1}.0`;
+    const nextMajor = `${currentParts[0] + 1}.0.0`;
+
+    console.log(`  ${neon.bold}[1]${neon.reset} 🔧  Patch    ${neon.dim}${nextPatch}  (bug fixes)${neon.reset}`);
+    console.log(`  ${neon.bold}[2]${neon.reset} ✨  Minor    ${neon.dim}${nextMinor}  (new features)${neon.reset}`);
+    console.log(`  ${neon.bold}[3]${neon.reset} 🚀  Major    ${neon.dim}${nextMajor}  (big changes)${neon.reset}`);
+    console.log(`  ${neon.bold}[4]${neon.reset} 🎯  Custom   ${neon.dim}Enter your own version${neon.reset}`);
+    console.log(`  ${neon.bold}[Enter]${neon.reset} ⏭️  Skip     ${neon.dim}Keep current (${packageJson.version})${neon.reset}`);
+    console.log();
+
+    const versionInput = await question(`  ${neon.cyan}Select version option${neon.reset} [1-4 or Enter]: `);
+    const choice = versionInput.trim();
+
     let newVersion = packageJson.version;
 
-    if (normalizedVersion && validateVersion(normalizedVersion)) {
-      newVersion = normalizedVersion;
-      
+    if (choice === '1') {
+      newVersion = nextPatch;
+    } else if (choice === '2') {
+      newVersion = nextMinor;
+    } else if (choice === '3') {
+      newVersion = nextMajor;
+    } else if (choice === '4') {
+      const customVersion = await question(`  ${neon.cyan}Enter version${neon.reset} (e.g., 1.2.3): `);
+      const normalizedCustom = customVersion.trim().replace(/^[vV]/, '');
+      if (validateVersion(normalizedCustom)) {
+        newVersion = normalizedCustom;
+      } else {
+        log.error(`Invalid version format: "${normalizedCustom}"`);
+        log.info(`Keeping version ${neon.yellow}${packageJson.version}${neon.reset}`);
+        newVersion = packageJson.version;
+      }
+    } else if (choice === '') {
+      log.info(`Keeping version ${neon.yellow}${packageJson.version}${neon.reset}`);
+    } else {
+      log.warning(`Invalid choice: "${choice}" - keeping current version`);
+    }
+
+    // Update version if changed
+    if (newVersion !== packageJson.version) {
       // Update package.json
       packageJson.version = newVersion;
       fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2) + '\n');
-      
+
       // Update version in index.html
       const indexHtmlPath = path.join(projectRoot, 'index.html');
       let indexHtml = fs.readFileSync(indexHtmlPath, 'utf8');
@@ -327,17 +361,8 @@ async function main() {
         `<span class="title-version">v${newVersion}</span>`
       );
       fs.writeFileSync(indexHtmlPath, indexHtml);
-      
-      // Reload package.json to ensure it's updated
-      const updatedPackageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
-      
+
       log.success(`Version updated to ${neon.yellow}${newVersion}${neon.reset}`);
-      log.info(`Updated: package.json (${updatedPackageJson.version}), index.html`);
-    } else if (normalizedVersion) {
-      log.error(`Invalid version format: "${versionInput.trim()}"`);
-      log.info(`Keeping version ${neon.yellow}${packageJson.version}${neon.reset}`);
-    } else {
-      log.info(`Keeping version ${neon.yellow}${packageJson.version}${neon.reset}`);
     }
 
     // ===================== PLATFORM SELECTION =====================
