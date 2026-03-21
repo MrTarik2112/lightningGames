@@ -255,7 +255,12 @@ class GameManager {
     getCanvas() {
         if (!this.canvas) {
             this.canvas = document.getElementById('game-canvas');
-            this.ctx = this.canvas.getContext('2d');
+            // Extreme Canvas Hardware Optimization
+            this.ctx = this.canvas.getContext('2d', {
+                alpha: false, // Disables transparency blending (faster)
+                desynchronized: true, // Bypasses DOM compositor (lower latency)
+                willReadFrequently: false // Optimizes for write-heavy rendering
+            });
         }
         return { canvas: this.canvas, ctx: this.ctx };
     }
@@ -393,16 +398,22 @@ class GameManager {
         if (this._ui.score) {
             this._ui.score.textContent = score;
             this._ui.score.classList.remove('score-pop');
-            void this._ui.score.offsetWidth;
-            this._ui.score.classList.add('score-pop');
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    if (this._ui.score) this._ui.score.classList.add('score-pop');
+                });
+            });
         }
 
         const currentHS = this.getHighScore(this.activeGame.id);
         if (score > currentHS && this._ui.highscore) {
             this._ui.highscore.textContent = score;
             this._ui.highscore.classList.remove('new-highscore');
-            void this._ui.highscore.offsetWidth;
-            this._ui.highscore.classList.add('new-highscore');
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    if (this._ui.highscore) this._ui.highscore.classList.add('new-highscore');
+                });
+            });
 
             // Achievement: High Score breaker
             if (currentHS > 0) {

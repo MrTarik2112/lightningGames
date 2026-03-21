@@ -2,7 +2,7 @@
    Lightning Games v2.0 - Ultra Premium Design System
    =========================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+/* Fonts loaded via index.html <link> tags (non-blocking) */
 
 :root {
   --bg-primary: #06060f;
@@ -198,16 +198,109 @@ body.theme-fire {
   flex-direction: column;
   overflow: hidden;
   position: relative;
-  /* Initial state hidden for seamless Electron show */
-  opacity: 0;
-  transform: translate3d(0, 20px, 0) scale(0.9);
-  filter: blur(10px);
-  transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1), transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), filter 0.4s ease;
-  will-change: transform, opacity, filter;
+  /* Start visible — JS .show class is applied immediately */
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+  will-change: transform, opacity;
   backface-visibility: hidden;
 }
 
-/* Animated top glow */
+/* Show state - instant display */
+.app-container.show {
+  opacity: 1;
+}
+
+/* ===== Premium Startup Animation ===== */
+@keyframes startupReveal {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes startupGlow {
+  0% {
+    box-shadow:
+      0 0 0 rgba(0, 220, 255, 0),
+      0 0 0 rgba(255, 0, 170, 0),
+      inset 0 0 0 rgba(0, 220, 255, 0);
+  }
+  30% {
+    box-shadow:
+      0 0 60px rgba(0, 220, 255, 0.4),
+      0 0 120px rgba(255, 0, 170, 0.15),
+      inset 0 0 30px rgba(0, 220, 255, 0.08);
+  }
+  100% {
+    box-shadow:
+      0 30px 80px rgba(0, 0, 0, 0.6),
+      0 0 120px rgba(0, 220, 255, 0.03),
+      inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
+}
+
+@keyframes startupBorderFlash {
+  0% {
+    border-color: rgba(0, 220, 255, 0);
+  }
+  30% {
+    border-color: rgba(0, 220, 255, 0.6);
+  }
+  100% {
+    border-color: var(--border-glass);
+  }
+}
+
+.app-container.startup-anim {
+  animation:
+    startupReveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards,
+    startupGlow 0.9s ease-out forwards,
+    startupBorderFlash 0.9s ease-out forwards;
+}
+
+/* Window enter/leave animations for smooth show/hide */
+@keyframes windowEnter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 6px, 0) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes windowLeave {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(0, 6px, 0) scale(0.97);
+  }
+}
+
+.app-container.window-entering {
+  animation: windowEnter 0.2s ease-out forwards;
+}
+
+.app-container.window-leaving {
+  animation: windowLeave 0.15s ease-in forwards;
+}
+
+/* Animate state - starts after 3 seconds */
+.app-container.animate::before {
+  animation: topGlowPulse 4s ease-in-out infinite;
+}
+
+
+
+/* Animated top glow - disabled by default */
 .app-container::before {
   content: '';
   position: absolute;
@@ -218,20 +311,17 @@ body.theme-fire {
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--accent-cyan), var(--accent-magenta), transparent);
   z-index: 100;
-  animation: topGlowPulse 4s ease-in-out infinite;
 }
 
 @keyframes topGlowPulse {
-
   0%,
   100% {
-    opacity: 0.6;
-    width: 60%;
+    opacity: 0.5;
+    width: 65%;
   }
-
   50% {
-    opacity: 1;
-    width: 80%;
+    opacity: 0.8;
+    width: 75%;
   }
 }
 
@@ -244,84 +334,72 @@ body.theme-fire {
   height: 100%;
   z-index: 0;
   pointer-events: none;
+  transform: translateZ(0); /* Force Hardware Layer */
+  backface-visibility: hidden;
 }
 
 /* Ambient glow orbs */
 .ambient-orb {
   position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
   pointer-events: none;
   z-index: 0;
-  opacity: 0.4;
+  opacity: 0.15; /* Lowered opacity since blur is gone */
+  transform: translateZ(0); /* Force Hardware Layer */
+  will-change: transform, opacity;
 }
 
 .orb-1 {
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(circle, rgba(0, 220, 255, 0.12), transparent 70%);
-  top: -100px;
-  right: -50px;
-  animation: orbFloat1 8s ease-in-out infinite;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(0, 220, 255, 0.4) 0%, transparent 60%);
+  top: -200px;
+  right: -150px;
 }
 
 .orb-2 {
-  width: 250px;
-  height: 250px;
-  background: radial-gradient(circle, rgba(255, 0, 170, 0.1), transparent 70%);
-  bottom: -80px;
-  left: -30px;
-  animation: orbFloat2 10s ease-in-out infinite;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(255, 0, 170, 0.3) 0%, transparent 60%);
+  bottom: -180px;
+  left: -130px;
 }
 
 .orb-3 {
-  width: 200px;
-  height: 200px;
-  background: radial-gradient(circle, rgba(0, 255, 136, 0.08), transparent 70%);
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(0, 255, 136, 0.2) 0%, transparent 60%);
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  animation: orbFloat3 12s ease-in-out infinite;
 }
 
 @keyframes orbFloat1 {
-
   0%,
   100% {
     transform: translate(0, 0);
   }
-
-  33% {
-    transform: translate(-30px, 20px);
-  }
-
-  66% {
-    transform: translate(20px, -10px);
+  50% {
+    transform: translate(-15px, 10px);
   }
 }
 
 @keyframes orbFloat2 {
-
   0%,
   100% {
     transform: translate(0, 0);
   }
-
   50% {
-    transform: translate(30px, -25px);
+    transform: translate(15px, -12px);
   }
 }
 
 @keyframes orbFloat3 {
-
   0%,
   100% {
     transform: translate(-50%, -50%) scale(1);
   }
-
   50% {
-    transform: translate(-50%, -50%) scale(1.3);
-    opacity: 0.2;
+    transform: translate(-50%, -50%) scale(1.1);
   }
 }
 
@@ -333,12 +411,11 @@ body.theme-fire {
   align-items: center;
   justify-content: space-between;
   padding: 14px 20px;
-  background: rgba(6, 6, 20, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(6, 6, 20, 0.95); /* Slightly more opaque since no blur */
   border-bottom: 1px solid var(--border-glass);
   z-index: 10;
   position: relative;
+  transform: translateZ(0); /* Force Hardware Layer */
 }
 
 .title-left {
@@ -1210,7 +1287,9 @@ body.theme-fire {
 .game-card {
   transform-style: preserve-3d;
   perspective: 1000px;
-  will-change: transform;
+  will-change: transform, box-shadow;
+  transform: translateZ(0); /* Hardware accelerate */
+  backface-visibility: hidden;
 }
 
 .game-card-content {
@@ -1274,6 +1353,9 @@ body.theme-fire {
   flex-direction: column;
   position: relative;
   z-index: 1;
+  will-change: transform, opacity;
+  transform: translateZ(0); /* Hardware accelerate */
+  backface-visibility: hidden;
 }
 
 .game-view.hidden {
@@ -1285,9 +1367,7 @@ body.theme-fire {
   align-items: center;
   justify-content: space-between;
   padding: 10px 20px;
-  background: rgba(6, 6, 20, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(6, 6, 20, 0.95);
   border-bottom: 1px solid var(--border-glass);
   position: relative;
 }
@@ -3282,26 +3362,23 @@ body.theme-fire {
   background: rgba(255, 255, 255, 0.15);
 }
 
-/* Window entry/exit animations */
+/* Window entry/exit animations - ULTRA FAST */
 .window-entering {
-  animation: windowEnter 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: windowEnter 0.18s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 .window-leaving {
-  animation: windowLeave 0.3s cubic-bezier(0.4, 0, 1, 1) forwards;
+  animation: windowLeave 0.15s cubic-bezier(0.4, 0, 1, 1) forwards;
 }
 
 @keyframes windowEnter {
   from {
     opacity: 0;
-    transform: scale(0.9) translateY(20px);
-    filter: blur(10px);
+    transform: scale(0.96) translateY(8px);
   }
-
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
-    filter: blur(0);
   }
 }
 
@@ -3309,13 +3386,10 @@ body.theme-fire {
   from {
     opacity: 1;
     transform: scale(1) translateY(0);
-    filter: blur(0);
   }
-
   to {
     opacity: 0;
-    transform: scale(0.9) translateY(20px);
-    filter: blur(10px);
+    transform: scale(0.96) translateY(8px);
   }
 }
 

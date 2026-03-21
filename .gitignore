@@ -1,5 +1,3 @@
-nul
-
 # Node modules & dependencies
 node_modules/
 package-lock.json
@@ -12,7 +10,7 @@ styles/tailwind-output.css.map
 
 # Build artifacts
 
-BuildLogs/
+haBuildLogs/
 
 # Temporary files
 temp_*
@@ -35,3 +33,4 @@ lightning-games-build-*/
 # OS files.
 .DS_Store
 Thumbs.db
+nul

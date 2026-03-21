@@ -30,10 +30,8 @@ class Particle {
 
     draw(ctx) {
         if (!this.active) return;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(${this.color[0]}, ${this.color[1]}, ${this.color[2]}, ${this.opacity})`;
-        ctx.fill();
+        ctx.fillRect(this.x - this.radius, this.y - this.radius, this.radius * 2, this.radius * 2);
     }
 }
 
@@ -92,9 +90,8 @@ class Pulse {
         for (const p of this.particles) {
             const opacity = p.life * (1 - p.life);
             ctx.fillStyle = `rgba(${p.color[0]}, ${p.color[1]}, ${p.color[2]}, ${opacity})`;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size * (1 - p.life), 0, Math.PI * 2);
-            ctx.fill();
+            const currentSize = p.size * (1 - p.life);
+            ctx.fillRect(p.x - currentSize, p.y - currentSize, currentSize * 2, currentSize * 2);
         }
     }
 }
@@ -111,13 +108,22 @@ function bindCanvas() {
     if (canvas && ctx) return true;
     canvas = document.getElementById('bg-particles');
     if (!canvas) return false;
-    ctx = canvas.getContext('2d', { alpha: true });
+    ctx = canvas.getContext('2d', { 
+        alpha: true,
+        desynchronized: true, // Bypass DOM compositor for low latency background
+        willReadFrequently: false // KEEP IN VRAM
+    });
     return !!ctx;
 }
 
 function resize() {
-    width = canvas.width = canvas.parentElement.clientWidth;
-    height = canvas.height = canvas.parentElement.clientHeight;
+    const clientW = canvas.parentElement.clientWidth;
+    const clientH = canvas.parentElement.clientHeight;
+    
+    // Hardware optimization: Don't render more than 1080p density for background particles
+    // Let the GPU upscale the rest via CSS
+    width = canvas.width = Math.min(clientW, 1920);
+    height = canvas.height = Math.min(clientH, 1080);
 }
 
 function init() {
@@ -189,15 +195,21 @@ function getSettings() {
     }
 }
 
-// Initialize on DOM ready
+// Initialize on DOM ready - DELAYED for faster startup
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
-        init();
-        animate();
+        // Delay particle initialization to avoid blocking UI
+        setTimeout(() => {
+            init();
+            animate();
+        }, 1000);
     });
 } else {
-    init();
-    animate();
+    // Delay particle initialization to avoid blocking UI
+    setTimeout(() => {
+        init();
+        animate();
+    }, 1000);
 }
 
 // Resource management: Pause animation when window is hidden
@@ -210,9 +222,10 @@ if (window.electronAPI) {
     });
 
     window.electronAPI.onWindowShowing(() => {
-        if (!animId) {
-            animate();
-        }
+        // Delay particle restart so it doesn't compete with window reveal animation
+        setTimeout(() => {
+            if (!animId) animate();
+        }, 200);
     });
 }
 

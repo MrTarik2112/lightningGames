@@ -3,6 +3,12 @@
 <!-- ============================================ -->
 
 <p align="center">
+  <a href="https://more-game.com/" target="_blank" style="text-decoration: none; color: inherit;">
+    <img src="https://img.shields.io/badge/🎮%20Discover%20More%20Games-more--game.com-00d4ff?style=for-the-badge&logoColor=white" alt="More Games" />
+  </a>
+</p>
+
+<p align="center">
   <img src="assets/icons/256x256.png" alt="Lightning Games" width="140" height="140" />
 </p>
 

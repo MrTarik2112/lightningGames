@@ -1,11 +1,17 @@
 const { app, BrowserWindow, Tray, Menu, globalShortcut, ipcMain, nativeImage } = require('electron');
 const path = require('path');
 
-// Performance & GPU Optimization
+// Extreme Hardware & GPU Optimization
 app.commandLine.appendSwitch('enable-gpu-rasterization');
 app.commandLine.appendSwitch('enable-oop-rasterization');
 app.commandLine.appendSwitch('enable-accelerated-video-decode');
 app.commandLine.appendSwitch('enable-gpu-compositing');
+app.commandLine.appendSwitch('enable-zero-copy');
+app.commandLine.appendSwitch('enable-native-gpu-memory-buffers');
+app.commandLine.appendSwitch('enable-hardware-overlays');
+app.commandLine.appendSwitch('ignore-gpu-blocklist');
+app.commandLine.appendSwitch('disable-software-rasterizer');
+app.commandLine.appendSwitch('disable-gpu-driver-bug-workarounds');
 app.commandLine.appendSwitch('disable-background-timer-throttle');
 app.commandLine.appendSwitch('disable-renderer-backgrounding');
 app.commandLine.appendSwitch('force-color-profile', 'srgb');
@@ -18,20 +24,46 @@ app.commandLine.appendSwitch('no-proxy-server');
 let mainWindow = null;
 let tray = null;
 let isQuitting = false;
+let isAnimating = false;
+let isStartingUp = true;
+let blurTimeout = null;
 
 // Shared functions
+function showWindow() {
+  if (!mainWindow || isAnimating) return;
+  if (mainWindow.isVisible()) return;
+
+  isAnimating = true;
+  clearTimeout(blurTimeout);
+
+  mainWindow.center();
+  mainWindow.show();
+  mainWindow.focus();
+  mainWindow.webContents.send('window-showing');
+
+  setTimeout(() => { isAnimating = false; }, 250);
+}
+
+function hideWindow() {
+  if (!mainWindow || isAnimating) return;
+  if (!mainWindow.isVisible()) return;
+
+  isAnimating = true;
+  clearTimeout(blurTimeout);
+
+  mainWindow.webContents.send('window-hiding');
+  setTimeout(() => {
+    if (mainWindow) mainWindow.hide();
+    isAnimating = false;
+  }, 150);
+}
+
 function toggleWindow() {
   if (!mainWindow) return;
   if (mainWindow.isVisible()) {
-    mainWindow.webContents.send('window-hiding');
-    setTimeout(() => {
-      if (mainWindow) mainWindow.hide();
-    }, 350);
+    hideWindow();
   } else {
-    mainWindow.center();
-    mainWindow.show();
-    mainWindow.focus();
-    mainWindow.webContents.send('window-showing');
+    showWindow();
   }
 }
 
@@ -100,7 +132,8 @@ function createWindow() {
     show: false,
     frame: false,
     resizable: false,
-    transparent: true,
+    transparent: false,
+    backgroundColor: '#050512',
     skipTaskbar: false,
     alwaysOnTop: true,
     icon: iconPath,
@@ -116,23 +149,44 @@ function createWindow() {
 
   mainWindow.loadFile('index.html');
 
+  // Smooth startup: show window invisible, then fade in after content loads
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.setOpacity(0);
+    mainWindow.show();
+    mainWindow.focus();
+  });
+
+  mainWindow.webContents.once('did-finish-load', () => {
+    // Content fully loaded — fade in
+    setTimeout(() => {
+      mainWindow.setOpacity(1);
+      // Grace period: don't hide on blur during startup
+      setTimeout(() => { isStartingUp = false; }, 2000);
+    }, 50);
+  });
+
   mainWindow.on('close', (e) => {
     if (!isQuitting) {
       e.preventDefault();
-      mainWindow.webContents.send('window-hiding');
-      setTimeout(() => {
-        if (mainWindow) mainWindow.hide();
-      }, 350);
+      hideWindow();
     }
   });
 
+  // Debounced blur handler — waits 200ms before hiding so regaining focus cancels it
   mainWindow.on('blur', () => {
-    if (mainWindow && mainWindow.isVisible()) {
-      mainWindow.webContents.send('window-hiding');
-      setTimeout(() => {
-        if (mainWindow) mainWindow.hide();
-      }, 350);
-    }
+    if (isStartingUp || isAnimating) return;
+    if (!mainWindow || !mainWindow.isVisible()) return;
+
+    clearTimeout(blurTimeout);
+    blurTimeout = setTimeout(() => {
+      if (mainWindow && mainWindow.isVisible() && !isAnimating && !isStartingUp) {
+        hideWindow();
+      }
+    }, 200);
+  });
+
+  mainWindow.on('focus', () => {
+    clearTimeout(blurTimeout);
   });
 }
 
