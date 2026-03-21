@@ -1,6 +1,18 @@
 // Launcher UI v2.0 - Premium game selection, high scores, particles, smooth transitions
 
 (function () {
+    // Instant show on startup - no delay
+    const appContainer = document.querySelector('.app-container');
+    if (appContainer) {
+        // Add startup animation class — triggers premium reveal
+        appContainer.classList.add('show', 'startup-anim');
+        // Remove startup-anim after it completes, keep animate for orbs
+        setTimeout(() => {
+            appContainer.classList.remove('startup-anim');
+            appContainer.classList.add('animate');
+        }, 1000);
+    }
+
     const gm = window.gameManager;
 
     const GAME_CARDS_CONFIG = [
@@ -564,7 +576,6 @@
     const totalPlaytime = document.getElementById('total-playtime');
     const bestScoreDisplay = document.getElementById('best-score-display');
     const favoriteCountDisplay = document.getElementById('favorite-count');
-    const appContainer = document.querySelector('.app-container');
 
     // Ultra Upgrade Elements
     const gameSearch = document.getElementById('game-search');
@@ -672,6 +683,7 @@
     function renderGameCards(filter = '') {
         const gamesState = gm.getGameList();
         gamesGrid.innerHTML = '';
+        const fragment = document.createDocumentFragment();
 
         const mergedGames = GAME_CARDS_CONFIG.map(config => {
             const state = gamesState.find(g => g.id === config.id) || {};
@@ -748,8 +760,11 @@
             // Removed individual card.addEventListener('mousemove', ...)
             // Removed individual card.addEventListener('mouseleave', ...)
 
-            gamesGrid.appendChild(card);
+            fragment.appendChild(card);
         });
+
+        // Batch DOM insert (zero layout thrashing)
+        gamesGrid.appendChild(fragment);
 
         updateFooterStats();
         renderRecentlyPlayed();
@@ -1505,10 +1520,11 @@
     window.electronAPI.onWindowHiding(() => {
         appContainer.classList.remove('window-entering');
         appContainer.classList.add('window-leaving');
-        sfx.play('hide');
+        // Defer sound so it doesn't block the hide animation
+        requestAnimationFrame(() => sfx.play('hide'));
         setTimeout(() => {
             appContainer.classList.remove('window-leaving');
-        }, 500);
+        }, 200);
 
         gm.pauseCurrentGame();
     });
@@ -1516,19 +1532,17 @@
     window.electronAPI.onWindowShowing(() => {
         appContainer.classList.remove('window-leaving');
         appContainer.classList.add('window-entering');
-        sfx.play('show');
         setTimeout(() => {
-            appContainer.classList.toggle('window-entering', false); // Ensure it's off eventually but keeps opacity: 1
-            appContainer.style.opacity = '1';
-            appContainer.style.transform = 'scale(1) translateY(0)';
-            appContainer.style.filter = 'blur(0)';
-        }, 500);
+            appContainer.classList.remove('window-entering');
+        }, 250);
 
-        if (gm.getActiveGameId()) {
-            gm.resumeCurrentGame();
-        } else {
-            renderGameCards();
-        }
+        // Defer heavy work after first frame renders
+        requestAnimationFrame(() => {
+            sfx.play('show');
+            if (gm.getActiveGameId()) {
+                gm.resumeCurrentGame();
+            }
+        });
     });
 
     // --- Ultra Upgrade Event Listeners ---
