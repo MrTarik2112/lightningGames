@@ -235,6 +235,19 @@ lightningGames/
 │                                 # - Build duration & file size
 │                                 # - Compression statistics
 │
+├── 🛠️ build-ui/ (Visual Build Wizard)
+│   ├── src/                     # C++ Source Code
+│   │   ├── main.cpp             # GLFW & Dear ImGui Window setup (High-DPI)
+│   │   ├── app.cpp              # UI State & Rendering logic
+│   │   └── build_runner.cpp     # Cross-platform sub-process management
+│   ├── CMakeLists.txt           # CMake build configuration
+│   ├── setup.sh                 # Linux/WSL compilation script
+│   └── setup-win.sh             # Windows (MinGW) cross-compilation script
+│
+├── 📜 Root Scripts
+│   ├── LightningBuildUI_Native.bat  # Fast launcher for Native Windows Build UI (.exe)
+│   └── LightningBuildUI.bat         # Launcher for WSL Linux Build UI
+│
 ├── 💅 styles/ (Design System)
 │   └── main.css                 # Complete stylesheet (1,200+ lines)
 │                                 # - CSS custom properties (50+)
@@ -599,6 +612,21 @@ class ParticleSystem {
     }
 }
 ```
+
+### 3.7 Build Wizard C++ Engine (build-ui) - High Performance GUI
+
+The project includes a fully featured, cross-platform visual build wizard written in C++ using Dear ImGui, completely replacing the legacy `build.js` terminal script with a premium neon-themed desktop application.
+
+#### Architecture Highlights
+- **Framework**: C++20 standard, using Dear ImGui (v1.91.8) for immediate mode UI rendering, and GLFW for window management.
+- **High-DPI Rendering**: Natively reads Windows DPI scaling (`SetProcessDPIAware()`) and applies dynamic font scaling using the Windows system font (`segoeui.ttf`) for pristine 4K resolution clarity.
+- **Cross-Platform Process Sandbox**: Uses `build_runner.cpp` to run the active build process asynchronously on a separate std::thread.
+  - **Linux / WSL**: Uses POSIX `fork()`, `exec()`, and `pipe()` to stream stdout/stderr.
+  - **Windows Native**: Uses Win32 API `CreateProcessA()` and `CreatePipe()` for deep native integration.
+- **State Management**: Uses `nlohmann/json` to directly interface with the Electron `package.json` for live-saving version numbers and detecting targets.
+- **Compilation Toolchain**: Provided two bash scripts:
+  - `setup.sh`: Uses standard `g++` to compile into an ELF binary for WSL.
+  - `setup-win.sh`: Uses `x86_64-w64-mingw32-g++` (MinGW) via CMake to cross-compile a standalone `lightning-build-ui.exe` static executable requiring zero external `.dll` files.
 
 ---
 

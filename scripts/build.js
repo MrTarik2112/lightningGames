@@ -141,7 +141,7 @@ async function buildWindows(compression, compressionName) {
   
   log.info(`Using ${icon} ${neon.yellow}${pm}${neon.reset} for build`);
   
-  // ULTRA MEGA mode: Use maximum compression + additional optimizations
+  // ULTRA MEGA mode: Use maximum compression
   if (compressionName === 'ULTRA MEGA') {
     log.info(`${neon.magenta}💎 ULTRA MEGA MODE ACTIVATED${neon.reset}`);
     log.step(`Running: ${builderPath} --win portable --config.compression=maximum`);

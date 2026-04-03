@@ -14,18 +14,21 @@
     "bun:start": "bun run start",
     "bun:dev": "bun run dev",
     "bun:dist": "bun run dist",
+    "ui": "wsl -d Ubuntu bash -c \"export DISPLAY=:0 && cd /mnt/c/Users/tarik/OneDrive/Belgeler/lightninggames/build-ui/build && ./lightning-build-ui\"",
+    "ui:native": "build-ui\\build_win\\lightning-build-ui.exe",
+    "ui:compile-win": "wsl bash -c \"cd /mnt/c/Users/tarik/OneDrive/Belgeler/lightninggames/build-ui && bash setup-win.sh\"",
     "tailwind": "tailwindcss -i ./styles/tailwind.css -o ./styles/tailwind-output.css --watch"
   },
   "author": "Tarik",
   "license": "MIT",
   "devDependencies": {
+    "autoprefixer": "^10.4.16",
     "canvas": "^3.2.1",
     "electron": "28.0.0",
-    "electron-builder": "24.13.3",
+    "electron-builder": "^23.6.0",
     "png-to-ico": "^3.0.1",
-    "tailwindcss": "^3.4.1",
     "postcss": "^8.4.32",
-    "autoprefixer": "^10.4.16"
+    "tailwindcss": "^3.4.1"
   },
   "build": {
     "appId": "com.tarik.lightninggames",
@@ -36,21 +39,8 @@
     ],
     "compression": "store",
     "win": {
-      "target": [
-        {
-          "target": "portable",
-          "arch": [
-            "x64"
-          ]
-        }
-      ],
-      "icon": "assets/icon.ico",
-      "certificateFile": null,
-      "certificatePassword": null,
-      "signingHashAlgorithms": [
-        "sha256"
-      ],
-      "sign": null
+      "target": "portable",
+      "icon": "assets/icon.ico"
     },
     "linux": {
       "target": "AppImage",

@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="https://more-game.com/" target="_blank" style="text-decoration: none; color: inherit;">
-    <img src="https://img.shields.io/badge/🎮%20Discover%20More%20Games-more--game.com-00d4ff?style=for-the-badge&logoColor=white" alt="More Games" />
+    <img src="https://img.shields.io/badge/🎮%20Official%20Website-more--game.com-00d4ff?style=for-the-badge&logoColor=white" alt="More Games" />
   </a>
 </p>
 
@@ -352,7 +352,7 @@ npm start          # Launch in development mode
 npm run dev        # Launch with dev tools open
 ```
 
-**4. Build portable executable**
+**4. Build portable executable (Terminal)**
 
 With Bun:
 ```bash
@@ -364,17 +364,21 @@ Or with npm:
 npm run dist
 ```
 
-The interactive build wizard will guide you through:
-1. Version number selection
-2. Compression level (0-10)
-   - **0-3 (Fast)**: ~5-50 seconds, ~150-105 MB
-   - **4-7 (Normal)**: ~30 seconds - 2 minutes, ~110-75 MB
-   - **8-10 (Maximum)**: ~2-15 minutes, ~80-35 MB
-3. Automatic package.json update
-4. Build execution with progress bar
-5. Log file generation in `BuildLogs/`
+**5. Visual Build Wizard (Dear ImGui) 🎨**
 
-**Output:** `dist/Lightning Games.exe`
+For a graphical and highly robust alternative, use the custom-built **C++ Build Wizard** powered by Dear ImGui. It features a High-DPI native neon interface, real-time color logs, and advanced artifact management.
+
+To launch the native Windows executable (Recommended):
+```bash
+npm run ui:native     # Or double-click LightningBuildUI_Native.bat
+```
+
+To launch the WSL/Linux version:
+```bash
+npm run ui            # Or double-click LightningBuildUI.bat
+```
+
+**Terminal Output:** `dist/Lightning Games.exe`
 
 #### Build Configuration
 
@@ -412,8 +416,10 @@ All commands work with both **Bun** and **npm**:
 |---------|-----|-----|-------------|
 | Start app | `bun start` | `npm start` | Launch in development mode |
 | Dev tools | `bun run dev` | `npm run dev` | Launch with DevTools open |
-| Build | `bun run dist` | `npm run dist` | Build portable executable (interactive) |
-| Direct build | `bun run dist` | `npx electron-builder --win portable` | Direct build (no wizard) |
+| Terminal Build | `bun run dist` | `npm run dist` | Build portable executable (interactive) |
+| UI Build (Win) | `bun run ui:native` | `npm run ui:native` | Launch High-DPI Visual Build Wizard (.exe) |
+| UI Build (WSL) | `bun run ui` | `npm run ui` | Launch Visual Build Wizard via WSL |
+| Compile UI | `bun run ui:compile-win` | `npm run ui:compile-win` | Compile the Windows native .exe build wizard |
 
 **Package Manager Detection:** The project automatically detects and uses Bun if available, otherwise falls back to npm. You can override this with the `LIGHTNING_PM` environment variable:
 
