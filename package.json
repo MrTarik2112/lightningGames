@@ -1,55 +1,17 @@
 {
-  "name": "lightning-games",
-  "version": "2.2.7",
-  "description": "⚡ Lightning Games - Quick game launcher that lives in your system tray",
-  "main": "main.js",
-  "scripts": {
-    "start": "electron .",
-    "dev": "electron . --dev",
-    "dist": "node scripts/build.js",
-    "build": "node scripts/build.js",
-    "build:win": "npx electron-builder --win portable",
-    "build:linux": "wsl bash -c \"cd /mnt/c/Users/tarik/Documents/lightningGames && npx electron-builder --linux AppImage\"",
-    "bun:install": "bun install",
-    "bun:start": "bun run start",
-    "bun:dev": "bun run dev",
-    "bun:dist": "bun run dist",
-    "ui": "wsl -d Ubuntu bash -c \"export DISPLAY=:0 && cd /mnt/c/Users/tarik/OneDrive/Belgeler/lightninggames/build-ui/build && ./lightning-build-ui\"",
-    "ui:native": "build-ui\\build_win\\lightning-build-ui.exe",
-    "ui:compile-win": "wsl bash -c \"cd /mnt/c/Users/tarik/OneDrive/Belgeler/lightninggames/build-ui && bash setup-win.sh\"",
-    "tailwind": "tailwindcss -i ./styles/tailwind.css -o ./styles/tailwind-output.css --watch"
-  },
   "author": "Tarik",
-  "license": "MIT",
-  "devDependencies": {
-    "autoprefixer": "^10.4.16",
-    "canvas": "^3.2.1",
-    "electron": "28.0.0",
-    "electron-builder": "^23.6.0",
-    "png-to-ico": "^3.0.1",
-    "postcss": "^8.4.32",
-    "tailwindcss": "^3.4.1"
-  },
   "build": {
     "appId": "com.tarik.lightninggames",
-    "productName": "Lightning Games",
     "asar": true,
     "asarUnpack": [
       "**/*.node"
     ],
     "compression": "store",
-    "win": {
-      "target": "portable",
-      "icon": "assets/icon.ico"
-    },
-    "linux": {
-      "target": "AppImage",
-      "icon": "assets/icon.png",
-      "category": "Game",
-      "maintainer": "Tarik"
-    },
     "directories": {
       "output": "dist"
+    },
+    "extraMetadata": {
+      "main": "main.js"
     },
     "files": [
       "**/*",
@@ -65,8 +27,46 @@
       "!.gitignore",
       "!.gitattributes"
     ],
-    "extraMetadata": {
-      "main": "main.js"
+    "linux": {
+      "category": "Game",
+      "icon": "assets/icon.png",
+      "maintainer": "Tarik",
+      "target": "AppImage"
+    },
+    "productName": "Lightning Games",
+    "win": {
+      "icon": "assets/icon.ico",
+      "target": "portable"
     }
-  }
+  },
+  "description": "⚡ Lightning Games - Quick game launcher that lives in your system tray",
+  "devDependencies": {
+    "autoprefixer": "^10.4.16",
+    "canvas": "^3.2.1",
+    "electron": "28.0.0",
+    "electron-builder": "^23.6.0",
+    "png-to-ico": "^3.0.1",
+    "postcss": "^8.4.32",
+    "tailwindcss": "^3.4.1"
+  },
+  "license": "MIT",
+  "main": "main.js",
+  "name": "lightning-games",
+  "scripts": {
+    "build": "node scripts/build.js",
+    "build:linux": "wsl bash -c \"cd /mnt/c/Users/tarik/Documents/lightningGames && npx electron-builder --linux AppImage\"",
+    "build:win": "npx electron-builder --win portable",
+    "bun:dev": "bun run dev",
+    "bun:dist": "bun run dist",
+    "bun:install": "bun install",
+    "bun:start": "bun run start",
+    "dev": "electron . --dev",
+    "dist": "node scripts/build.js",
+    "start": "electron .",
+    "tailwind": "tailwindcss -i ./styles/tailwind.css -o ./styles/tailwind-output.css --watch",
+    "ui": "wsl -d Ubuntu bash -c \"export DISPLAY=:0 && cd /mnt/c/Users/tarik/OneDrive/Belgeler/lightninggames/build-ui/build && ./lightning-build-ui\"",
+    "ui:compile-win": "wsl bash -c \"cd /mnt/c/Users/tarik/OneDrive/Belgeler/lightninggames/build-ui && bash setup-win.sh\"",
+    "ui:native": "cmd /c \"build-ui\\build_win\\lightning-build-ui.exe\""
+  },
+  "version": "2.3.0"
 }
