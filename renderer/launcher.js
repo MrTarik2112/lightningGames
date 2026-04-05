@@ -33,10 +33,21 @@
             name: 'Cyber Dash',
             desc: 'Dodge obstacles, collect energy',
             category: 'arcade',
-    color: '--accent-cyan',
+            color: '--accent-cyan',
             glowColor: 'rgba(0, 212, 255, 0.12)',
             borderColor: 'rgba(0, 212, 255, 0.35)',
             shadowColor: '0 0 30px rgba(0, 212, 255, 0.2), 0 0 60px rgba(0, 212, 255, 0.06)'
+        },
+        {
+            id: 'neonbrawl',
+            icon: '🥊',
+            name: 'Neon Brawl',
+            desc: 'Beat em up with combo system',
+            category: 'arcade',
+            color: '#ff00aa',
+            glowColor: 'rgba(255, 0, 170, 0.12)',
+            borderColor: 'rgba(255, 0, 170, 0.35)',
+            shadowColor: '0 0 30px rgba(255, 0, 170, 0.2), 0 0 60px rgba(255, 0, 170, 0.06)'
         },
         {
             id: 'tetris',
@@ -557,6 +568,12 @@
         { id: 'power_up_master', title: 'Power-Up Master', desc: 'Activate power-up 20 times in Pac-Man.', icon: '⚡', ultra: true },
         { id: 'level_5_pacman', title: 'Level 5 Survivor', desc: 'Reach level 5 in Pac-Man.', icon: '🎯', ultra: true },
         { id: 'pacman_extreme', title: 'Extreme Pac-Man', desc: 'Beat Pac-Man on Extreme difficulty.', icon: '🔥', legendary: true },
+
+        // ===== NEON BRAWL ACHIEVEMENTS =====
+        { id: 'neonbrawl_first', title: 'First Brawl', desc: 'Won your first Neon Brawl match.', icon: '🥊' },
+        { id: 'neonbrawl_500', title: 'Street Fighter', desc: 'Scored 500 points in Neon Brawl.', icon: '🥊', ultra: true },
+        { id: 'neonbrawl_combo_10', title: 'Combo Master', desc: 'Achieved 10x combo in Neon Brawl.', icon: '💥', ultra: true },
+        { id: 'neonbrawl_boss', title: 'Boss Breaker', desc: 'Defeated a boss in Neon Brawl.', icon: '👑', ultra: true },
 
     ];
 
@@ -1415,14 +1432,20 @@
         const overlay = document.querySelector('.game-over-overlay');
         if (overlay) overlay.remove();
 
-        // Validate game ID before starting
+        // Validate game ID
         if (!gm || !gm.games[id]) {
             console.error(`Game ID ${id} not found`);
             showLauncher();
             return;
         }
 
+        // Show loading indicator
+        const loadingEl = document.getElementById('game-loading');
+        if (loadingEl) loadingEl.classList.remove('hidden');
+        
+        // Start game directly
         gm.startGame(id);
+        if (loadingEl) loadingEl.classList.add('hidden');
 
         // Throttle back to false after animation
         setTimeout(() => { isOpening = false; }, 500);

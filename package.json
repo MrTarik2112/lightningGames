@@ -3,9 +3,6 @@
   "build": {
     "appId": "com.tarik.lightninggames",
     "asar": true,
-    "asarUnpack": [
-      "**/*.node"
-    ],
     "compression": "store",
     "directories": {
       "output": "dist"
@@ -14,18 +11,13 @@
       "main": "main.js"
     },
     "files": [
-      "**/*",
-      "!**/node_modules/**",
-      "!**/dist/**",
-      "!**/BuildLogs/**",
-      "!**/.git/**",
-      "!**/.crush/**",
-      "!**/Docs/**",
-      "!**/scripts/**",
-      "!**/temp_*/**",
-      "!**/*.md",
-      "!.gitignore",
-      "!.gitattributes"
+      "main.js",
+      "preload.js",
+      "index.html",
+      "renderer/**/*",
+      "games/**/*",
+      "styles/**/*",
+      "assets/**/*"
     ],
     "linux": {
       "category": "Game",
@@ -68,5 +60,5 @@
     "ui:compile-win": "wsl bash -c \"cd /mnt/c/Users/tarik/OneDrive/Belgeler/lightninggames/build-ui && bash setup-win.sh\"",
     "ui:native": "cmd /c \"build-ui\\build_win\\lightning-build-ui.exe\""
   },
-  "version": "2.3.0"
+  "version": "2.4.0"
 }

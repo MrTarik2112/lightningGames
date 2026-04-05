@@ -445,6 +445,40 @@ std::string BuildApp::getLinuxTargetStr() {
 
 std::string BuildApp::constructBuildCommand() {
     std::string cmd;
+    
+    if (platform_.parallelBuilds && platform_.windows && platform_.linuxBuild) {
+        // PARALLEL BUILD: Run Windows and Linux simultaneously
+        std::string winCmd, linCmd;
+        
+        // Windows build command
+        if (advanced_.cleanBeforeBuild) {
+            winCmd += "if exist \"dist\" rd /s /q \"dist\" & ";
+        }
+        winCmd += "npx electron-builder --win " + getWinTargetStr();
+        winCmd += " --config.compression=" + getCompressionStr();
+        if (!advanced_.asarEnabled) winCmd += " --config.asar=false";
+        
+        // Linux build command (using WSL)
+        std::string ts = std::to_string(time(nullptr));
+        std::string buildDir = std::string(getenv("HOME") ? getenv("HOME") : "/tmp") + "/lg-build-" + ts;
+        
+        linCmd = "wsl bash -c '";
+        linCmd += "set -e; ";
+        linCmd += "rm -rf " + buildDir + "; ";
+        linCmd += "mkdir -p " + buildDir + "; ";
+        linCmd += "rsync -a --exclude=node_modules --exclude=dist --exclude=.git " + projectRoot_ + "/ " + buildDir + "/; ";
+        linCmd += "cd " + buildDir + "; ";
+        linCmd += "npm install; ";
+        linCmd += "npx electron-builder --linux " + getLinuxTargetStr() + " --config.compression=" + getCompressionStr();
+        if (!advanced_.asarEnabled) linCmd += " --config.asar=false";
+        linCmd += "'";
+        
+        // Run both in parallel using Windows cmd
+        cmd = "start /B " + winCmd + " & " + linCmd;
+        return cmd;
+    }
+    
+    // SEQUENTIAL BUILD (original logic)
     if (advanced_.cleanBeforeBuild) {
 #ifdef _WIN32
         cmd += std::string("if exist \"") + advanced_.outputDir + "\" rd /s /q \"" + advanced_.outputDir + "\" & ";
@@ -466,7 +500,25 @@ std::string BuildApp::constructBuildCommand() {
         cmd += " && ";
 
     if (platform_.linuxBuild) {
-#ifndef _WIN32
+#ifdef _WIN32
+        // Linux build from Windows using WSL
+        std::string ts = std::to_string(time(nullptr));
+        std::string buildDir = std::string(getenv("HOME") ? getenv("HOME") : "/tmp") + "/lg-build-" + ts;
+        
+        std::string wslCmd = "wsl bash -c '";
+        wslCmd += "set -e; ";
+        wslCmd += "rm -rf " + buildDir + "; ";
+        wslCmd += "mkdir -p " + buildDir + "; ";
+        wslCmd += "rsync -a --exclude=node_modules --exclude=dist --exclude=.git " + projectRoot_ + "/ " + buildDir + "/; ";
+        wslCmd += "cd " + buildDir + "; ";
+        wslCmd += "npm install; ";
+        wslCmd += "npx electron-builder --linux " + getLinuxTargetStr() + " --config.compression=" + getCompressionStr();
+        if (!advanced_.asarEnabled) wslCmd += " --config.asar=false";
+        wslCmd += "'";
+        
+        cmd += wslCmd;
+#else
+        // Linux build from WSL/Linux
         std::string ts = std::to_string(time(nullptr));
         std::string buildDir = std::string(getenv("HOME") ? getenv("HOME") : "/tmp") + "/lightning-games-build-" + ts;
         std::string script;

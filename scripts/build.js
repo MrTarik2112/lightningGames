@@ -362,7 +362,23 @@ async function main() {
       );
       fs.writeFileSync(indexHtmlPath, indexHtml);
 
-      log.success(`Version updated to ${neon.yellow}${newVersion}${neon.reset}`);
+      // Update version in README.md
+      const readmePath = path.join(projectRoot, 'README.md');
+      if (fs.existsSync(readmePath)) {
+        let readme = fs.readFileSync(readmePath, 'utf8');
+        readme = readme.replace(/version-\d+\.\d+\.\d+/, `version-${newVersion}`);
+        fs.writeFileSync(readmePath, readme);
+      }
+
+      // Update version in AGENTS.md
+      const agentsPath = path.join(projectRoot, 'AGENTS.md');
+      if (fs.existsSync(agentsPath)) {
+        let agents = fs.readFileSync(agentsPath, 'utf8');
+        agents = agents.replace(/> \*\*Version:\*\* \d+\.\d+\.\d+/, `> **Version:** ${newVersion}`);
+        fs.writeFileSync(agentsPath, agents);
+      }
+
+      log.success(`Version updated to ${neon.yellow}${newVersion}${neon.reset} (package.json, index.html, README.md, AGENTS.md)`);
     }
 
     // ===================== PLATFORM SELECTION =====================

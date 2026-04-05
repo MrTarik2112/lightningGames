@@ -18,17 +18,17 @@
 
 <p align="center">
   <b>A premium neon-themed game arcade that lives in your system tray.</b><br/>
-  <sub>41 handcrafted games • One global hotkey • Zero friction • 100% offline</sub>
+  <sub>59 handcrafted games • One global hotkey • Zero friction • 100% offline</sub>
 </p>
 
 <br/>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-2.2.4-00d4ff?style=for-the-badge&logo=semver&logoColor=white" alt="Version" />
-  <img src="https://img.shields.io/badge/games-41-ff00aa?style=for-the-badge&logoColor=white" alt="Games" />
+  <img src="https://img.shields.io/badge/version-2.4.0-00d4ff?style=for-the-badge&logo=semver&logoColor=white" alt="Version" />
+  <img src="https://img.shields.io/badge/games-59-ff00aa?style=for-the-badge&logoColor=white" alt="Games" />
   <img src="https://img.shields.io/badge/achievements-100+-ffcc00?style=for-the-badge&logoColor=white" alt="Achievements" />
   <img src="https://img.shields.io/badge/themes-11-00ff88?style=for-the-badge&logoColor=white" alt="Themes" />
-  <img src="https://img.shields.io/badge/launch%20time-%3C200ms-00d4ff?style=for-the-badge&logoColor=white" alt="Launch Time" />
+  <img src="https://img.shields.io/badge/launch%20time-%3C1s-00d4ff?style=for-the-badge&logoColor=white" alt="Launch Time" />
 </p>
 
 <p align="center">

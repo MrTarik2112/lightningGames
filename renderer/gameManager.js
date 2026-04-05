@@ -1,6 +1,8 @@
 // Game Manager v2.0 - handles game lifecycle, freeze/resume, state, high scores
 
 class GameManager {
+    // All games are loaded at startup via script tags in index.html
+    
     constructor() {
         this.games = {};
         this.activeGame = null;
@@ -248,8 +250,94 @@ class GameManager {
             meta,
             GameClass: gameClass,
             instance: null,
-            hasState: false
+            hasState: false,
+            loaded: !!gameClass
         };
+    }
+
+    async _lazyLoadGame(id) {
+        const game = this.games[id];
+        if (!game) {
+            console.error(`[GameManager] No game entry in registry for: ${id}`);
+            return false;
+        }
+        
+        if (game.loaded && game.GameClass) {
+            console.log(`[GameManager] Game already loaded: ${id}`);
+            return true;
+        }
+        
+        if (this._loadingGames[id]) {
+            console.log(`[GameManager] Game already loading: ${id}`);
+            return this._loadingGames[id];
+        }
+        
+        console.log(`[GameManager] Starting lazy load for: ${id}`);
+        const promise = this._doLazyLoad(id);
+        this._loadingGames[id] = promise;
+        
+        try {
+            await promise;
+            return true;
+        } catch (e) {
+            console.error(`[GameManager] Failed to load game ${id}:`, e);
+            this._loadingGames[id] = null;
+            return false;
+        }
+    }
+
+    async _doLazyLoad(id) {
+        const scriptPath = this._gameManifest[id];
+        if (!scriptPath) {
+            throw new Error(`No manifest entry for game: ${id}`);
+        }
+        
+        console.log(`[GameManager] Loading script: ${scriptPath}`);
+        
+        return new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = scriptPath;
+            script.onload = () => {
+                console.log(`[GameManager] Script loaded: ${scriptPath}`);
+                
+                // Wait for the script to execute and registerGame to run
+                let attempts = 0;
+                const maxAttempts = 20;
+                
+                const checkRegistered = () => {
+                    attempts++;
+                    const gameEntry = this.games[id];
+                    console.log(`[GameManager] Check ${attempts}: gameEntry =`, gameEntry);
+                    
+                    // If game was already registered (has GameClass), we're good
+                    if (gameEntry && gameEntry.GameClass) {
+                        gameEntry.loaded = true;
+                        console.log(`[GameManager] Game registered successfully: ${id}`);
+                        resolve();
+                        return;
+                    }
+                    
+                    // If we have attempts left, keep checking
+                    if (attempts < maxAttempts) {
+                        setTimeout(checkRegistered, 50);
+                        return;
+                    }
+                    
+                    // Give up after timeout
+                    console.error(`[GameManager] Timeout waiting for game registration: ${id}`);
+                    console.error(`[GameManager] Game entry:`, gameEntry);
+                    reject(new Error(`Game registration timeout: ${id}`));
+                };
+                
+                // Start checking after a short delay
+                setTimeout(checkRegistered, 100);
+            };
+            script.onerror = (e) => {
+                console.error(`[GameManager] Script failed to load: ${scriptPath}`, e);
+                reject(e);
+            };
+            document.head.appendChild(script);
+        });
     }
 
     getCanvas() {
@@ -267,7 +355,15 @@ class GameManager {
 
     startGame(id) {
         const game = this.games[id];
-        if (!game) return;
+        if (!game) {
+            console.error(`[GameManager] Game not found: ${id}`);
+            return;
+        }
+        
+        if (!game.GameClass) {
+            console.error(`[GameManager] Game class not registered: ${id}`);
+            return;
+        }
 
         this.stopLoop();
 

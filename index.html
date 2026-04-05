@@ -35,7 +35,7 @@
           <div class="logo-ring"></div>
         </div>
         <span class="title-text">Lightning Games</span>
-        <span class="title-version">v2.3.0</span>
+        <span class="title-version">v2.4.0</span>
       </div>
       <div class="title-right" style="-webkit-app-region: no-drag;">
         <!-- Ultra Upgrade: Volume & Settings -->
@@ -351,6 +351,11 @@
 
     <!-- Game View -->
     <div id="game-view" class="game-view hidden">
+      <!-- Loading indicator for lazy-loaded games -->
+      <div id="game-loading" class="game-loading hidden">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading game...</div>
+      </div>
       <div class="game-header">
         <button id="btn-back" class="btn-back">
           <svg width="14" height="14" viewBox="0 0 14 14">
@@ -1036,7 +1041,10 @@
   <!-- Import Success Toast -->
   <div id="import-success-toast" class="import-success">✅ Data imported!</div>
 
+  <!-- Game Manager -->
   <script src="renderer/gameManager.js"></script>
+  
+  <!-- All Games - loaded at startup for compatibility -->
   <script src="games/snake.js"></script>
   <script src="games/tetris.js"></script>
   <script src="games/game2048.js"></script>
@@ -1045,8 +1053,6 @@
   <script src="games/pong.js"></script>
   <script src="games/breakout.js"></script>
   <script src="games/space.js"></script>
-
-  <!-- New Games -->
   <script src="games/asteroids.js"></script>
   <script src="games/frogger.js"></script>
   <script src="games/memory.js"></script>
@@ -1061,8 +1067,8 @@
   <script src="games/orbit.js"></script>
   <script src="games/stacker.js"></script>
   <script src="games/colorrush.js"></script>
-    <script src="games/cyberdash.js"></script>
-     <script src="games/neonduel.js"></script>
+  <script src="games/cyberdash.js"></script>
+  <script src="games/neonduel.js"></script>
   <script src="games/blaster.js"></script>
   <script src="games/pixelquest.js"></script>
   <script src="games/wordquest.js"></script>
@@ -1096,6 +1102,9 @@
   <script src="games/colormatcher.js"></script>
   <script src="games/cubefall.js"></script>
   <script src="games/pacman.js"></script>
+  <script src="games/neonbrawl.js"></script>
+
+  <!-- Renderer scripts -->
   <script src="renderer/soundManager.js"></script>
   <script src="renderer/particles.js"></script>
   <script src="renderer/tutorial.js"></script>

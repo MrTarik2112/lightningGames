@@ -1,7 +1,7 @@
 # ⚡ Lightning Games - Complete Technical Documentation
 
-> **Version:** 3.7.1  
-> **Last Updated:** 2026-03-10  
+> **Version:** 2.4.0  
+> **Last Updated:** 2026-04-05  
 > **Author:** Tarik  
 > **Status:** Production Ready  
 > **Package Manager:** Bun + npm (auto-detect)  
@@ -11,20 +11,20 @@
 
 ## 📋 1. Project Overview
 
-**Lightning Games** is a lightweight, high-performance game launcher built with Electron that lives in the system tray. It provides instant access to 40 handcrafted arcade and puzzle games with a premium neon-themed UI, zero internet requirements, and 100% local data storage.
+**Lightning Games** is a lightweight, high-performance game launcher built with Electron that lives in the system tray. It provides instant access to 59 handcrafted arcade and puzzle games with a premium neon-themed UI, zero internet requirements, and 100% local data storage.
 
 ### Core Philosophy
-- **Instant Launch**: < 200ms from hotkey to playable game
+- **Instant Launch**: < 1s from hotkey to playable game
 - **Zero Friction**: No accounts, no internet, no installation
 - **Local First**: All data stored in localStorage, never leaves your machine
 - **Vanilla Stack**: Pure JavaScript, HTML5 Canvas, no frameworks
 - **Performance**: GPU-accelerated rendering, frame-independent physics
 
 ### Key Features
-- 🎮 **41 Games** - 25 Arcade, 10 Puzzle, 3 Classic, 1 Strategy, 2 Creative
-- 🎯 **Achievement System** - 37 unlockable achievements with rarity tiers
+- 🎮 **59 Games** - 25 Arcade, 10 Puzzle, 3 Classic, 1 Strategy, 2 Creative + 18 more
+- 🎯 **Achievement System** - 100+ unlockable achievements with rarity tiers
 - 🏆 **High Scores** - Per-game persistent scoring with global leaderboard tracking
-- 🌓 **4 Themes** - Neon (default), Retro, Minimal, Forest with instant switching
+- 🌓 **11 Themes** - Neon (default), Retro, Minimal, Forest, Ocean, Sunset, Purple Haze, Matrix, Cyberpunk, Dark Blue, Fire
 - 🔔 **System Tray Integration** - Global hotkey (Ctrl+Alt+G) from anywhere
 - ⚡ **GPU Optimized** - Hardware acceleration, OOP rasterization, 60fps target
 - 🔊 **Synthesized Audio** - 25+ procedurally generated sound effects, 8-bit music engine
@@ -292,7 +292,7 @@ lightningGames/
 
 ### File Statistics
 - **Total Lines of Code**: ~8,700
-- **Game Files**: 41 (avg 150-300 lines each)
+- **Game Files**: 59 (avg 150-300 lines each)
 - **Largest Game**: Tower Defense (1,300+ lines)
 - **Renderer Code**: ~2,000 lines
 - **Styles**: ~1,200 lines
@@ -630,7 +630,7 @@ The project includes a fully featured, cross-platform visual build wizard writte
 
 ---
 
-## 🎮 4. Complete Game List (41 Games) - Detailed Reference
+## 🎮 4. Complete Game List (59 Games) - Detailed Reference
 
 All games run on an **880x540 HTML5 Canvas** with synthesized audio and neon visuals.
 
@@ -666,6 +666,7 @@ Fast-paced, reflex-based gameplay with increasing difficulty curves.
 | 23 | `gravityflip` | Gravity Flip | 🔄 | ⭐⭐⭐ | Gravity mechanics, navigation | Puzzle-action |
 | 24 | `tapdash` | Tap Dash | 👆 | ⭐⭐ | Quick taps, rhythm | Casual |
 | 25 | `pacman` | Pac-Man | 👻 | ⭐⭐⭐ | Smooth movement, 4 smart ghosts, power pellets, fruit system | Classic arcade |
+| 26 | `neonbrawl` | Neon Brawl | 🥊 | ⭐⭐⭐ | Beat 'em up, combo system, dash attack | Action |
 
 #### Puzzle Games (10 Total)
 Strategic, thinking-based gameplay with no time pressure (mostly).
