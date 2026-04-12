@@ -35,7 +35,7 @@ const tests = {
       throw new Error('main.js not found');
     }
     // Syntax check
-    require(mainPath.replace('.js', '.test-check'));
+    execSync(`node -c "${mainPath}"`, { stdio: 'pipe' });
     return 'OK';
   },
   

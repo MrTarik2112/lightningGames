@@ -6,6 +6,9 @@
   <a href="https://more-game.com/" target="_blank" style="text-decoration: none; color: inherit;">
     <img src="https://img.shields.io/badge/🎮%20Official%20Website-more--game.com-00d4ff?style=for-the-badge&logoColor=white" alt="More Games" />
   </a>
+  <a href="https://discord.gg/hbNRTQFbjT" target="_blank">
+    <img src="https://img.shields.io/badge/Discord-Join%20Server-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord" />
+  </a>
 </p>
 
 <p align="center">
@@ -29,6 +32,9 @@
   <img src="https://img.shields.io/badge/achievements-100+-ffcc00?style=for-the-badge&logoColor=white" alt="Achievements" />
   <img src="https://img.shields.io/badge/themes-11-00ff88?style=for-the-badge&logoColor=white" alt="Themes" />
   <img src="https://img.shields.io/badge/launch%20time-%3C1s-00d4ff?style=for-the-badge&logoColor=white" alt="Launch Time" />
+  <a href="https://discord.gg/hbNRTQFbjT" target="_blank">
+    <img src="https://img.shields.io/discord/1330644347715092520?color=5865F2&label=Discord&logo=discord&logoColor=white&style=for-the-badge" alt="Discord Members" />
+  </a>
 </p>
 
 <p align="center">
@@ -48,6 +54,7 @@
 
 <p align="center">
   <a href="#-why-lightning-games">Why?</a> •
+  <a href="#-join-the-community">Community</a> •
   <a href="#-quick-start">Quick Start</a> •
   <a href="#-game-library">Games</a> •
   <a href="#-features">Features</a> •
@@ -137,6 +144,37 @@ You're working. You need a 2-minute break. You want to play a quick game.
 Press <kbd>Ctrl+Alt+G</kbd> → Play for 2 minutes → Press <kbd>Esc</kbd> → Back to work.
 
 Your scores, achievements, and settings are saved locally forever. No cloud. No sync. No tracking. Just you and your games.
+
+---
+
+## 💬 Join the Community
+
+<div align="center">
+  <p align="center">
+    <a href="https://discord.gg/hbNRTQFbjT" target="_blank">
+      <img src="https://img.shields.io/badge/Discord-Join%20the%20Arcade-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord" height="40" />
+    </a>
+  </p>
+  
+  <table align="center">
+    <tr>
+      <td align="center">🏆 <b>High Scores</b></td>
+      <td align="center">💡 <b>Game Ideas</b></td>
+      <td align="center">🛠️ <b>Support</b></td>
+      <td align="center">📢 <b>Updates</b></td>
+    </tr>
+    <tr>
+      <td align="center">Show off your skills</td>
+      <td align="center">Suggest new games</td>
+      <td align="center">Get instant help</td>
+      <td align="center">News & releases</td>
+    </tr>
+  </table>
+
+  <p>
+    <i>Connect with <b>Lightning Games</b> players and developers from around the world!</i>
+  </p>
+</div>
 
 ---
 

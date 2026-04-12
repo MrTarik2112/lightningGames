@@ -572,8 +572,12 @@
         // ===== NEON BRAWL ACHIEVEMENTS =====
         { id: 'neonbrawl_first', title: 'First Brawl', desc: 'Won your first Neon Brawl match.', icon: '🥊' },
         { id: 'neonbrawl_500', title: 'Street Fighter', desc: 'Scored 500 points in Neon Brawl.', icon: '🥊', ultra: true },
+        { id: 'neonbrawl_1000', title: 'Brawl Master', desc: 'Scored 1000 points in Neon Brawl.', icon: '🏆', ultra: true },
         { id: 'neonbrawl_combo_10', title: 'Combo Master', desc: 'Achieved 10x combo in Neon Brawl.', icon: '💥', ultra: true },
+        { id: 'neonbrawl_combo_20', title: 'Combo Legend', desc: 'Achieved 20x combo in Neon Brawl.', icon: '🔥', legendary: true },
         { id: 'neonbrawl_boss', title: 'Boss Breaker', desc: 'Defeated a boss in Neon Brawl.', icon: '👑', ultra: true },
+        { id: 'neonbrawl_wave10', title: 'Fighter', desc: 'Reached wave 10 in Neon Brawl.', icon: '🎖️', ultra: true },
+        { id: 'neonbrawl_stage3', title: 'Street Walker', desc: 'Reached stage 3 in Neon Brawl.', icon: '🌆', ultra: true },
 
     ];
 

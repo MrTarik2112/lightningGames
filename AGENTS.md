@@ -11,7 +11,7 @@
 
 ## 📋 1. Project Overview
 
-**Lightning Games** is a lightweight, high-performance game launcher built with Electron that lives in the system tray. It provides instant access to 59 handcrafted arcade and puzzle games with a premium neon-themed UI, zero internet requirements, and 100% local data storage.
+**Lightning Games** is a lightweight, high-performance game launcher built with Electron that lives in the system tray. It provides instant access to 59 handcrafted arcade and puzzle games with a premium neon-themed UI, zero internet requirements, and 100% local data storage. The project is supported by a vibrant [Discord Community](https://discord.gg/hbNRTQFbjT).
 
 ### Core Philosophy
 - **Instant Launch**: < 1s from hotkey to playable game

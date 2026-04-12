@@ -601,6 +601,53 @@ class SoundManager {
     playLand() { this._playTone(80, 'triangle', 0.08, 0.25); this._playNoise(0.03, 0.1); }
     playSwing() { this._playSweep(600, 1200, 'sawtooth', 0.05, 0.15); }
 
+    // ═══════════════════════════════════════════════════════════════════════════════════
+    // NEON BRAWL - NEW SOUND EFFECTS
+    // ═══════════════════════════════════════════════════════════════════════════════════
+    
+    playKick() { this._playSweep(300, 150, 'square', 0.05, 0.25); }
+    playBlock() { this._playSweep(200, 400, 'triangle', 0.08, 0.3); }
+    playWhooshFast() { this._playSweep(600, 1200, 'sine', 0.04, 0.15); }
+    playMetalClash() { 
+        this._playNoise(0.1, 0.3); 
+        this._playTone(800, 'square', 0.05, 0.3, this.ctx.currentTime);
+    }
+    playDragonRoar() { 
+        const now = this.ctx.currentTime;
+        [200, 180, 160, 140].forEach((f, i) => this._playTone(f, 'sawtooth', 0.15, 0.2, now + i * 0.08));
+    }
+    playWindSwoosh() { this._playSweep(800, 200, 'sine', 0.15, 0.2); }
+    playBossEnter() { 
+        const now = this.ctx.currentTime;
+        [100, 150, 200, 300, 400].forEach((f, i) => this._playTone(f, 'sawtooth', 0.2, 0.25, now + i * 0.1));
+    }
+    playBossDeath() { 
+        this._playSweep(400, 50, 'sawtooth', 0.6, 0.4);
+        this._playNoise(0.4, 0.5);
+    }
+    playPowerupCollect() { 
+        const now = this.ctx.currentTime;
+        [523, 659, 784, 1047, 1318].forEach((f, i) => this._playTone(f, 'square', 0.08, 0.15, now + i * 0.04));
+    }
+    playHeal() { 
+        const now = this.ctx.currentTime;
+        [440, 550, 660, 880].forEach((f, i) => this._playTone(f, 'sine', 0.1, 0.12, now + i * 0.06));
+    }
+    playCounter() { this._playSweep(200, 800, 'square', 0.1, 0.3); }
+    playThrow() { this._playSweep(400, 100, 'square', 0.08, 0.25); }
+    playAirAttack() { this._playSweep(500, 250, 'square', 0.06, 0.2); }
+    playRage() { 
+        const now = this.ctx.currentTime;
+        [100, 150, 200, 250, 300, 350, 400].forEach((f, i) => this._playTone(f, 'sawtooth', 0.1, 0.25, now + i * 0.05));
+    }
+    playFreeze() { this._playSweep(800, 300, 'sine', 0.3, 0.25); }
+    playShield() { this._playSweep(400, 600, 'triangle', 0.1, 0.2); }
+    playComboX(n) { 
+        const base = 400 + n * 60;
+        this._playTone(base, 'square', 0.05, 0.2, this.ctx.currentTime);
+        this._playTone(base * 1.5, 'square', 0.05, 0.15, this.ctx.currentTime + 0.03);
+    }
+
     // Music ducking - lower music volume when sound plays
     duckMusic(duration = 0.1) {
         if (!this._musicGain || !this.ctx) return;
