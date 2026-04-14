@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Lightning Games - One Page Summary</title>
+  <style>
+    @page { size: A4 landscape; margin: 0.28in; }
+    :root {
+      --bg: #061018;
+      --panel: #0d1824;
+      --panel2: #101e2d;
+      --line: #1e4057;
+      --ink: #e8f6ff;
+      --muted: #9dc3d8;
+      --accent: #5ce1ff;
+      --accent2: #7cffc8;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; color: var(--ink); background: var(--bg); }
+    body { width: 100%; }
+    .page {
+      width: 100%;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top right, rgba(92,225,255,0.16), transparent 26%),
+        radial-gradient(circle at bottom left, rgba(124,255,200,0.12), transparent 22%),
+        linear-gradient(180deg, #07111a, #08131d 30%, #08111b 100%);
+      padding: 14px 18px 12px;
+    }
+    .header {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 12px;
+      margin-bottom: 8px;
+      align-items: end;
+    }
+    .title {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      color: white;
+      margin: 0;
+    }
+    .subtitle {
+      margin-top: 4px;
+      font-size: 10px;
+      line-height: 1.35;
+      color: var(--muted);
+    }
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: flex-end;
+      align-content: start;
+    }
+    .pill {
+      border: 1px solid var(--line);
+      background: rgba(15, 28, 43, 0.88);
+      border-radius: 999px;
+      padding: 5px 8px;
+      font-size: 9px;
+      color: var(--ink);
+      white-space: nowrap;
+    }
+    .grid-top {
+      display: grid;
+      grid-template-columns: 1.22fr 0.78fr 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .panel {
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(13,24,36,0.96), rgba(16,30,45,0.96));
+      border-radius: 12px;
+      padding: 9px 10px 8px;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+    }
+    h2 {
+      margin: 0 0 5px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1.1px;
+      color: var(--accent);
+    }
+    ul {
+      margin: 0;
+      padding-left: 13px;
+    }
+    li {
+      margin: 0 0 2px;
+      font-size: 8.7px;
+      line-height: 1.18;
+      color: var(--ink);
+    }
+    .persona p {
+      margin: 0 0 5px;
+      font-size: 8.9px;
+      line-height: 1.28;
+      color: var(--ink);
+    }
+    .compact li { margin-bottom: 2px; }
+    .features {
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(13,24,36,0.97), rgba(16,30,45,0.97));
+      border-radius: 12px;
+      padding: 9px 10px 6px;
+    }
+    .feature-columns {
+      column-count: 4;
+      column-gap: 14px;
+      padding-left: 14px;
+      margin-top: 2px;
+    }
+    .feature-columns li {
+      break-inside: avoid;
+      margin-bottom: 2px;
+      font-size: 8.15px;
+      line-height: 1.14;
+    }
+    .footer {
+      margin-top: 6px;
+      font-size: 7.5px;
+      color: var(--muted);
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="header">
+      <div>
+        <h1 class="title">Lightning Games</h1>
+        <div class="subtitle">One-page repo summary generated from local project evidence on 2026-04-13. Scope is limited to files present in this repository.</div>
+      </div>
+      <div class="meta">
+        <div class="pill">Electron 28.0.0</div>
+        <div class="pill">59 game files</div>
+        <div class="pill">Tray + hotkey launcher</div>
+        <div class="pill">localStorage persistence</div>
+        <div class="pill">Bun / npm scripts</div>
+      </div>
+    </div>
+
+    <div class="grid-top">
+      <section class="panel">
+        <h2>What It Is</h2>
+        <ul class="compact">
+          <li>Lightning Games is an Electron desktop app that lives in the system tray.</li><li>It opens a frameless launcher window with a neon styled interface.</li><li>The launcher is designed for quick access to a large local game library.</li><li>The repo currently ships 59 JavaScript game files under the games folder.</li><li>Games are loaded into a single HTML shell that also hosts the launcher UI.</li><li>The app runs offline from local assets packaged with Electron.</li><li>It uses a secure preload bridge instead of exposing Node APIs to the renderer.</li><li>The main process manages the tray icon, global hotkey, window visibility, and quit flow.</li><li>The renderer manages game registration, launch, pause, resume, and score updates.</li><li>Player progress is stored in browser localStorage rather than a server database.</li><li>The interface includes search, categories, favorites, recent activity, and stats views.</li><li>The experience is heavily themed with particle effects, glow treatments, and multiple themes.</li>
+        </ul>
+      </section>
+
+      <section class="panel persona">
+        <h2>Who It Is For</h2>
+        <p>Primary user: a Windows desktop player who wants instant, low-friction access to short local games from the tray.</p><p>Likely persona: someone who prefers offline play, quick breaks, visible progress tracking, and a playful premium UI without accounts or setup overhead.</p>
+        <h2 style="margin-top:8px;">How To Run</h2>
+        <ul class="compact">
+          <li>1. From the repo root, install dependencies with `bun install` or `npm install`.</li><li>2. Start the app with `bun start` or `npm start`.</li><li>3. Use `bun run dev` or `npm run dev` if you want DevTools.</li><li>4. Build a distributable with `bun run dist` or `npm run dist`.</li>
+        </ul>
+      </section>
+
+      <section class="panel">
+        <h2>How It Works</h2>
+        <ul class="compact">
+          <li>Main process: main.js configures GPU and privacy-related Chromium flags, creates the BrowserWindow, manages the tray menu, registers Ctrl+Alt+G, and handles close/quit IPC.</li><li>Preload bridge: preload.js exposes only closeWindow, quitApp, and window show/hide event hooks through contextBridge.</li><li>Renderer shell: index.html defines the launcher, stats, settings, data modals, game canvas, and script includes for renderer modules plus all game scripts.</li><li>Game lifecycle: renderer/gameManager.js registers game classes, instantiates the active game, runs the animation loop, pauses/resumes, updates scores, and checks achievements.</li><li>UI layer: renderer/launcher.js renders game cards from GAME_CARDS_CONFIG, wires search, category tabs, favorites, stats, settings, export/import, screenshot, and tutorial flows.</li><li>Media layers: renderer/soundManager.js synthesizes music and SFX with the Web Audio API; renderer/particles.js draws the animated background canvas.</li><li>Data flow: user input in launcher -> gameManager launches/updates games -> score and stats mutate in memory -> localStorage persists highscores, settings, achievements, favorites, playtime, and last-played data.</li><li>Remote services, cloud sync, and external APIs: Not found in repo.</li>
+        </ul>
+      </section>
+    </div>
+
+    <section class="features">
+      <h2>What It Does</h2>
+      <ul class="feature-columns">
+        <li>Electron desktop runtime</li><li>System tray presence</li><li>Tray click toggles window</li><li>Global hotkey Ctrl+Alt+G</li><li>Single-instance lock</li><li>Frameless fixed-size window</li><li>Always-on-top launcher window</li><li>Hide instead of full close</li><li>Auto-hide on blur</li><li>Startup fade-in flow</li><li>Secure preload bridge</li><li>Context isolation enabled</li><li>Node integration disabled</li><li>Web security enabled</li><li>59 local game scripts included</li><li>Arcade game category</li><li>Puzzle game category</li><li>Classic game category</li><li>Favorites category tab</li><li>Searchable game grid</li><li>Random game button</li><li>Recently played section</li><li>Stats dashboard</li><li>Top games by score</li><li>Recent activity list</li><li>Category breakdown</li><li>Playtime distribution view</li><li>Milestones panel</li><li>Achievement list filters</li><li>Achievement toast container</li><li>High score tracking</li><li>Per-game best score display</li><li>Persistent favorites</li><li>Persistent achievements</li><li>Persistent last played timestamps</li><li>Persistent total play time</li><li>Persistent consecutive streaks</li><li>Persistent unique games list</li><li>Persistent total asteroids stat</li><li>Volume slider in title bar</li><li>Procedural SFX engine</li><li>Per-game music themes</li><li>Background particle canvas</li><li>Reduced motion setting</li><li>Screen shake setting</li><li>Resolution scale setting</li><li>Particle density setting</li><li>Glow intensity setting</li><li>Animation speed setting</li><li>Show FPS option</li><li>Screen flash option</li><li>SFX volume option</li><li>Music volume option</li><li>Mute on blur option</li><li>Auto-pause option</li><li>Confirm exit option</li><li>Show timer option</li><li>Difficulty selector</li><li>Compact mode option</li><li>Show descriptions option</li><li>Achievement notifications option</li><li>Card size control</li><li>Grid layout selector</li><li>Dark mode toggle</li><li>Tutorial button</li><li>JSON data export</li><li>JSON data import</li><li>High-score screenshot action</li><li>Achievement share action</li><li>Hard reset action</li><li>Build scripts for Bun and npm</li><li>Portable Windows build target</li><li>Linux AppImage build target</li><li>Native build UI project included</li><li>Backend/API services: Not found in repo</li>
+      </ul>
+    </section>
+
+    <div class="footer">Output target: C:/Users/tarik/OneDrive/Belgeler/lightningGames/output/pdf/lightning-games-onepager.pdf</div>
+  </div>
+</body>
+</html>

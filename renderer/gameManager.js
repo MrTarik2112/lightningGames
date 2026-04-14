@@ -354,6 +354,7 @@ class GameManager {
     }
 
     startGame(id) {
+        console.log('[GameManager] startGame called:', id);
         const game = this.games[id];
         if (!game) {
             console.error(`[GameManager] Game not found: ${id}`);
@@ -365,9 +366,12 @@ class GameManager {
             return;
         }
 
+        console.log('[GameManager] Game class found:', game.GameClass.name);
+        
         this.stopLoop();
 
         const { canvas, ctx } = this.getCanvas();
+        console.log('[GameManager] Canvas:', canvas.width, 'x', canvas.height);
 
         const baseWidth = game.meta.canvasWidth || 880;
         const baseHeight = game.meta.canvasHeight || 540;
@@ -445,10 +449,14 @@ class GameManager {
 
         game.hasState = true;
         this.lastTime = performance.now();
+        console.log('[GameManager] Calling startLoop...');
         this.startLoop();
+        console.log('[GameManager] startLoop returned, activeGame:', this.activeGame ? this.activeGame.id : 'none');
 
         // Start game music
         if (window.soundManager) window.soundManager.startMusic(id);
+        
+        console.log('[GameManager] startGame complete');
     }
 
     _updateHighScoreDisplay(gameId) {

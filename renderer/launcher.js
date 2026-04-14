@@ -50,6 +50,17 @@
             shadowColor: '0 0 30px rgba(255, 0, 170, 0.2), 0 0 60px rgba(255, 0, 170, 0.06)'
         },
         {
+            id: 'battlecards',
+            icon: '🃏',
+            name: 'Battle Cards',
+            desc: 'Card battle duel',
+            category: 'puzzle',
+            color: '--accent-purple',
+            glowColor: 'rgba(136, 85, 255, 0.12)',
+            borderColor: 'rgba(136, 85, 255, 0.35)',
+            shadowColor: '0 0 30px rgba(136, 85, 255, 0.2), 0 0 60px rgba(136, 85, 255, 0.06)'
+        },
+        {
             id: 'tetris',
             icon: '🧱',
             name: 'Tetris',
@@ -433,6 +444,17 @@
             glowColor: 'rgba(255, 255, 0, 0.12)',
             borderColor: 'rgba(255, 255, 0, 0.35)',
             shadowColor: '0 0 30px rgba(255, 255, 0, 0.2), 0 0 60px rgba(255, 255, 0, 0.06)'
+        },
+        {
+            id: 'gardenempire',
+            icon: '🌿',
+            name: 'Garden Empire',
+            desc: 'Grow plants, harvest & profit',
+            category: 'arcade',
+            color: '#44ff88',
+            glowColor: 'rgba(68, 255, 136, 0.12)',
+            borderColor: 'rgba(68, 255, 136, 0.35)',
+            shadowColor: '0 0 30px rgba(68, 255, 136, 0.2), 0 0 60px rgba(68, 255, 136, 0.06)'
         },
 
     ];
@@ -1422,6 +1444,8 @@
         if (isOpening) return;
         isOpening = true;
 
+        console.log('[Launcher] Opening game:', id, name);
+        
         sfx.play('select');
         launcherView.classList.add('hidden');
         gameView.classList.remove('hidden');
@@ -1438,18 +1462,42 @@
 
         // Validate game ID
         if (!gm || !gm.games[id]) {
-            console.error(`Game ID ${id} not found`);
+            console.error('[Launcher] Game not found in gm.games:', id);
             showLauncher();
             return;
         }
+        
+        console.log('[Launcher] Game found:', gm.games[id]);
 
+        // Get canvas element
+        const canvas = document.getElementById('game-canvas');
+        console.log('[Launcher] Canvas element:', canvas);
+        
         // Show loading indicator
         const loadingEl = document.getElementById('game-loading');
         if (loadingEl) loadingEl.classList.remove('hidden');
         
-        // Start game directly
-        gm.startGame(id);
-        if (loadingEl) loadingEl.classList.add('hidden');
+        console.log('[Launcher] Calling gm.startGame...');
+        
+        // Start game with proper error handling
+        try {
+            gm.startGame(id);
+            console.log('[Launcher] gm.startGame completed');
+            
+            // Verify canvas was updated
+            console.log('[Launcher] Canvas size after startGame:', canvas ? canvas.width + 'x' + canvas.height : 'N/A');
+        } catch(e) {
+            console.error('[Launcher] Failed to start game:', e);
+            alert('Error: ' + e.message);
+            showLauncher();
+            return;
+        }
+        
+        // Check if game is actually running
+        setTimeout(() => {
+            console.log('[Launcher] Active game:', gm.activeGame);
+            if (loadingEl) loadingEl.classList.add('hidden');
+        }, 500);
 
         // Throttle back to false after animation
         setTimeout(() => { isOpening = false; }, 500);
@@ -2774,6 +2822,14 @@
         canvasHeight: 540,
         title: 'Pac-Man',
         icon: '👻'
+    });
+
+    // Register Battle Cards game
+    gm.registerGame('battlecards', BattleCards, {
+        canvasWidth: 880,
+        canvasHeight: 540,
+        title: 'Battle Cards',
+        icon: '🃏'
     });
 
 })();

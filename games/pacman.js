@@ -11,12 +11,10 @@ class PacMan {
         this.lives = 3;
         this.extraLifeAwarded = false;
         
-        // Grid ayarları
         this.gridSize = 20;
         this.cols = 28;
         this.rows = 31;
         
-        // Pac-Man - Sub-pixel smooth hareket
         this.pacman = {
             gridX: 14, gridY: 23,
             x: 14 * 20 + 10, y: 23 * 20 + 10,
@@ -29,47 +27,50 @@ class PacMan {
             startX: 14, startY: 23
         };
         
-        // Hayaletler - Akıllı AI
         this.ghosts = [
             { 
                 gridX: 14, gridY: 11, x: 14 * 20 + 10, y: 11 * 20 + 10, 
                 dir: 0, color: '#ff0000', name: 'Blinky', 
                 startX: 14, startY: 11, 
                 moving: false, targetX: 0, targetY: 0,
-                personality: 'hunter', // Her zaman Pac-Man'i takip eder
+                personality: 'hunter',
                 speed: 1.0,
                 eaten: false,
-                eyes: false
+                eyes: false,
+                exited: false
             },
             { 
                 gridX: 12, gridY: 14, x: 12 * 20 + 10, y: 14 * 20 + 10, 
                 dir: 0, color: '#ffb8ff', name: 'Pinky', 
                 startX: 12, startY: 14, 
                 moving: false, targetX: 0, targetY: 0,
-                personality: 'ambusher', // Pac-Man'in önünü keser
+                personality: 'ambusher',
                 speed: 1.0,
                 eaten: false,
-                eyes: false
+                eyes: false,
+                exited: false
             },
             { 
                 gridX: 14, gridY: 14, x: 14 * 20 + 10, y: 14 * 20 + 10, 
                 dir: 0, color: '#00ffff', name: 'Inky', 
                 startX: 14, startY: 14, 
                 moving: false, targetX: 0, targetY: 0,
-                personality: 'flanker', // Blinky ile koordineli
+                personality: 'flanker',
                 speed: 1.0,
                 eaten: false,
-                eyes: false
+                eyes: false,
+                exited: false
             },
             { 
                 gridX: 16, gridY: 14, x: 16 * 20 + 10, y: 14 * 20 + 10, 
                 dir: 0, color: '#ffb847', name: 'Clyde', 
                 startX: 16, startY: 14, 
                 moving: false, targetX: 0, targetY: 0,
-                personality: 'random', // Rastgele hareket
+                personality: 'random',
                 speed: 1.0,
                 eaten: false,
-                eyes: false
+                eyes: false,
+                exited: false
             }
         ];
         
@@ -80,30 +81,29 @@ class PacMan {
         this.powerTimer = 0;
         this.powerFlash = false;
         this.moveTimer = 0;
-        this.moveDelay = 0.12;
+        this.moveDelay = 0.1;
         this.ghostSpeed = 0.12;
         this.frightenedTimer = 0;
         this.frightenedDuration = 6;
         
-        // Fruit sistemi
         this.fruit = null;
         this.fruitTimer = 0;
-        this.fruitSpawnTime = 12; // Saniye
+        this.fruitSpawnTime = 70;
         this.fruitEaten = false;
         this.fruitPoints = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
         
-        // Partiküller
         this.particles = [];
         
-        // Ses durumu
         this.sirenPhase = 0;
         this.sirenTimer = 0;
         
-        // Oyun durumu
         this.spawning = true;
         this.spawnTimer = 0;
         this.introMode = true;
         this.introTimer = 0;
+        
+        this.pelletCount = 0;
+        this.totalPellets = 0;
     }
 
     init(canvas, ctx) {
@@ -114,7 +114,6 @@ class PacMan {
         this.keyHandler = (e) => this.handleKey(e);
         document.addEventListener('keydown', this.keyHandler);
         
-        // İntro animasyonu
         this.introTimer = 0;
         
         if (window.soundManager) {
@@ -123,7 +122,6 @@ class PacMan {
     }
 
     createMaze() {
-        // Klasik Pac-Man labirenti
         const pattern = [
             '############################',
             '#............##............#',
@@ -137,7 +135,7 @@ class PacMan {
             '######.##### ## #####.######',
             '######.##### ## #####.######',
             '######.##          ##.######',
-            '######.## ###--### ##.######',
+            '######.## ###++### ##.######',
             '      .   #      #   .      ',
             '######.## #      # ##.######',
             '######.## ######## ##.######',
@@ -166,7 +164,7 @@ class PacMan {
             for (let x = 0; x < pattern[y].length; x++) {
                 const char = pattern[y][x];
                 
-                if (char === '#') {
+                if (char === '#' || char === '+') {
                     this.maze[y][x] = 1;
                 } else {
                     this.maze[y][x] = 0;
@@ -178,15 +176,19 @@ class PacMan {
                 }
             }
         }
+        
+        this.pelletCount = this.pellets.length + this.powerPellets.length;
+        this.totalPellets = this.pelletCount;
     }
 
     handleKey(e) {
+        const key = e.key.toLowerCase();
+        
         if (this.introMode) {
             this.introMode = false;
             this.spawning = false;
         }
         
-        const key = e.key.toLowerCase();
         if (key === 'arrowup' || key === 'w') {
             this.pacman.nextDir = 3;
             e.preventDefault();
@@ -205,7 +207,6 @@ class PacMan {
     update(dt) {
         if (this.gameOver) return;
         
-        // İntro modu
         if (this.introMode) {
             this.introTimer += dt;
             if (this.introTimer > 2) {
@@ -216,14 +217,12 @@ class PacMan {
         
         this.moveTimer += dt;
         
-        // Ağız animasyonu
         this.pacman.mouthTimer += dt;
         if (this.pacman.mouthTimer > this.pacman.mouthSpeed) {
             this.pacman.mouthOpen = !this.pacman.mouthOpen;
             this.pacman.mouthTimer = 0;
         }
         
-        // Power mode
         if (this.powerMode) {
             this.powerTimer -= dt;
             this.powerFlash = this.powerTimer < 2 && Math.floor(this.powerTimer * 4) % 2 === 0;
@@ -239,8 +238,8 @@ class PacMan {
             }
         }
         
-        // Fruit spawn
-        if (!this.fruit && !this.fruitEaten && this.pellets.filter(p => p.active).length <= 70) {
+        const activePellets = this.pellets.filter(p => p.active).length + this.powerPellets.filter(p => p.active).length;
+        if (!this.fruit && !this.fruitEaten && activePellets <= 70 && activePellets > 0) {
             this.fruitTimer += dt;
             if (this.fruitTimer > this.fruitSpawnTime) {
                 this.fruitTimer = 0;
@@ -248,7 +247,6 @@ class PacMan {
             }
         }
         
-        // Fruit süre limiti
         if (this.fruit) {
             this.fruit.life -= dt;
             if (this.fruit.life <= 0) {
@@ -256,7 +254,6 @@ class PacMan {
             }
         }
         
-        // Grid hareket
         if (this.moveTimer >= this.moveDelay) {
             this.moveTimer = 0;
             this.movePacman();
@@ -264,13 +261,9 @@ class PacMan {
             this.checkCollisions();
         }
         
-        // Smooth hareket
         this.updateSmoothMovement(dt);
-        
-        // Partiküller
         this.updateParticles(dt);
         
-        // Seviye tamamlandı
         if (this.pellets.filter(p => p.active).length === 0 && this.powerPellets.filter(p => p.active).length === 0) {
             this.levelUp();
         }
@@ -301,7 +294,15 @@ class PacMan {
                 const dy = ghost.targetY - ghost.y;
                 const dist = Math.hypot(dx, dy);
                 
-                const speed = ghost.eaten ? 300 : (this.powerMode ? 80 : 150) * dt;
+                let baseSpeed;
+                if (ghost.eaten) {
+                    baseSpeed = 250;
+                } else if (this.powerMode) {
+                    baseSpeed = 80;
+                } else {
+                    baseSpeed = 120;
+                }
+                const speed = baseSpeed * dt;
                 
                 if (dist < 2) {
                     ghost.x = ghost.targetX;
@@ -312,7 +313,6 @@ class PacMan {
                     ghost.y += (dy / dist) * speed;
                 }
             } else if (ghost.eyes) {
-                // Gözler hızlı geri döner
                 const dx = ghost.startX * this.gridSize + this.gridSize / 2 - ghost.x;
                 const dy = ghost.startY * this.gridSize + this.gridSize / 2 - ghost.y;
                 const dist = Math.hypot(dx, dy);
@@ -323,7 +323,7 @@ class PacMan {
                     ghost.x = ghost.startX * this.gridSize + this.gridSize / 2;
                     ghost.y = ghost.startY * this.gridSize + this.gridSize / 2;
                 } else {
-                    const speed = 400 * dt;
+                    const speed = 300 * dt;
                     ghost.x += (dx / dist) * speed;
                     ghost.y += (dy / dist) * speed;
                 }
@@ -334,7 +334,6 @@ class PacMan {
     movePacman() {
         const p = this.pacman;
         
-        // Yön değiştirme
         const nextX = p.gridX + (p.nextDir === 0 ? 1 : p.nextDir === 2 ? -1 : 0);
         const nextY = p.gridY + (p.nextDir === 1 ? 1 : p.nextDir === 3 ? -1 : 0);
         
@@ -342,7 +341,6 @@ class PacMan {
             p.dir = p.nextDir;
         }
         
-        // Hareket
         const newX = p.gridX + (p.dir === 0 ? 1 : p.dir === 2 ? -1 : 0);
         const newY = p.gridY + (p.dir === 1 ? 1 : p.dir === 3 ? -1 : 0);
         
@@ -350,7 +348,6 @@ class PacMan {
             p.gridX = newX;
             p.gridY = newY;
             
-            // Tünel
             if (p.gridX < 0) p.gridX = this.cols - 1;
             if (p.gridX >= this.cols) p.gridX = 0;
             
@@ -364,7 +361,7 @@ class PacMan {
 
     moveGhosts() {
         this.ghosts.forEach(ghost => {
-            if (ghost.eyes) return; // Gözler otomatik dönüyor
+            if (ghost.eyes) return;
             
             const possibleDirs = [];
             
@@ -384,15 +381,15 @@ class PacMan {
                 let targetX, targetY;
                 
                 if (ghost.eaten) {
-                    // Eve dön
                     targetX = ghost.startX;
                     targetY = ghost.startY;
-                } else if (this.powerMode) {
-                    // Kaç
-                    targetX = ghost.startX;
-                    targetY = ghost.startY;
+                } else if (this.powerMode && !ghost.eaten) {
+                    targetX = this.pacman.gridX;
+                    targetY = this.pacman.gridY;
+                } else if (!ghost.exited && ghost.gridY >= 11 && ghost.gridY <= 14 && ghost.gridX >= 12 && ghost.gridX <= 16) {
+                    targetX = 13;
+                    targetY = 11;
                 } else {
-                    // Pac-Man'e yaklaş
                     switch(ghost.personality) {
                         case 'hunter':
                             targetX = this.pacman.gridX;
@@ -414,7 +411,7 @@ class PacMan {
                 }
                 
                 let bestDir = possibleDirs[0];
-                let bestDist = ghost.eaten ? Infinity : 999;
+                let bestDist = ghost.eaten ? Infinity : 9999;
                 
                 possibleDirs.forEach(dir => {
                     const newX = ghost.gridX + (dir === 0 ? 1 : dir === 2 ? -1 : 0);
@@ -440,6 +437,10 @@ class PacMan {
                 });
                 
                 ghost.dir = bestDir;
+                
+                if (ghost.dir === 0 || ghost.dir === 1) {
+                    ghost.exited = true;
+                }
             }
             
             const newX = ghost.gridX + (ghost.dir === 0 ? 1 : ghost.dir === 2 ? -1 : 0);
@@ -457,7 +458,9 @@ class PacMan {
     }
 
     canMove(x, y) {
-        if (x < 0 || x >= this.cols || y < 0 || y >= this.rows) return true; // Tünel
+        if (y < 0 || y >= this.rows) return false;
+        if (x < 0) x = this.cols - 1;
+        if (x >= this.cols) x = 0;
         if (!this.maze[y] || this.maze[y][x] === undefined) return false;
         return this.maze[y][x] === 0;
     }
@@ -465,7 +468,6 @@ class PacMan {
     collectPellet() {
         const p = this.pacman;
         
-        // Normal pellet
         this.pellets.forEach(pellet => {
             if (pellet.active && pellet.x === p.gridX && pellet.y === p.gridY) {
                 pellet.active = false;
@@ -475,7 +477,6 @@ class PacMan {
             }
         });
         
-        // Power pellet
         this.powerPellets.forEach(pellet => {
             if (pellet.active && pellet.x === p.gridX && pellet.y === p.gridY) {
                 pellet.active = false;
@@ -483,8 +484,8 @@ class PacMan {
                 this.powerMode = true;
                 this.powerTimer = 8;
                 this.ghosts.forEach(g => {
-                    if (!g.eaten) {
-                        g.dir = (g.dir + 2) % 4; // Yön değiştir
+                    if (!g.eaten && !g.eyes) {
+                        g.dir = (g.dir + 2) % 4;
                     }
                 });
                 this.spawnParticles(p.x, p.y, '#ffffff', 20);
@@ -492,7 +493,6 @@ class PacMan {
             }
         });
         
-        // Fruit
         if (this.fruit && this.fruit.x === p.gridX && this.fruit.y === p.gridY) {
             const points = this.fruitPoints[Math.min(this.level - 1, 9)];
             this.score += points;
@@ -504,7 +504,6 @@ class PacMan {
     }
 
     spawnFruit() {
-        // Fruit pozisyonları
         const positions = [
             { x: 13, y: 17 },
             { x: 14, y: 17 }
@@ -549,14 +548,12 @@ class PacMan {
                 if (ghost.eyes) return;
                 
                 if (this.powerMode && !ghost.eaten) {
-                    // Hayaleti ye
                     ghost.eaten = true;
                     ghost.eyes = true;
                     this.score += 200 * (this.ghosts.filter(g => g.eaten).length);
                     this.spawnParticles(ghost.x, ghost.y, ghost.color, 15);
                     if (window.soundManager) window.soundManager.playExplosion();
                 } else if (!ghost.eaten) {
-                    // Can kaybı
                     this.lives--;
                     if (this.lives <= 0) {
                         this.endGame();
@@ -588,6 +585,7 @@ class PacMan {
             ghost.moving = false;
             ghost.eaten = false;
             ghost.eyes = false;
+            ghost.exited = false;
         });
         
         this.powerMode = false;
@@ -598,7 +596,7 @@ class PacMan {
     levelUp() {
         this.level++;
         this.score += 2000;
-        this.moveDelay *= 0.95;
+        this.moveDelay = Math.max(0.06, this.moveDelay * 0.95);
         this.createMaze();
         this.resetPositions();
         this.fruitEaten = false;
@@ -649,12 +647,10 @@ class PacMan {
     draw() {
         const { ctx, canvas } = this;
         
-        // Arka plan
         ctx.fillStyle = '#000000';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         
-        // Labirent
-        ctx.fillStyle = '#2121ff';
+        ctx.fillStyle = '#2121de';
         for (let y = 0; y < this.maze.length; y++) {
             for (let x = 0; x < this.maze[y].length; x++) {
                 if (this.maze[y][x] === 1) {
@@ -663,7 +659,6 @@ class PacMan {
             }
         }
         
-        // Pelletler
         ctx.fillStyle = '#ffb897';
         this.pellets.forEach(p => {
             if (p.active) {
@@ -673,7 +668,6 @@ class PacMan {
             }
         });
         
-        // Power pelletler
         const pulse = Math.sin(Date.now() / 150) * 0.5 + 0.5;
         ctx.fillStyle = `rgba(255, 255, 255, ${0.8 + pulse * 0.2})`;
         this.powerPellets.forEach(p => {
@@ -684,9 +678,7 @@ class PacMan {
             }
         });
         
-        // Fruit
         if (this.fruit) {
-            const fruitColors = ['#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3', '#54a0ff', '#5f27cd', '#00d2d3', '#ff9f43', '#10ac84', '#ee5253'];
             const fruitIcons = ['🍒', '🍓', '🍊', '🍋', '🍅', '🍆', '🥥', '🍑', '🍐', '🍎'];
             
             ctx.font = '16px Arial';
@@ -695,7 +687,6 @@ class PacMan {
             ctx.fillText(fruitIcons[this.fruit.type], this.fruit.x * 20 + 10, this.fruit.y * 20 + 10);
         }
         
-        // Partiküller
         this.particles.forEach(p => {
             ctx.globalAlpha = p.life;
             ctx.fillStyle = p.color;
@@ -705,7 +696,6 @@ class PacMan {
         });
         ctx.globalAlpha = 1;
         
-        // Pac-Man
         const radius = this.gridSize / 2 - 2;
         ctx.fillStyle = '#ffff00';
         ctx.beginPath();
@@ -718,12 +708,10 @@ class PacMan {
         ctx.lineTo(this.pacman.x, this.pacman.y);
         ctx.fill();
         
-        // Hayaletler
         this.ghosts.forEach(ghost => {
             const size = this.gridSize - 4;
             
             if (ghost.eyes) {
-                // Sadece gözler
                 ctx.fillStyle = '#ffffff';
                 ctx.beginPath();
                 ctx.arc(ghost.x - 4, ghost.y - 2, 4, 0, Math.PI * 2);
@@ -736,11 +724,9 @@ class PacMan {
                 ctx.arc(ghost.x + 4, ghost.y - 2, 2, 0, Math.PI * 2);
                 ctx.fill();
             } else if (this.powerMode && !ghost.eaten) {
-                // Frightened modu
                 const flash = Math.floor(Date.now() / 200) % 2;
                 ctx.fillStyle = flash ? '#0000ff' : '#ffffff';
                 
-                // Gövde
                 ctx.beginPath();
                 ctx.arc(ghost.x, ghost.y - size / 4, size / 2, Math.PI, 0);
                 ctx.lineTo(ghost.x + size / 2, ghost.y + size / 4);
@@ -751,7 +737,6 @@ class PacMan {
                 ctx.closePath();
                 ctx.fill();
                 
-                // Korkmuş yüz
                 ctx.fillStyle = '#000000';
                 ctx.beginPath();
                 ctx.arc(ghost.x - 4, ghost.y - 4, 2, 0, Math.PI * 2);
@@ -761,10 +746,8 @@ class PacMan {
                 ctx.arc(ghost.x, ghost.y + 2, 3, 0, Math.PI);
                 ctx.stroke();
             } else {
-                // Normal hayalet
                 ctx.fillStyle = ghost.color;
                 
-                // Gövde
                 ctx.beginPath();
                 ctx.arc(ghost.x, ghost.y - size / 4, size / 2, Math.PI, 0);
                 ctx.lineTo(ghost.x + size / 2, ghost.y + size / 4);
@@ -775,14 +758,12 @@ class PacMan {
                 ctx.closePath();
                 ctx.fill();
                 
-                // Gözler
                 ctx.fillStyle = '#ffffff';
                 ctx.beginPath();
                 ctx.arc(ghost.x - 4, ghost.y - 6, 4, 0, Math.PI * 2);
                 ctx.arc(ghost.x + 4, ghost.y - 6, 4, 0, Math.PI * 2);
                 ctx.fill();
                 
-                // Göz bebekleri
                 const eyeOffsetX = (ghost.dir === 0 ? 2 : ghost.dir === 2 ? -2 : 0);
                 const eyeOffsetY = (ghost.dir === 1 ? 2 : ghost.dir === 3 ? -2 : 0);
                 ctx.fillStyle = '#0000ff';
@@ -793,14 +774,12 @@ class PacMan {
             }
         });
         
-        // UI
         ctx.fillStyle = '#ffffff';
         ctx.font = 'bold 16px Arial';
         ctx.textAlign = 'left';
         ctx.fillText(`Score: ${this.score}`, 10, 20);
         ctx.fillText(`Level: ${this.level}`, 150, 20);
         
-        // Canlar
         for (let i = 0; i < this.lives; i++) {
             ctx.fillStyle = '#ffff00';
             ctx.beginPath();
@@ -808,13 +787,11 @@ class PacMan {
             ctx.fill();
         }
         
-        // Power mode göstergesi
         if (this.powerMode) {
             ctx.fillStyle = this.powerFlash ? '#ff0000' : '#00ffff';
             ctx.fillText(`POWER! ${Math.ceil(this.powerTimer)}s`, 400, 20);
         }
         
-        // Pellet sayısı
         const pelletsLeft = this.pellets.filter(p => p.active).length + this.powerPellets.filter(p => p.active).length;
         ctx.fillStyle = '#888888';
         ctx.fillText(`Remaining: ${pelletsLeft}`, 520, 20);
@@ -833,11 +810,10 @@ class PacMan {
     }
 }
 
-// Oyunu kaydet
 if (window.gameManager) {
     window.gameManager.registerGame('pacman', PacMan, {
         name: 'Pac-Man',
-        canvasWidth: 560,
-        canvasHeight: 620
+        canvasWidth: 880,
+        canvasHeight: 540
     });
 }
