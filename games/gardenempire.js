@@ -1,6 +1,7 @@
 // ═══════════════════════════════════════════════════════════════════════════════
-// GARDEN EMPIRE - Idle / Tycoon / Plant Growing Simulation
+// GARDEN EMPIRE - The Grand Conservatory
 // Grow plants, harvest, sell, and build your garden empire!
+// Theme: Natural Botanical Greenhouse (No Neon)
 // ═══════════════════════════════════════════════════════════════════════════════
 
 class GardenEmpire {
@@ -9,53 +10,64 @@ class GardenEmpire {
         this.ctx = null;
 
         // Game state
-        this.score = 0;           // Total lifetime earnings (= high score)
-        this.money = 100;         // Current balance
+        this.score = 0;
+        this.money = 100;
+        this.displayMoney = 100;
         this.gameOver = false;
+
+        // Layout constants (Safe Area System)
+        this.LAYOUT = {
+            TOP_BAR_H: 58,
+            BOTTOM_BAR_H: 65,
+            SHOP_W: 190,
+            GRID_SIZE: 6,
+            CELL_SIZE: 60,
+            CELL_PAD: 5,
+        };
 
         // Garden grid
         this.GRID_SIZE = 6;
-        this.CELL_SIZE = 64;
-        this.GRID_PADDING = 4;
-        this.grid = [];           // 2D array of plant objects or null
+        this.CELL_SIZE = 60;
+        this.GRID_PADDING = 5;
+        this.grid = [];
 
         // Layout offsets (calculated in init)
         this.gardenOffsetX = 0;
         this.gardenOffsetY = 0;
         this.shopX = 0;
-        this.shopWidth = 160;
+        this.shopWidth = 190;
 
         // Plant definitions
         this.PLANTS = {
-            rose:      { name: 'Gül',       cost: 10,  growTime: 15,  sell: 15,  color: '#ff4466', accent: '#ff8899', bloomColor: '#ff2244', icon: '🌹', unlock: 0 },
-            tulip:     { name: 'Lale',      cost: 20,  growTime: 25,  sell: 30,  color: '#ff8800', accent: '#ffaa44', bloomColor: '#ff6600', icon: '🌷', unlock: 0 },
-            sunflower: { name: 'Ayçiçeği',  cost: 35,  growTime: 40,  sell: 52,  color: '#ffdd00', accent: '#ffee66', bloomColor: '#eebb00', icon: '🌻', unlock: 0 },
-            orchid:    { name: 'Orkide',    cost: 60,  growTime: 60,  sell: 90,  color: '#cc44ff', accent: '#dd88ff', bloomColor: '#aa22dd', icon: '🪻', unlock: 200 },
-            smile:     { name: 'Papatya',   cost: 90,  growTime: 90,  sell: 135, color: '#ffffff', accent: '#ffffcc', bloomColor: '#ffff88', icon: '🌼', unlock: 500 },
-            cactus:    { name: 'Kaktüs',    cost: 120, growTime: 45,  sell: 180, color: '#22cc44', accent: '#66ee88', bloomColor: '#11aa33', icon: '🌵', unlock: 1000 },
-            bonsai:    { name: 'Bonsai',    cost: 200, growTime: 120, sell: 320, color: '#228844', accent: '#44aa66', bloomColor: '#116633', icon: '🌳', unlock: 2000 },
-            crystal:   { name: 'Kristal',   cost: 350, growTime: 150, sell: 560, color: '#00ddff', accent: '#88eeff', bloomColor: '#00aadd', icon: '💎', unlock: 5000 },
+            rose:      { name: 'Gül',       cost: 10,  growTime: 15,  sell: 15,  color: '#c94060', accent: '#e88099', bloomColor: '#a82040', icon: '🌹', unlock: 0 },
+            tulip:     { name: 'Lale',      cost: 20,  growTime: 25,  sell: 30,  color: '#d47020', accent: '#e89858', bloomColor: '#b85810', icon: '🌷', unlock: 0 },
+            sunflower: { name: 'Ayçiçeği',  cost: 35,  growTime: 40,  sell: 52,  color: '#d4a520', accent: '#e8c860', bloomColor: '#b88b10', icon: '🌻', unlock: 0 },
+            orchid:    { name: 'Orkide',    cost: 60,  growTime: 60,  sell: 90,  color: '#9040b0', accent: '#b878d0', bloomColor: '#7828a0', icon: '🪻', unlock: 200 },
+            smile:     { name: 'Papatya',   cost: 90,  growTime: 90,  sell: 135, color: '#f0ead0', accent: '#f5f0e0', bloomColor: '#e8dfc0', icon: '🌼', unlock: 500 },
+            cactus:    { name: 'Kaktüs',    cost: 120, growTime: 45,  sell: 180, color: '#508840', accent: '#70a860', bloomColor: '#387030', icon: '🌵', unlock: 1000 },
+            bonsai:    { name: 'Bonsai',    cost: 200, growTime: 120, sell: 320, color: '#2d6b3a', accent: '#4a8b58', bloomColor: '#1a5028', icon: '🌳', unlock: 2000 },
+            crystal:   { name: 'Kristal',   cost: 350, growTime: 150, sell: 560, color: '#88c8d8', accent: '#a8dbe8', bloomColor: '#68b0c0', icon: '💎', unlock: 5000 },
         };
         this.PLANT_KEYS = Object.keys(this.PLANTS);
-        this.selectedSeed = null;  // Currently selected plant type key
+        this.selectedSeed = null;
 
-        // Inventory (harvested plants)
-        this.inventory = [];       // Array of { type, sellPrice }
+        // Inventory
+        this.inventory = [];
         this.inventoryValue = 0;
 
         // Event system
         this.activeEvent = null;
         this.eventEndTime = 0;
-        this.eventTimer = 0;       // Countdown to next event check
-        this.eventCheckInterval = 5; // Check every 5 seconds
+        this.eventTimer = 0;
+        this.eventCheckInterval = 5;
         this.EVENTS = {
-            rain:  { name: 'Yağmur',   icon: '🌧️', desc: 'Bitkiler 2x hızla büyür!',     duration: 30, color: '#4488ff' },
-            sale:  { name: 'Fırsat',   icon: '🏷️', desc: 'Tohumlar %30 indirimli!',       duration: 45, color: '#ffaa00' },
-            bugs:  { name: 'Böcek',    icon: '🐛', desc: 'Her 5s\'de rastgele bitki ölür!', duration: 25, color: '#ff4444' },
-            crowd: { name: 'Müşteri',  icon: '👥', desc: 'Satış değeri 2x!',               duration: 35, color: '#44ff88' },
-            bonus: { name: 'Bonus',    icon: '✨', desc: 'Bonus para!',                    duration: 0,  color: '#ffdd00' },
+            rain:  { name: 'Yağmur',   icon: '🌧️', desc: 'Bitkiler 2x hızla büyür!',     duration: 30, color: '#5577aa' },
+            sale:  { name: 'Fırsat',   icon: '🏷️', desc: 'Tohumlar %30 indirimli!',       duration: 45, color: '#d4af37' },
+            bugs:  { name: 'Böcek',    icon: '🐛', desc: 'Her 5s\'de rastgele bitki ölür!', duration: 25, color: '#8b0000' },
+            crowd: { name: 'Müşteri',  icon: '👥', desc: 'Satış değeri 2x!',               duration: 35, color: '#6b8e23' },
+            bonus: { name: 'Bonus',    icon: '✨', desc: 'Bonus para!',                    duration: 0,  color: '#d4af37' },
         };
-        this.bugTimer = 0; // For bug event, kill plant every 5s
+        this.bugTimer = 0;
 
         // Upgrade system
         this.UPGRADES = [
@@ -66,14 +78,18 @@ class GardenEmpire {
             { level: 5, cost: 2000, desc: 'Bonsai açılır' },
             { level: 6, cost: 5000, desc: 'Kristal açılır' },
         ];
-        this.fertilizerActive = false;  // +50% growth speed at $2000+ score
-        this.goldenWater = false;       // 2x rain duration at $5000+ score
+        this.fertilizerActive = false;
+        this.goldenWater = false;
 
         // Visual effects
         this.particles = [];
         this.floatingTexts = [];
         this.time = 0;
-        this.harvestGlow = [];  // Cells with ready-to-harvest glow
+        this.harvestGlow = [];
+
+        // Error shake
+        this.errorShake = 0;
+        this.errorShakeX = 0;
 
         // Shop scroll
         this.shopScrollY = 0;
@@ -88,9 +104,35 @@ class GardenEmpire {
         this._wheelHandler = null;
         this._moveHandler = null;
 
-        // Button areas (computed in draw, used in click)
+        // Button areas
         this._sellBtnArea = null;
         this._quitBtnArea = null;
+
+        // Theme palette (Botanical)
+        this.PAL = {
+            bg: '#0d140e',
+            bgAlt: '#111a12',
+            wood: '#3d2b1f',
+            woodLight: '#5c3d2e',
+            woodDark: '#2a1c14',
+            gold: '#d4af37',
+            goldDim: '#9a7d28',
+            ivory: '#f5f0e0',
+            sage: '#b2ac88',
+            olive: '#6b8e23',
+            soil: '#3a2a1a',
+            soilLight: '#4d3928',
+            soilDark: '#261a0e',
+            terracotta: '#c0623a',
+            terracottaDark: '#8e4528',
+            oxblood: '#8b0000',
+            parchment: '#e8dcc8',
+            textMain: '#f5f0e0',
+            textDim: '#8a7e68',
+            textMuted: '#5a5040',
+            green: '#4a7a38',
+            greenDark: '#2d5520',
+        };
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
@@ -119,17 +161,21 @@ class GardenEmpire {
         this.goldenWater = false;
         this.mouseX = -100;
         this.mouseY = -100;
+        this.errorShake = 0;
+        this.errorShakeX = 0;
 
-        // Layout
+        // Layout calculations with safe area
+        const L = this.LAYOUT;
         this.shopX = 0;
-        this.shopWidth = 175;
-        const gridTotalWidth = this.GRID_SIZE * (this.CELL_SIZE + this.GRID_PADDING) - this.GRID_PADDING;
-        const gridTotalHeight = this.GRID_SIZE * (this.CELL_SIZE + this.GRID_PADDING) - this.GRID_PADDING;
-        const availableWidth = canvas.width - this.shopWidth - 20;
-        this.gardenOffsetX = this.shopWidth + 10 + Math.floor((availableWidth - gridTotalWidth) / 2);
-        this.gardenOffsetY = 65 + Math.floor((canvas.height - 65 - 75 - gridTotalHeight) / 2);
+        this.shopWidth = L.SHOP_W;
+        const gridTotalW = L.GRID_SIZE * (L.CELL_SIZE + L.CELL_PAD) - L.CELL_PAD;
+        const gridTotalH = gridTotalW;
+        const availW = canvas.width - L.SHOP_W - 20;
+        const availH = canvas.height - L.TOP_BAR_H - L.BOTTOM_BAR_H - 20;
+        this.gardenOffsetX = L.SHOP_W + 10 + Math.floor((availW - gridTotalW) / 2);
+        this.gardenOffsetY = L.TOP_BAR_H + 10 + Math.floor((availH - gridTotalH) / 2);
 
-        // Initialize empty grid
+        // Initialize grid
         this.grid = [];
         for (let r = 0; r < this.GRID_SIZE; r++) {
             this.grid[r] = [];
@@ -192,7 +238,6 @@ class GardenEmpire {
 
     _handleWheel(e) {
         const pos = this._getCanvasPos(e);
-        // Only scroll in shop area
         if (pos.x >= this.shopX && pos.x <= this.shopX + this.shopWidth) {
             e.preventDefault();
             this.shopScrollY = Math.max(0, Math.min(this.shopMaxScroll, this.shopScrollY + e.deltaY * 0.5));
@@ -224,17 +269,18 @@ class GardenEmpire {
         }
 
         // Check shop items
-        if (x >= this.shopX && x <= this.shopX + this.shopWidth && y > 90) {
+        if (x >= this.shopX && x <= this.shopX + this.shopWidth && y > this.LAYOUT.TOP_BAR_H + 45) {
             this._handleShopClick(x, y);
             return;
         }
 
-        // Check garden grid click
+        // Check garden grid
         this._handleGridClick(x, y);
     }
 
     _handleShopClick(x, y) {
-        const startY = 95 - this.shopScrollY;
+        const L = this.LAYOUT;
+        const startY = L.TOP_BAR_H + 52 - this.shopScrollY;
         const itemHeight = 62;
         let idx = 0;
 
@@ -248,6 +294,10 @@ class GardenEmpire {
                 if (this.money >= cost) {
                     this.selectedSeed = key;
                     if (window.soundManager) window.soundManager.playClick();
+                } else {
+                    // Error: can't afford
+                    this.errorShake = 0.3;
+                    if (window.soundManager) window.soundManager.playBuzz();
                 }
                 return;
             }
@@ -270,7 +320,6 @@ class GardenEmpire {
         const cell = this.grid[r][c];
 
         if (cell === null && this.selectedSeed) {
-            // Plant a seed
             const cost = this._getPlantCost(this.selectedSeed);
             if (this.money >= cost) {
                 this.money -= cost;
@@ -278,17 +327,20 @@ class GardenEmpire {
                     type: this.selectedSeed,
                     plantedAt: Date.now(),
                     ready: false,
-                    growthOffset: 0,  // Extra growth from rain etc.
+                    growthOffset: 0,
                 };
                 if (window.soundManager) window.soundManager.playPlace();
 
-                // Spawn planting particles
+                // Soil burst particles
                 const cellX = this.gardenOffsetX + c * (this.CELL_SIZE + this.GRID_PADDING) + this.CELL_SIZE / 2;
                 const cellY = this.gardenOffsetY + r * (this.CELL_SIZE + this.GRID_PADDING) + this.CELL_SIZE / 2;
-                this._spawnParticles(cellX, cellY, '#8B6914', 6);
+                this._spawnParticles(cellX, cellY, this.PAL.soil, 8);
+                this._spawnParticles(cellX, cellY, this.PAL.soilLight, 4);
+            } else {
+                this.errorShake = 0.3;
+                if (window.soundManager) window.soundManager.playBuzz();
             }
         } else if (cell && cell.ready) {
-            // Harvest
             const plant = this.PLANTS[cell.type];
             let sellPrice = plant.sell;
             if (this.activeEvent === 'crowd') sellPrice *= 2;
@@ -297,11 +349,12 @@ class GardenEmpire {
             this._recalcInventoryValue();
             this.grid[r][c] = null;
 
-            // Harvest effects
+            // Harvest: gold pollen burst
             const cellX = this.gardenOffsetX + c * (this.CELL_SIZE + this.GRID_PADDING) + this.CELL_SIZE / 2;
             const cellY = this.gardenOffsetY + r * (this.CELL_SIZE + this.GRID_PADDING) + this.CELL_SIZE / 2;
-            this._spawnParticles(cellX, cellY, plant.color, 10);
-            this._addFloatingText(`+${plant.icon}`, cellX, cellY, plant.color);
+            this._spawnParticles(cellX, cellY, this.PAL.gold, 10);
+            this._spawnParticles(cellX, cellY, plant.color, 6);
+            this._addFloatingText(`+${plant.icon}`, cellX, cellY, this.PAL.gold);
 
             if (window.soundManager) window.soundManager.playDing();
         }
@@ -315,7 +368,7 @@ class GardenEmpire {
         if (this.gameOver) return;
         this.time += dt;
 
-        // Money Ticker Interpolation (Smooth UI)
+        // Money ticker interpolation
         const diff = this.money - this.displayMoney;
         if (Math.abs(diff) < 0.5) {
             this.displayMoney = this.money;
@@ -323,7 +376,17 @@ class GardenEmpire {
             this.displayMoney += diff * 10 * dt;
         }
 
-        // Update plant growth
+        // Error shake decay
+        if (this.errorShake > 0) {
+            this.errorShake -= dt;
+            this.errorShakeX = (Math.random() - 0.5) * 6 * this.errorShake;
+            if (this.errorShake <= 0) {
+                this.errorShake = 0;
+                this.errorShakeX = 0;
+            }
+        }
+
+        // Plant growth
         const now = Date.now();
         let growthMultiplier = 1;
         if (this.activeEvent === 'rain') growthMultiplier = 2;
@@ -334,23 +397,18 @@ class GardenEmpire {
                 const cell = this.grid[r][c];
                 if (cell && !cell.ready) {
                     const plant = this.PLANTS[cell.type];
-                    const elapsed = (now - cell.plantedAt) / 1000 + cell.growthOffset;
-                    const adjustedTime = elapsed * growthMultiplier / (growthMultiplier > 1 ? 1 : 1);
-                    // We track real elapsed time but apply multiplier via growthOffset
-                    // Actually, simplify: just check if accumulated growth >= growTime
                     const totalGrowth = ((now - cell.plantedAt) / 1000) * growthMultiplier + cell.growthOffset;
                     if (totalGrowth >= plant.growTime && !cell.ready) {
                         cell.ready = true;
-                        // Ready glow effect
                         const cx = this.gardenOffsetX + c * (this.CELL_SIZE + this.GRID_PADDING) + this.CELL_SIZE / 2;
                         const cy = this.gardenOffsetY + r * (this.CELL_SIZE + this.GRID_PADDING) + this.CELL_SIZE / 2;
-                        this._spawnParticles(cx, cy, '#ffff00', 8);
+                        this._spawnParticles(cx, cy, this.PAL.gold, 8);
                     }
                 }
             }
         }
 
-        // Event system
+        // Events
         this.eventTimer += dt;
         if (this.eventTimer >= this.eventCheckInterval) {
             this.eventTimer = 0;
@@ -359,14 +417,13 @@ class GardenEmpire {
             }
         }
 
-        // Active event expiry
         if (this.activeEvent && this.activeEvent !== 'bonus') {
             if (Date.now() >= this.eventEndTime) {
                 this.activeEvent = null;
             }
         }
 
-        // Bug event: kill random plant every 5s
+        // Bug event
         if (this.activeEvent === 'bugs') {
             this.bugTimer += dt;
             if (this.bugTimer >= 5) {
@@ -375,30 +432,30 @@ class GardenEmpire {
             }
         }
 
-        // Check upgrades
+        // Upgrades
         if (this.score >= 2000 && !this.fertilizerActive) {
             this.fertilizerActive = true;
-            this._addFloatingText('🧪 Gübre Aktif!', this.canvas.width / 2, 100, '#44ff88');
+            this._addFloatingText('🧪 Gübre Aktif!', this.canvas.width / 2, 100, this.PAL.olive);
         }
         if (this.score >= 5000 && !this.goldenWater) {
             this.goldenWater = true;
-            this._addFloatingText('✨ Altın Sulama!', this.canvas.width / 2, 100, '#ffdd00');
+            this._addFloatingText('✨ Altın Sulama!', this.canvas.width / 2, 100, this.PAL.gold);
         }
 
-        // Update particles
+        // Particles
         for (let i = this.particles.length - 1; i >= 0; i--) {
             const p = this.particles[i];
             p.x += p.vx * dt;
             p.y += p.vy * dt;
-            p.vy += 80 * dt; // gravity
+            p.vy += 80 * dt;
             p.life -= p.decay * dt;
             if (p.life <= 0) this.particles.splice(i, 1);
         }
 
-        // Update floating texts
+        // Floating texts
         for (let i = this.floatingTexts.length - 1; i >= 0; i--) {
             const ft = this.floatingTexts[i];
-            ft.y -= 40 * dt;
+            ft.y -= 35 * dt;
             ft.life -= dt;
             if (ft.life <= 0) this.floatingTexts.splice(i, 1);
         }
@@ -410,30 +467,41 @@ class GardenEmpire {
 
     draw() {
         const { ctx, canvas } = this;
+        const P = this.PAL;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Background
-        ctx.fillStyle = '#060612';
+        // Deep forest background
+        const bgGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+        bgGrad.addColorStop(0, P.bg);
+        bgGrad.addColorStop(1, '#080e08');
+        ctx.fillStyle = bgGrad;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // Subtle background pattern
-        ctx.fillStyle = 'rgba(30, 60, 30, 0.04)';
-        for (let i = 0; i < canvas.width; i += 40) {
-            for (let j = 0; j < canvas.height; j += 40) {
-                if ((Math.floor(i / 40) + Math.floor(j / 40)) % 2 === 0) {
-                    ctx.fillRect(i, j, 40, 40);
+        // Organic pattern: subtle leaf-like diamond grid
+        ctx.save();
+        ctx.globalAlpha = 0.03;
+        ctx.strokeStyle = P.olive;
+        ctx.lineWidth = 0.5;
+        for (let i = 0; i < canvas.width; i += 35) {
+            for (let j = 0; j < canvas.height; j += 35) {
+                if ((Math.floor(i / 35) + Math.floor(j / 35)) % 2 === 0) {
+                    ctx.beginPath();
+                    ctx.moveTo(i + 17, j);
+                    ctx.lineTo(i + 35, j + 17);
+                    ctx.lineTo(i + 17, j + 35);
+                    ctx.lineTo(i, j + 17);
+                    ctx.closePath();
+                    ctx.stroke();
                 }
             }
         }
+        ctx.restore();
 
         // Event background tint
         if (this.activeEvent && this.EVENTS[this.activeEvent]) {
-            const evtColor = this.EVENTS[this.activeEvent].color;
-            ctx.fillStyle = evtColor.replace(')', ', 0.03)').replace('rgb', 'rgba').replace('#', '');
-            // Simpler approach
             ctx.save();
             ctx.globalAlpha = 0.04;
-            ctx.fillStyle = evtColor;
+            ctx.fillStyle = this.EVENTS[this.activeEvent].color;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.restore();
         }
@@ -447,157 +515,164 @@ class GardenEmpire {
         this._drawFloatingTexts();
     }
 
-    _drawTopBar() {
-        const { ctx, canvas } = this;
-        const barHeight = 60;
+    // ─── Wooden Panel Helper ─────────────────────────────────────────────────
 
-        // Premium glassmorphism base
-        const grad = ctx.createLinearGradient(0, 0, 0, barHeight);
-        grad.addColorStop(0, 'rgba(12, 16, 32, 0.95)');
-        grad.addColorStop(1, 'rgba(6, 8, 20, 0.85)');
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, canvas.width, barHeight);
+    _drawWoodPanel(x, y, w, h, radius) {
+        const { ctx } = this;
+        const P = this.PAL;
 
-        // Glowing bottom border
-        const borderGrad = ctx.createLinearGradient(0, barHeight - 2, canvas.width, barHeight - 2);
-        borderGrad.addColorStop(0, 'rgba(0, 212, 255, 0)');
-        borderGrad.addColorStop(0.3, 'rgba(0, 212, 255, 0.8)');
-        borderGrad.addColorStop(0.5, 'rgba(68, 255, 136, 1)');
-        borderGrad.addColorStop(0.7, 'rgba(0, 212, 255, 0.8)');
-        borderGrad.addColorStop(1, 'rgba(0, 212, 255, 0)');
-        ctx.fillStyle = borderGrad;
-        ctx.fillRect(0, barHeight - 2, canvas.width, 2);
-
-        // Money Ticker State & Colors
-        const isTickingUp = this.displayMoney < this.money - 0.5;
-        const isTickingDown = this.displayMoney > this.money + 0.5;
-        let moneyColor = '#44ff88'; // Normal green
-        let shadowColor = 'rgba(68, 255, 136, 0.8)';
-        // Shake logic for when spending money (ticking down)
-        let moneyX = 25;
-        let moneyY = barHeight / 2;
-
-        if (isTickingDown) {
-            moneyColor = '#ff4444';
-            shadowColor = 'rgba(255, 68, 68, 0.8)';
-            moneyX += (Math.random() - 0.5) * 3;
-            moneyY += (Math.random() - 0.5) * 3;
-        } else if (isTickingUp) {
-            moneyColor = '#00d4ff';
-            shadowColor = 'rgba(0, 212, 255, 0.8)';
-            moneyY -= 1; // Slight lift effect when gaining
-        }
-
-        // Money icon & display
-        ctx.save();
-        ctx.fillStyle = moneyColor;
-        ctx.font = '800 24px Inter, sans-serif';
-        ctx.textAlign = 'left';
-        ctx.textBaseline = 'middle';
-        ctx.shadowColor = shadowColor;
-        ctx.shadowBlur = 15;
-        const moneyText = `💰 $${Math.floor(this.displayMoney)}`;
-        ctx.fillText(moneyText, moneyX, moneyY);
-        ctx.shadowBlur = 0;
-        ctx.restore();
-
-        // Main Title
-        ctx.save();
-        ctx.font = '900 22px Orbitron, Inter, sans-serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        // Title gradient
-        const tGrad = ctx.createLinearGradient(canvas.width/2 - 100, 0, canvas.width/2 + 100, 0);
-        tGrad.addColorStop(0, '#00d4ff');
-        tGrad.addColorStop(0.5, '#44ff88');
-        tGrad.addColorStop(1, '#00d4ff');
-        ctx.fillStyle = tGrad;
-        ctx.shadowColor = '#00d4ff';
-        ctx.shadowBlur = 20;
-        ctx.fillText('G A R D E N   E M P I R E', canvas.width / 2 + 40, barHeight / 2 - 8);
-        
-        ctx.shadowBlur = 0;
-        ctx.fillStyle = '#8899aa';
-        ctx.font = '600 11px Inter, sans-serif';
-        ctx.letterSpacing = '1px';
-        ctx.fillText(`TOTAL REVENUE: $${Math.floor(this.score)}`, canvas.width / 2 + 40, barHeight / 2 + 14);
-        ctx.letterSpacing = '0px';
-        ctx.restore();
-
-        // Quit Button (Hover active)
-        const quitW = 80;
-        const quitH = 30;
-        const quitX = canvas.width - quitW - 20;
-        const quitY = (barHeight - quitH) / 2;
-        this._quitBtnArea = { x: quitX, y: quitY, w: quitW, h: quitH };
-
-        const isHover = (this.mouseX >= quitX && this.mouseX <= quitX + quitW && this.mouseY >= quitY && this.mouseY <= quitY + quitH);
-        
         ctx.save();
         ctx.beginPath();
-        ctx.roundRect(quitX, quitY, quitW, quitH, 8);
-        ctx.fillStyle = isHover ? 'rgba(255, 68, 68, 0.25)' : 'rgba(255, 68, 68, 0.1)';
+        ctx.roundRect(x, y, w, h, radius || 0);
+        const woodGrad = ctx.createLinearGradient(x, y, x, y + h);
+        woodGrad.addColorStop(0, P.woodLight);
+        woodGrad.addColorStop(0.3, P.wood);
+        woodGrad.addColorStop(1, P.woodDark);
+        ctx.fillStyle = woodGrad;
         ctx.fill();
-        ctx.strokeStyle = isHover ? '#ff4444' : 'rgba(255, 68, 68, 0.4)';
-        ctx.lineWidth = 1.5;
-        if (isHover) {
-            ctx.shadowColor = '#ff4444';
-            ctx.shadowBlur = 10;
+
+        // Subtle grain lines
+        ctx.globalAlpha = 0.06;
+        ctx.strokeStyle = '#000000';
+        for (let i = y + 4; i < y + h - 2; i += 6) {
+            ctx.beginPath();
+            ctx.moveTo(x + 2, i + Math.sin(i * 0.3) * 1.5);
+            ctx.lineTo(x + w - 2, i + Math.cos(i * 0.2) * 1.5);
+            ctx.stroke();
         }
-        ctx.stroke();
-        
-        ctx.fillStyle = isHover ? '#ffffff' : '#ff6666';
-        ctx.font = '700 12px Inter, sans-serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText('BITIR ✕', quitX + quitW / 2, quitY + quitH / 2);
         ctx.restore();
     }
 
-    _drawShop() {
+    // ─── Top Bar ─────────────────────────────────────────────────────────────
+
+    _drawTopBar() {
         const { ctx, canvas } = this;
-        const shopY = 60;
-        const shopH = canvas.height - shopY;
+        const P = this.PAL;
+        const barH = this.LAYOUT.TOP_BAR_H;
 
-        // Premium frosted panel
-        const bGrad = ctx.createLinearGradient(this.shopX, shopY, this.shopWidth, shopY);
-        bGrad.addColorStop(0, 'rgba(6, 10, 20, 0.95)');
-        bGrad.addColorStop(1, 'rgba(10, 15, 30, 0.9)');
-        ctx.fillStyle = bGrad;
-        ctx.fillRect(this.shopX, shopY, this.shopWidth, shopH);
+        // Wooden shelf
+        this._drawWoodPanel(0, 0, canvas.width, barH, 0);
 
-        // Right glowing border
-        ctx.fillStyle = 'rgba(0, 212, 255, 0.3)';
-        ctx.fillRect(this.shopWidth - 1, shopY, 1, shopH);
-        
-        // Inner shadow on the right line
-        ctx.shadowColor = '#00d4ff';
-        ctx.shadowBlur = 15;
-        ctx.fillRect(this.shopWidth - 2, shopY, 2, shopH);
-        ctx.shadowBlur = 0;
+        // Bottom brass trim
+        const trimGrad = ctx.createLinearGradient(0, barH - 3, canvas.width, barH - 3);
+        trimGrad.addColorStop(0, 'rgba(180, 145, 50, 0.1)');
+        trimGrad.addColorStop(0.3, P.gold);
+        trimGrad.addColorStop(0.5, '#e8c850');
+        trimGrad.addColorStop(0.7, P.gold);
+        trimGrad.addColorStop(1, 'rgba(180, 145, 50, 0.1)');
+        ctx.fillStyle = trimGrad;
+        ctx.fillRect(0, barH - 3, canvas.width, 3);
+
+        // Money display with ticker
+        const isTickingUp = this.displayMoney < this.money - 0.5;
+        const isTickingDown = this.displayMoney > this.money + 0.5;
+        let moneyColor = P.gold;
+        let moneyX = 22 + this.errorShakeX;
+        let moneyY = barH / 2;
+
+        if (isTickingDown) {
+            moneyColor = P.oxblood;
+            moneyX += (Math.random() - 0.5) * 3;
+            moneyY += (Math.random() - 0.5) * 2;
+        } else if (isTickingUp) {
+            moneyColor = P.olive;
+            moneyY -= 1;
+        }
+
+        ctx.save();
+        ctx.fillStyle = moneyColor;
+        ctx.font = '800 22px Inter, sans-serif';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(`💰 $${Math.floor(this.displayMoney)}`, moneyX, moneyY);
+        ctx.restore();
 
         // Title
-        ctx.fillStyle = '#00d4ff';
-        ctx.font = '800 14px Inter, sans-serif';
+        ctx.save();
+        ctx.font = '900 18px Georgia, serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.shadowColor = '#00d4ff';
-        ctx.shadowBlur = 8;
-        ctx.fillText('🌱 SEED SHOP', this.shopWidth / 2, shopY + 22);
-        ctx.shadowBlur = 0;
+        ctx.fillStyle = P.ivory;
+        ctx.fillText('G A R D E N   E M P I R E', canvas.width / 2 + 30, barH / 2 - 8);
 
-        // Separator
-        ctx.fillStyle = 'rgba(0, 212, 255, 0.2)';
-        ctx.fillRect(10, shopY + 40, this.shopWidth - 20, 1);
+        ctx.fillStyle = P.textDim;
+        ctx.font = '600 10px Inter, sans-serif';
+        ctx.fillText(`TOPLAM GELİR: $${Math.floor(this.score)}`, canvas.width / 2 + 30, barH / 2 + 12);
+        ctx.restore();
 
-        // Draw plant items
+        // Quit button (wooden sign style)
+        const quitW = 75;
+        const quitH = 28;
+        const quitX = canvas.width - quitW - 15;
+        const quitY = (barH - quitH) / 2;
+        this._quitBtnArea = { x: quitX, y: quitY, w: quitW, h: quitH };
+
+        const isHover = (this.mouseX >= quitX && this.mouseX <= quitX + quitW &&
+                         this.mouseY >= quitY && this.mouseY <= quitY + quitH);
+
         ctx.save();
         ctx.beginPath();
-        ctx.rect(this.shopX, shopY + 45, this.shopWidth, shopH - 45);
+        ctx.roundRect(quitX, quitY, quitW, quitH, 5);
+        ctx.fillStyle = isHover ? 'rgba(139, 0, 0, 0.4)' : 'rgba(139, 0, 0, 0.2)';
+        ctx.fill();
+        ctx.strokeStyle = isHover ? P.oxblood : 'rgba(139, 0, 0, 0.4)';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        ctx.fillStyle = isHover ? '#ff9999' : '#cc8888';
+        ctx.font = '700 11px Inter, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('BİTİR ✕', quitX + quitW / 2, quitY + quitH / 2);
+        ctx.restore();
+    }
+
+    // ─── Shop (Seed Shed) ────────────────────────────────────────────────────
+
+    _drawShop() {
+        const { ctx, canvas } = this;
+        const P = this.PAL;
+        const L = this.LAYOUT;
+        const shopY = L.TOP_BAR_H;
+        const shopBottom = canvas.height - L.BOTTOM_BAR_H;
+        const shopH = shopBottom - shopY;
+
+        // Wooden panel background
+        this._drawWoodPanel(this.shopX, shopY, this.shopWidth, shopH, 0);
+
+        // Right edge brass trim
+        ctx.fillStyle = P.goldDim;
+        ctx.fillRect(this.shopWidth - 2, shopY, 2, shopH);
+
+        // Title plaque
+        ctx.save();
+        ctx.beginPath();
+        ctx.roundRect(15, shopY + 8, this.shopWidth - 30, 26, 4);
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+        ctx.fill();
+        ctx.strokeStyle = P.goldDim;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        ctx.fillStyle = P.gold;
+        ctx.font = '800 12px Inter, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('🌱 TOHUM REYONu', this.shopWidth / 2, shopY + 21);
+        ctx.restore();
+
+        // Separator
+        ctx.fillStyle = 'rgba(212, 175, 55, 0.2)';
+        ctx.fillRect(10, shopY + 40, this.shopWidth - 20, 1);
+
+        // Clip region for scrolling items
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(this.shopX, shopY + 42, this.shopWidth, shopH - 82);
         ctx.clip();
 
-        const itemHeight = 65;
-        const startY = shopY + 52 - this.shopScrollY;
+        const itemHeight = 62;
+        const startY = shopY + 48 - this.shopScrollY;
         let idx = 0;
         let totalHeight = 0;
 
@@ -609,93 +684,82 @@ class GardenEmpire {
             const cost = this._getPlantCost(key);
             const canAfford = this.money >= cost;
 
-            const isHover = isUnlocked && 
+            const isHover = isUnlocked &&
                 (this.mouseX >= this.shopX + 8 && this.mouseX <= this.shopWidth - 8 &&
-                 this.mouseY >= iy && this.mouseY <= iy + itemHeight - 8);
+                 this.mouseY >= iy && this.mouseY <= iy + itemHeight - 6);
 
-            // Item background (rounded glass)
+            // Seed packet card
             ctx.beginPath();
-            ctx.roundRect(this.shopX + 8, iy, this.shopWidth - 16, itemHeight - 8, 8);
-            
+            ctx.roundRect(this.shopX + 8, iy, this.shopWidth - 16, itemHeight - 6, 6);
+
             if (isSelected) {
-                ctx.fillStyle = 'rgba(0, 212, 255, 0.15)';
+                ctx.fillStyle = 'rgba(107, 142, 35, 0.2)';
             } else if (isHover) {
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
+                ctx.fillStyle = 'rgba(245, 240, 224, 0.08)';
             } else {
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
             }
             ctx.fill();
 
             if (isSelected) {
-                ctx.strokeStyle = '#00d4ff';
+                ctx.strokeStyle = P.olive;
                 ctx.lineWidth = 1.5;
-                ctx.shadowColor = '#00d4ff';
-                ctx.shadowBlur = 10;
                 ctx.stroke();
-                ctx.shadowBlur = 0;
             } else if (isHover) {
-                ctx.strokeStyle = 'rgba(0, 212, 255, 0.4)';
+                ctx.strokeStyle = 'rgba(212, 175, 55, 0.3)';
                 ctx.lineWidth = 1;
                 ctx.stroke();
             }
 
             if (!isUnlocked) {
-                // Locked frosted glass
-                ctx.fillStyle = 'rgba(5, 5, 10, 0.8)';
+                // Locked: twine-wrapped appearance
+                ctx.fillStyle = 'rgba(10, 8, 5, 0.75)';
                 ctx.fill();
 
-                ctx.fillStyle = '#ff4466';
+                ctx.fillStyle = '#cc8866';
                 ctx.font = '700 14px Inter, sans-serif';
                 ctx.textAlign = 'center';
-                ctx.fillText('🔒', this.shopWidth / 2, iy + 20);
+                ctx.fillText('🔒', this.shopWidth / 2, iy + 18);
 
-                ctx.fillStyle = '#667788';
+                ctx.fillStyle = P.textDim;
                 ctx.font = '600 9px Inter, sans-serif';
-                ctx.fillText(`REQ: $${plant.unlock}`, this.shopWidth / 2, iy + 36);
+                ctx.fillText(`GELİR: $${plant.unlock}`, this.shopWidth / 2, iy + 34);
 
-                ctx.fillStyle = '#445566';
-                ctx.fillText(plant.name, this.shopWidth / 2, iy + 48);
+                ctx.fillStyle = P.textMuted;
+                ctx.fillText(plant.name, this.shopWidth / 2, iy + 46);
             } else {
-                // Plant icon with glow
-                ctx.font = '24px serif';
+                // Plant icon
+                ctx.font = '22px serif';
                 ctx.textAlign = 'left';
-                ctx.fillText(plant.icon, this.shopX + 16, iy + 26);
+                ctx.fillText(plant.icon, this.shopX + 16, iy + 24);
 
                 // Plant name
-                ctx.fillStyle = canAfford ? '#ffffff' : '#778899';
-                ctx.font = '700 13px Inter, sans-serif';
+                ctx.fillStyle = canAfford ? P.ivory : P.textDim;
+                ctx.font = '700 12px Inter, sans-serif';
                 ctx.textAlign = 'left';
-                ctx.fillText(plant.name, this.shopX + 48, iy + 18);
+                ctx.fillText(plant.name, this.shopX + 46, iy + 16);
 
-                // Cost
-                ctx.fillStyle = canAfford ? '#44ff88' : '#ff4444';
-                ctx.font = '800 12px Inter, sans-serif';
-                if (!canAfford) {
-                    ctx.shadowColor = '#ff4444'; ctx.shadowBlur = 5;
-                }
-                ctx.fillText(`$${cost}`, this.shopX + 48, iy + 34);
-                ctx.shadowBlur = 0;
+                // Cost (gold plate)
+                ctx.fillStyle = canAfford ? P.gold : P.oxblood;
+                ctx.font = '800 11px Inter, sans-serif';
+                ctx.fillText(`$${cost}`, this.shopX + 46, iy + 31);
 
-                // Growth time
-                ctx.fillStyle = '#8899aa';
-                ctx.font = '500 10px Inter, sans-serif';
-                ctx.fillText(`⏱ ${plant.growTime}s`, this.shopX + 48, iy + 48);
+                // Stats
+                ctx.fillStyle = P.textDim;
+                ctx.font = '500 9px Inter, sans-serif';
+                ctx.fillText(`⏱ ${plant.growTime}s`, this.shopX + 46, iy + 44);
 
-                // Sell value
                 const sellVal = this.activeEvent === 'crowd' ? plant.sell * 2 : plant.sell;
-                ctx.fillStyle = '#00d4ff'; // neon cyan value
-                ctx.fillText(`💰$${sellVal}`, this.shopX + 100, iy + 48);
-                
-                if(isSelected) {
-                    // Pulse indicator dot
-                    const dotPulse = 0.5 + Math.sin(this.time * 6) * 0.5;
-                    ctx.fillStyle = `rgba(0, 212, 255, ${dotPulse})`;
+                ctx.fillStyle = P.olive;
+                ctx.fillText(`💰$${sellVal}`, this.shopX + 100, iy + 44);
+
+                // Selected indicator: brass dot
+                if (isSelected) {
+                    const dotPulse = 0.5 + Math.sin(this.time * 4) * 0.3;
+                    ctx.fillStyle = `rgba(212, 175, 55, ${dotPulse})`;
                     ctx.beginPath();
-                    ctx.arc(this.shopWidth - 20, iy + 20, 4, 0, Math.PI*2);
-                    ctx.shadowColor = '#00d4ff';
-                    ctx.shadowBlur = 8;
+                    ctx.arc(this.shopWidth - 20, iy + 22, 4, 0, Math.PI * 2);
                     ctx.fill();
-                    ctx.shadowBlur = 0;
                 }
             }
 
@@ -703,77 +767,124 @@ class GardenEmpire {
             totalHeight = idx * itemHeight;
         }
 
-        this.shopMaxScroll = Math.max(0, totalHeight - (shopH - 70));
+        this.shopMaxScroll = Math.max(0, totalHeight - (shopH - 90));
         ctx.restore();
 
-        // Balance at bottom of shop
-        const balY = canvas.height - 20;
-        const balH = 40;
-        ctx.fillStyle = 'rgba(6, 10, 20, 0.95)';
-        ctx.fillRect(this.shopX, canvas.height - balH, this.shopWidth, balH);
-        
-        ctx.fillStyle = 'rgba(0, 212, 255, 0.3)';
-        ctx.fillRect(this.shopX, canvas.height - balH, this.shopWidth, 1);
-        
-        ctx.fillStyle = (this.displayMoney > this.money + 0.5) ? '#ff4444' : '#44ff88';
-        ctx.font = '700 12px Inter, sans-serif';
+        // Balance bar at bottom of shop
+        const balBarH = 36;
+        const balBarY = shopBottom - balBarH;
+        ctx.fillStyle = P.woodDark;
+        ctx.fillRect(this.shopX, balBarY, this.shopWidth, balBarH);
+        ctx.fillStyle = P.goldDim;
+        ctx.fillRect(this.shopX, balBarY, this.shopWidth, 1);
+
+        ctx.fillStyle = (this.displayMoney > this.money + 0.5) ? P.oxblood : P.gold;
+        ctx.font = '700 11px Inter, sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillText(`BAKİYE: $${Math.floor(this.displayMoney)}`, this.shopWidth / 2, balY);
+        ctx.textBaseline = 'middle';
+        ctx.fillText(`BAKİYE: $${Math.floor(this.displayMoney)}`, this.shopWidth / 2, balBarY + balBarH / 2);
     }
+
+    // ─── Garden Grid ─────────────────────────────────────────────────────────
 
     _drawGarden() {
         const { ctx } = this;
+        const P = this.PAL;
         const now = Date.now();
         let growthMultiplier = 1;
         if (this.activeEvent === 'rain') growthMultiplier = 2;
         if (this.fertilizerActive) growthMultiplier *= 1.5;
 
+        // Garden border: wooden fence frame
+        const gridW = this.GRID_SIZE * (this.CELL_SIZE + this.GRID_PADDING) - this.GRID_PADDING;
+        const gridH = gridW;
+        const frameX = this.gardenOffsetX - 10;
+        const frameY = this.gardenOffsetY - 10;
+        const frameW = gridW + 20;
+        const frameH = gridH + 20;
+
+        // Outer wooden frame
+        ctx.save();
+        ctx.beginPath();
+        ctx.roundRect(frameX, frameY, frameW, frameH, 10);
+        ctx.strokeStyle = P.wood;
+        ctx.lineWidth = 4;
+        ctx.stroke();
+        // Inner brass trim
+        ctx.strokeStyle = 'rgba(212, 175, 55, 0.2)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.roundRect(frameX + 3, frameY + 3, frameW - 6, frameH - 6, 8);
+        ctx.stroke();
+        ctx.restore();
+
+        // Draw each cell
         for (let r = 0; r < this.GRID_SIZE; r++) {
             for (let c = 0; c < this.GRID_SIZE; c++) {
                 const cellX = this.gardenOffsetX + c * (this.CELL_SIZE + this.GRID_PADDING);
                 const cellY = this.gardenOffsetY + r * (this.CELL_SIZE + this.GRID_PADDING);
                 const cell = this.grid[r][c];
 
-                // Premium Soil Base (Futuristic Pod)
-                ctx.fillStyle = 'rgba(12, 16, 24, 0.8)';
+                // Terracotta pot (top-down view)
                 ctx.beginPath();
-                ctx.roundRect(cellX, cellY, this.CELL_SIZE, this.CELL_SIZE, 12);
+                ctx.roundRect(cellX, cellY, this.CELL_SIZE, this.CELL_SIZE, 8);
+
+                // Pot rim gradient
+                const potGrad = ctx.createLinearGradient(cellX, cellY, cellX, cellY + this.CELL_SIZE);
+                potGrad.addColorStop(0, P.terracotta);
+                potGrad.addColorStop(0.15, P.terracottaDark);
+                potGrad.addColorStop(0.2, P.soilDark);
+                potGrad.addColorStop(0.5, P.soil);
+                potGrad.addColorStop(1, P.soilDark);
+                ctx.fillStyle = potGrad;
                 ctx.fill();
 
-                // Pod inner gradient
-                const podGrad = ctx.createLinearGradient(cellX, cellY, cellX, cellY + this.CELL_SIZE);
-                podGrad.addColorStop(0, 'rgba(255, 255, 255, 0.05)');
-                podGrad.addColorStop(1, 'rgba(0, 0, 0, 0.5)');
-                ctx.fillStyle = podGrad;
-                ctx.fill();
-                
-                // Border 
-                ctx.strokeStyle = 'rgba(0, 212, 255, 0.15)';
+                // Pot border
+                ctx.strokeStyle = 'rgba(140, 90, 50, 0.4)';
                 ctx.lineWidth = 1;
                 ctx.stroke();
 
-                // Empty cell hover/target indicator
+                // Soil texture dots (procedural noise)
+                ctx.save();
+                ctx.globalAlpha = 0.15;
+                const seed = r * 7 + c * 13;
+                for (let d = 0; d < 8; d++) {
+                    const dx = ((seed + d * 37) % 48) + cellX + 6;
+                    const dy = ((seed + d * 23) % 38) + cellY + 14;
+                    ctx.fillStyle = d % 2 === 0 ? '#2a1c10' : '#4a3520';
+                    ctx.beginPath();
+                    ctx.arc(dx, dy, 1 + (d % 3), 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.restore();
+
+                // Empty cell hover: sunlight beam effect
                 if (cell === null && this.selectedSeed) {
                     const isHover = (this.mouseX >= cellX && this.mouseX <= cellX + this.CELL_SIZE &&
                                      this.mouseY >= cellY && this.mouseY <= cellY + this.CELL_SIZE);
-                    
+
                     if (isHover) {
-                        ctx.fillStyle = 'rgba(0, 212, 255, 0.15)';
+                        // Warm golden glow filling the pot
+                        ctx.save();
+                        ctx.beginPath();
+                        ctx.roundRect(cellX, cellY, this.CELL_SIZE, this.CELL_SIZE, 8);
+                        ctx.fillStyle = 'rgba(212, 175, 55, 0.12)';
                         ctx.fill();
-                        ctx.strokeStyle = '#00d4ff';
+                        ctx.strokeStyle = P.gold;
                         ctx.lineWidth = 2;
-                        ctx.shadowColor = '#00d4ff';
-                        ctx.shadowBlur = 10;
                         ctx.stroke();
-                        ctx.shadowBlur = 0;
+                        ctx.restore();
                     } else {
-                        ctx.fillStyle = 'rgba(0, 212, 255, 0.02)';
-                        ctx.fill();
-                        ctx.strokeStyle = 'rgba(0, 212, 255, 0.3)';
+                        // Subtle dashed hint
+                        ctx.save();
+                        ctx.beginPath();
+                        ctx.roundRect(cellX + 4, cellY + 4, this.CELL_SIZE - 8, this.CELL_SIZE - 8, 4);
+                        ctx.strokeStyle = 'rgba(107, 142, 35, 0.2)';
                         ctx.lineWidth = 1;
-                        ctx.setLineDash([4, 4]);
+                        ctx.setLineDash([3, 3]);
                         ctx.stroke();
                         ctx.setLineDash([]);
+                        ctx.restore();
                     }
                 }
 
@@ -786,170 +897,137 @@ class GardenEmpire {
                 }
             }
         }
-
-        // Garden border futuristic frame
-        const gridW = this.GRID_SIZE * (this.CELL_SIZE + this.GRID_PADDING) - this.GRID_PADDING;
-        const gridH = gridW;
-        ctx.strokeStyle = 'rgba(0, 212, 255, 0.25)';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.roundRect(this.gardenOffsetX - 8, this.gardenOffsetY - 8, gridW + 16, gridH + 16, 16);
-        ctx.stroke();
-        
-        ctx.shadowColor = '#00d4ff';
-        ctx.shadowBlur = 15;
-        ctx.strokeStyle = 'rgba(0, 212, 255, 0.5)';
-        ctx.lineWidth = 1;
-        ctx.stroke();
-        ctx.shadowBlur = 0;
     }
 
     _drawPlant(ctx, cellX, cellY, cell, plant, progress) {
         const centerX = cellX + this.CELL_SIZE / 2;
         const centerY = cellY + this.CELL_SIZE / 2;
-        const bounce = Math.sin(this.time * 2) * 1.5;
+        // Wind sway: gentle organic animation
+        const windSway = Math.sin(this.time * 1.8 + centerX * 0.05) * 1.5;
 
         if (progress < 0.25) {
-            // Stage 1: SEED - small brown dot
-            ctx.fillStyle = '#8B6914';
-            ctx.shadowColor = '#8B6914';
-            ctx.shadowBlur = 4;
+            // Stage 1: Seed
+            ctx.fillStyle = '#7a5c2e';
             ctx.beginPath();
-            ctx.arc(centerX, centerY + 10, 4 + progress * 8, 0, Math.PI * 2);
+            ctx.arc(centerX, centerY + 10, 3 + progress * 6, 0, Math.PI * 2);
             ctx.fill();
-            ctx.shadowBlur = 0;
         } else if (progress < 0.50) {
-            // Stage 2: SPROUT - small green stem + tiny leaves
-            const stemH = 10 + (progress - 0.25) * 60;   // 10 to 25
+            // Stage 2: Sprout
+            const stemH = 10 + (progress - 0.25) * 60;
             const stemTopY = centerY + 10 - stemH;
 
-            // Stem
-            ctx.strokeStyle = '#4a9f4a';
+            ctx.strokeStyle = '#4a8a40';
             ctx.lineWidth = 2.5;
             ctx.beginPath();
             ctx.moveTo(centerX, centerY + 10);
-            ctx.lineTo(centerX, stemTopY + bounce);
+            ctx.lineTo(centerX + windSway * 0.3, stemTopY + windSway);
             ctx.stroke();
 
-            // Leaves
             ctx.fillStyle = '#5cb85c';
             ctx.beginPath();
-            ctx.ellipse(centerX - 6, stemTopY + 5 + bounce, 5, 3, -0.4, 0, Math.PI * 2);
+            ctx.ellipse(centerX - 6 + windSway * 0.3, stemTopY + 5 + windSway, 5, 3, -0.4, 0, Math.PI * 2);
             ctx.fill();
             ctx.beginPath();
-            ctx.ellipse(centerX + 6, stemTopY + 8 + bounce, 5, 3, 0.4, 0, Math.PI * 2);
+            ctx.ellipse(centerX + 6 + windSway * 0.3, stemTopY + 8 + windSway, 5, 3, 0.4, 0, Math.PI * 2);
             ctx.fill();
 
-            // Root dot
-            ctx.fillStyle = '#8B6914';
+            ctx.fillStyle = '#7a5c2e';
             ctx.beginPath();
-            ctx.arc(centerX, centerY + 12, 3, 0, Math.PI * 2);
+            ctx.arc(centerX, centerY + 12, 2.5, 0, Math.PI * 2);
             ctx.fill();
         } else if (progress < 0.75) {
-            // Stage 3: GROWING - medium plant with leaves
-            const p = (progress - 0.5) / 0.25; // 0-1 within this stage
+            // Stage 3: Growing
+            const p = (progress - 0.5) / 0.25;
             const stemH = 25 + p * 10;
             const stemTopY = centerY + 10 - stemH;
 
-            // Stem
-            ctx.strokeStyle = '#3d8b3d';
+            ctx.strokeStyle = '#3d7a35';
             ctx.lineWidth = 3;
             ctx.beginPath();
             ctx.moveTo(centerX, centerY + 10);
-            ctx.lineTo(centerX, stemTopY + bounce);
+            ctx.lineTo(centerX + windSway * 0.5, stemTopY + windSway);
             ctx.stroke();
 
-            // Multiple leaves
             ctx.fillStyle = '#4caf50';
             const leafSize = 7 + p * 4;
             ctx.beginPath();
-            ctx.ellipse(centerX - 9, stemTopY + 12 + bounce, leafSize, 4, -0.5, 0, Math.PI * 2);
+            ctx.ellipse(centerX - 9 + windSway * 0.4, stemTopY + 12 + windSway, leafSize, 4, -0.5, 0, Math.PI * 2);
             ctx.fill();
             ctx.beginPath();
-            ctx.ellipse(centerX + 9, stemTopY + 16 + bounce, leafSize, 4, 0.5, 0, Math.PI * 2);
+            ctx.ellipse(centerX + 9 + windSway * 0.4, stemTopY + 16 + windSway, leafSize, 4, 0.5, 0, Math.PI * 2);
             ctx.fill();
             ctx.beginPath();
-            ctx.ellipse(centerX - 5, stemTopY + 5 + bounce, leafSize - 2, 3, -0.3, 0, Math.PI * 2);
+            ctx.ellipse(centerX - 5 + windSway * 0.3, stemTopY + 5 + windSway, leafSize - 2, 3, -0.3, 0, Math.PI * 2);
             ctx.fill();
 
-            // Small bud
+            // Bud
             ctx.fillStyle = plant.accent;
             ctx.beginPath();
-            ctx.arc(centerX, stemTopY + bounce, 4 + p * 3, 0, Math.PI * 2);
+            ctx.arc(centerX + windSway * 0.5, stemTopY + windSway, 4 + p * 3, 0, Math.PI * 2);
             ctx.fill();
         } else {
-            // Stage 4: MATURE - full bloom
-            const stemH = 35;
+            // Stage 4: Full bloom
+            const stemH = 32;
             const stemTopY = centerY + 10 - stemH;
 
-            // Stem
-            ctx.strokeStyle = '#2d6b2d';
+            ctx.strokeStyle = '#2d6028';
             ctx.lineWidth = 3.5;
             ctx.beginPath();
             ctx.moveTo(centerX, centerY + 10);
-            ctx.lineTo(centerX, stemTopY + bounce);
+            ctx.lineTo(centerX + windSway * 0.6, stemTopY + windSway);
             ctx.stroke();
 
-            // Leaves
             ctx.fillStyle = '#388e3c';
             ctx.beginPath();
-            ctx.ellipse(centerX - 10, stemTopY + 18 + bounce, 10, 5, -0.5, 0, Math.PI * 2);
+            ctx.ellipse(centerX - 10 + windSway * 0.5, stemTopY + 18 + windSway, 10, 5, -0.5, 0, Math.PI * 2);
             ctx.fill();
             ctx.beginPath();
-            ctx.ellipse(centerX + 10, stemTopY + 22 + bounce, 10, 5, 0.5, 0, Math.PI * 2);
+            ctx.ellipse(centerX + 10 + windSway * 0.5, stemTopY + 22 + windSway, 10, 5, 0.5, 0, Math.PI * 2);
             ctx.fill();
 
-            // Flower / bloom
-            this._drawBloom(ctx, centerX, stemTopY + bounce, plant, cell.type);
+            // Flower
+            this._drawBloom(ctx, centerX + windSway * 0.6, stemTopY + windSway, plant, cell.type);
 
-            // Ready glow effect
+            // Ready indicator: golden harvest marker
             if (cell.ready) {
                 ctx.save();
-                const pulse = 0.4 + Math.sin(this.time * 4) * 0.2;
-                ctx.strokeStyle = plant.color;
+                const pulse = 0.5 + Math.sin(this.time * 3) * 0.3;
+                ctx.strokeStyle = this.PAL.gold;
                 ctx.lineWidth = 2;
                 ctx.globalAlpha = pulse;
-                ctx.shadowColor = plant.color;
-                ctx.shadowBlur = 15;
                 ctx.beginPath();
-                ctx.roundRect(cellX + 2, cellY + 2, this.CELL_SIZE - 4, this.CELL_SIZE - 4, 5);
+                ctx.roundRect(cellX + 2, cellY + 2, this.CELL_SIZE - 4, this.CELL_SIZE - 4, 6);
                 ctx.stroke();
                 ctx.restore();
 
-                // Ready indicator
-                ctx.fillStyle = '#ffff00';
-                ctx.font = '700 14px Inter, sans-serif';
+                // Harvest star
+                ctx.fillStyle = this.PAL.gold;
+                ctx.font = '700 12px Inter, sans-serif';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.shadowColor = '#ffff00';
-                ctx.shadowBlur = 8;
                 ctx.fillText('✦', cellX + this.CELL_SIZE - 10, cellY + 10);
-                ctx.shadowBlur = 0;
             }
         }
 
-        // Progress bar
+        // Progress bar (natural style)
         if (!cell.ready) {
             const barW = this.CELL_SIZE - 10;
             const barH = 3;
             const barX = cellX + 5;
             const barY = cellY + this.CELL_SIZE - 8;
 
-            ctx.fillStyle = 'rgba(0,0,0,0.5)';
+            ctx.fillStyle = 'rgba(0,0,0,0.4)';
             ctx.fillRect(barX, barY, barW, barH);
-            ctx.fillStyle = progress < 0.5 ? '#ffaa00' : '#44ff88';
+            ctx.fillStyle = progress < 0.5 ? '#b8860b' : this.PAL.olive;
             ctx.fillRect(barX, barY, barW * progress, barH);
         }
     }
 
     _drawBloom(ctx, cx, cy, plant, type) {
         ctx.save();
-        ctx.shadowColor = plant.color;
-        ctx.shadowBlur = 12;
 
         switch (type) {
             case 'rose':
-                // Rose: concentric petals
                 for (let i = 0; i < 6; i++) {
                     const angle = (i / 6) * Math.PI * 2;
                     ctx.fillStyle = plant.color;
@@ -957,19 +1035,17 @@ class GardenEmpire {
                     ctx.ellipse(
                         cx + Math.cos(angle) * 6,
                         cy + Math.sin(angle) * 6,
-                        8, 5,
-                        angle, 0, Math.PI * 2
+                        8, 5, angle, 0, Math.PI * 2
                     );
                     ctx.fill();
                 }
-                ctx.fillStyle = '#ff6688';
+                ctx.fillStyle = '#a84060';
                 ctx.beginPath();
                 ctx.arc(cx, cy, 5, 0, Math.PI * 2);
                 ctx.fill();
                 break;
 
             case 'tulip':
-                // Tulip: cup shape
                 ctx.fillStyle = plant.color;
                 ctx.beginPath();
                 ctx.moveTo(cx - 8, cy + 3);
@@ -986,31 +1062,28 @@ class GardenEmpire {
                 break;
 
             case 'sunflower':
-                // Sunflower: petals + dark center
                 for (let i = 0; i < 10; i++) {
                     const angle = (i / 10) * Math.PI * 2;
-                    ctx.fillStyle = '#ffdd00';
+                    ctx.fillStyle = '#c89820';
                     ctx.beginPath();
                     ctx.ellipse(
                         cx + Math.cos(angle) * 8,
                         cy + Math.sin(angle) * 8,
-                        7, 3.5,
-                        angle, 0, Math.PI * 2
+                        7, 3.5, angle, 0, Math.PI * 2
                     );
                     ctx.fill();
                 }
-                ctx.fillStyle = '#553300';
+                ctx.fillStyle = '#442200';
                 ctx.beginPath();
                 ctx.arc(cx, cy, 6, 0, Math.PI * 2);
                 ctx.fill();
-                ctx.fillStyle = '#664411';
+                ctx.fillStyle = '#553311';
                 ctx.beginPath();
                 ctx.arc(cx, cy, 4, 0, Math.PI * 2);
                 ctx.fill();
                 break;
 
-            case 'orchid':
-                // Orchid: exotic petals
+            case 'orchid': {
                 const angles = [0, 72, 144, 216, 288];
                 angles.forEach(deg => {
                     const rad = deg * Math.PI / 180;
@@ -1019,62 +1092,55 @@ class GardenEmpire {
                     ctx.ellipse(
                         cx + Math.cos(rad) * 7,
                         cy + Math.sin(rad) * 7,
-                        7, 4,
-                        rad, 0, Math.PI * 2
+                        7, 4, rad, 0, Math.PI * 2
                     );
                     ctx.fill();
                 });
-                ctx.fillStyle = '#ff88dd';
+                ctx.fillStyle = '#c878b0';
                 ctx.beginPath();
                 ctx.arc(cx, cy, 4, 0, Math.PI * 2);
                 ctx.fill();
                 break;
+            }
 
             case 'smile':
-                // Daisy: white petals
                 for (let i = 0; i < 8; i++) {
                     const angle = (i / 8) * Math.PI * 2;
-                    ctx.fillStyle = '#ffffff';
+                    ctx.fillStyle = '#f0ead0';
                     ctx.beginPath();
                     ctx.ellipse(
                         cx + Math.cos(angle) * 7,
                         cy + Math.sin(angle) * 7,
-                        6, 3,
-                        angle, 0, Math.PI * 2
+                        6, 3, angle, 0, Math.PI * 2
                     );
                     ctx.fill();
                 }
-                ctx.fillStyle = '#ffdd44';
+                ctx.fillStyle = '#c8a830';
                 ctx.beginPath();
                 ctx.arc(cx, cy, 5, 0, Math.PI * 2);
                 ctx.fill();
                 break;
 
             case 'cactus':
-                // Cactus: round body + arms
                 ctx.fillStyle = plant.color;
                 ctx.beginPath();
                 ctx.roundRect(cx - 6, cy - 12, 12, 20, 6);
                 ctx.fill();
-                // Arms
                 ctx.beginPath();
                 ctx.roundRect(cx - 14, cy - 6, 8, 4, 3);
                 ctx.fill();
                 ctx.beginPath();
                 ctx.roundRect(cx + 6, cy - 8, 8, 4, 3);
                 ctx.fill();
-                // Flower on top
-                ctx.fillStyle = '#ff66aa';
+                ctx.fillStyle = '#d08088';
                 ctx.beginPath();
                 ctx.arc(cx, cy - 14, 4, 0, Math.PI * 2);
                 ctx.fill();
                 break;
 
             case 'bonsai':
-                // Bonsai: tree shape
-                ctx.fillStyle = '#553322';
+                ctx.fillStyle = '#4a3020';
                 ctx.fillRect(cx - 2, cy - 5, 4, 15);
-                // Canopy
                 ctx.fillStyle = plant.color;
                 ctx.beginPath();
                 ctx.arc(cx, cy - 10, 12, 0, Math.PI * 2);
@@ -1089,7 +1155,6 @@ class GardenEmpire {
                 break;
 
             case 'crystal':
-                // Crystal: geometric shape with glow
                 ctx.fillStyle = plant.color;
                 ctx.beginPath();
                 ctx.moveTo(cx, cy - 16);
@@ -1099,8 +1164,7 @@ class GardenEmpire {
                 ctx.lineTo(cx - 8, cy - 4);
                 ctx.closePath();
                 ctx.fill();
-                // Inner shine
-                ctx.fillStyle = 'rgba(255,255,255,0.3)';
+                ctx.fillStyle = 'rgba(255,255,255,0.2)';
                 ctx.beginPath();
                 ctx.moveTo(cx - 2, cy - 12);
                 ctx.lineTo(cx + 4, cy - 4);
@@ -1114,162 +1178,147 @@ class GardenEmpire {
         ctx.restore();
     }
 
+    // ─── Bottom Bar ──────────────────────────────────────────────────────────
+
     _drawBottomBar() {
         const { ctx, canvas } = this;
-        const barH = 55;
+        const P = this.PAL;
+        const L = this.LAYOUT;
+        const barH = L.BOTTOM_BAR_H;
         const barY = canvas.height - barH;
 
-        // Premium translucent bar
-        ctx.fillStyle = 'rgba(6, 10, 20, 0.95)';
-        ctx.fillRect(this.shopWidth, barY, canvas.width - this.shopWidth, barH);
+        // Wooden shelf
+        this._drawWoodPanel(this.shopWidth, barY, canvas.width - this.shopWidth, barH, 0);
 
-        // Top border with glowing gradient
-        const grad = ctx.createLinearGradient(this.shopWidth, barY, canvas.width, barY);
-        grad.addColorStop(0, 'rgba(0, 212, 255, 0.1)');
-        grad.addColorStop(0.5, 'rgba(68, 255, 136, 0.8)');
-        grad.addColorStop(1, 'rgba(0, 212, 255, 0.1)');
-        ctx.fillStyle = grad;
+        // Top brass trim
+        ctx.fillStyle = P.goldDim;
         ctx.fillRect(this.shopWidth, barY, canvas.width - this.shopWidth, 2);
-        
-        // Inner shadow glow
-        ctx.shadowColor = '#44ff88';
-        ctx.shadowBlur = 15;
-        ctx.fillRect(this.shopWidth, barY, canvas.width - this.shopWidth, 1);
-        ctx.shadowBlur = 0;
 
-        // Inventory count
-        ctx.fillStyle = '#00d4ff';
-        ctx.font = '700 13px Inter, sans-serif';
+        // Inventory label
+        ctx.fillStyle = P.ivory;
+        ctx.font = '700 12px Inter, sans-serif';
         ctx.textAlign = 'left';
         ctx.textBaseline = 'middle';
-        ctx.fillText(`📦 INVENTORY: ${this.inventory.length} items`, this.shopWidth + 25, barY + barH / 2);
+        ctx.fillText(`📦 ENVANTER: ${this.inventory.length} adet`, this.shopWidth + 20, barY + barH / 2);
 
-        // Sell button
-        const btnW = 200;
+        // Sell button (wooden sign)
+        const btnW = 190;
         const btnH = 36;
-        const btnX = canvas.width / 2 + 60 - btnW / 2;
+        const btnX = canvas.width / 2 + 50 - btnW / 2;
         const btnY = barY + (barH - btnH) / 2;
         this._sellBtnArea = { x: btnX, y: btnY, w: btnW, h: btnH };
-        
-        const isBtnHover = (this.mouseX >= btnX && this.mouseX <= btnX + btnW && this.mouseY >= btnY && this.mouseY <= btnY + btnH);
+
+        const isBtnHover = (this.mouseX >= btnX && this.mouseX <= btnX + btnW &&
+                            this.mouseY >= btnY && this.mouseY <= btnY + btnH);
 
         if (this.inventory.length > 0) {
-            // Active sell button
-            ctx.fillStyle = isBtnHover ? 'rgba(68, 255, 136, 0.25)' : 'rgba(68, 255, 136, 0.15)';
             ctx.beginPath();
-            ctx.roundRect(btnX, btnY, btnW, btnH, 8);
+            ctx.roundRect(btnX, btnY, btnW, btnH, 6);
+            ctx.fillStyle = isBtnHover ? 'rgba(107, 142, 35, 0.35)' : 'rgba(107, 142, 35, 0.2)';
             ctx.fill();
-            
-            ctx.strokeStyle = isBtnHover ? '#44ff88' : 'rgba(68, 255, 136, 0.5)';
+            ctx.strokeStyle = isBtnHover ? P.olive : 'rgba(107, 142, 35, 0.4)';
             ctx.lineWidth = 1.5;
-            if (isBtnHover) {
-                ctx.shadowColor = '#44ff88';
-                ctx.shadowBlur = 10;
-            }
             ctx.stroke();
-            ctx.shadowBlur = 0;
 
-            ctx.fillStyle = isBtnHover ? '#ffffff' : '#44ff88';
-            ctx.font = '800 13px Inter, sans-serif';
+            ctx.fillStyle = isBtnHover ? P.ivory : P.olive;
+            ctx.font = '800 12px Inter, sans-serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText(`SELL ALL - $${this.inventoryValue}`, btnX + btnW / 2, btnY + btnH / 2);
+            ctx.fillText(`HEPSİNİ SAT - $${this.inventoryValue}`, btnX + btnW / 2, btnY + btnH / 2);
         } else {
-            // Inactive
-            ctx.fillStyle = 'rgba(255,255,255,0.02)';
             ctx.beginPath();
-            ctx.roundRect(btnX, btnY, btnW, btnH, 8);
+            ctx.roundRect(btnX, btnY, btnW, btnH, 6);
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
             ctx.fill();
-            ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+            ctx.strokeStyle = 'rgba(90, 80, 64, 0.3)';
             ctx.lineWidth = 1;
             ctx.stroke();
 
-            ctx.fillStyle = '#445566';
-            ctx.font = '700 13px Inter, sans-serif';
+            ctx.fillStyle = P.textMuted;
+            ctx.font = '700 12px Inter, sans-serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText('SELL ALL - $0', btnX + btnW / 2, btnY + btnH / 2);
+            ctx.fillText('HEPSİNİ SAT - $0', btnX + btnW / 2, btnY + btnH / 2);
         }
 
-        // Active seed indicator (right side)
+        // Selected seed indicator
         if (this.selectedSeed) {
             const seed = this.PLANTS[this.selectedSeed];
-            ctx.fillStyle = '#8899aa';
-            ctx.font = '700 12px Inter, sans-serif';
+            ctx.fillStyle = P.sage;
+            ctx.font = '700 11px Inter, sans-serif';
             ctx.textAlign = 'right';
-            ctx.fillText(`SELECTED: ${seed.icon} ${seed.name}`, canvas.width - 25, barY + barH / 2);
+            ctx.fillText(`SEÇİLİ: ${seed.icon} ${seed.name}`, canvas.width - 20, barY + barH / 2);
         }
     }
+
+    // ─── Event Banner ────────────────────────────────────────────────────────
 
     _drawEventBanner() {
         const { ctx, canvas } = this;
         if (!this.activeEvent || !this.EVENTS[this.activeEvent]) return;
 
         const evt = this.EVENTS[this.activeEvent];
-        const bannerH = 34;
-        const bannerY = 60;
+        const L = this.LAYOUT;
+        const bannerH = 30;
+        const bannerY = L.TOP_BAR_H + 2;
 
         ctx.save();
-        
-        ctx.globalAlpha = 0.85;
+
+        // Parchment scroll ribbon
+        ctx.beginPath();
+        ctx.rect(this.shopWidth, bannerY, canvas.width - this.shopWidth, bannerH);
+        ctx.fillStyle = 'rgba(20, 15, 10, 0.85)';
+        ctx.fill();
+
+        // Color accent strip at bottom
         ctx.fillStyle = evt.color;
-        ctx.shadowColor = evt.color;
-        ctx.shadowBlur = 8;
-        ctx.fillRect(this.shopWidth, bannerY, canvas.width - this.shopWidth, bannerH);
-        ctx.shadowBlur = 0;
+        ctx.globalAlpha = 0.3;
+        ctx.fillRect(this.shopWidth, bannerY + bannerH - 2, canvas.width - this.shopWidth, 2);
         ctx.globalAlpha = 1;
 
-        // Overlay to darken
-        ctx.fillStyle = 'rgba(0,0,0,0.5)';
-        ctx.fillRect(this.shopWidth, bannerY, canvas.width - this.shopWidth, bannerH);
-
         // Event text
-        ctx.fillStyle = '#ffffff';
-        ctx.shadowColor = evt.color;
-        ctx.shadowBlur = 10;
-        ctx.font = '800 13px Inter, sans-serif';
+        ctx.fillStyle = this.PAL.parchment;
+        ctx.font = '700 12px Inter, sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
 
         const remaining = Math.max(0, Math.ceil((this.eventEndTime - Date.now()) / 1000));
         ctx.fillText(
-            `${evt.icon} ${evt.name.toUpperCase()} - ${evt.desc} ${remaining > 0 ? `(${remaining}s)` : ''}`,
+            `${evt.icon} ${evt.name.toUpperCase()} — ${evt.desc} ${remaining > 0 ? `(${remaining}s)` : ''}`,
             this.shopWidth + (canvas.width - this.shopWidth) / 2,
             bannerY + bannerH / 2
         );
-        
+
         ctx.restore();
     }
 
+    // ─── Particles & Floating Texts ──────────────────────────────────────────
+
     _drawParticles() {
         const { ctx } = this;
+        ctx.save();
         this.particles.forEach(p => {
             ctx.globalAlpha = Math.max(0, p.life);
             ctx.fillStyle = p.color;
-            ctx.shadowColor = p.color;
-            ctx.shadowBlur = 6;
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.size * Math.max(0, p.life), 0, Math.PI * 2);
             ctx.fill();
         });
-        ctx.globalAlpha = 1;
-        ctx.shadowBlur = 0;
+        ctx.restore();
     }
 
     _drawFloatingTexts() {
         const { ctx } = this;
+        ctx.save();
         this.floatingTexts.forEach(ft => {
             ctx.globalAlpha = Math.min(1, ft.life * 2);
             ctx.fillStyle = ft.color;
-            ctx.font = '700 16px Inter, sans-serif';
+            ctx.font = '700 15px Inter, sans-serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.shadowColor = ft.color;
-            ctx.shadowBlur = 8;
             ctx.fillText(ft.text, ft.x, ft.y);
         });
-        ctx.globalAlpha = 1;
-        ctx.shadowBlur = 0;
+        ctx.restore();
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
@@ -1280,7 +1329,7 @@ class GardenEmpire {
         const plant = this.PLANTS[key];
         let cost = plant.cost;
         if (this.activeEvent === 'sale') {
-            cost = Math.floor(cost * 0.7); // 30% discount
+            cost = Math.floor(cost * 0.7);
         }
         return cost;
     }
@@ -1292,14 +1341,13 @@ class GardenEmpire {
         this.money += total;
         this.score += total;
 
-        // Visual effects
         this._addFloatingText(
             `+$${total}`,
-            this.canvas.width / 2 + 60,
-            this.canvas.height - 80,
-            '#44ff88'
+            this.canvas.width / 2 + 50,
+            this.canvas.height - 100,
+            this.PAL.gold
         );
-        this._spawnParticles(this.canvas.width / 2 + 60, this.canvas.height - 70, '#44ff88', 15);
+        this._spawnParticles(this.canvas.width / 2 + 50, this.canvas.height - 90, this.PAL.gold, 15);
 
         if (total >= 100) {
             if (window.soundManager) window.soundManager.playWin();
@@ -1311,7 +1359,6 @@ class GardenEmpire {
         this.inventory = [];
         this.inventoryValue = 0;
 
-        // Update high score
         if (window.gameManager) {
             window.gameManager.checkAndUpdateHighScore('gardenempire', this.score);
         }
@@ -1322,7 +1369,6 @@ class GardenEmpire {
     }
 
     _tryTriggerEvent() {
-        // Need at least 3 plants in garden
         const plantCount = this.grid.flat().filter(p => p).length;
         if (plantCount < 3) return;
 
@@ -1340,12 +1386,11 @@ class GardenEmpire {
 
     _startEvent(type) {
         if (type === 'bonus') {
-            // Instant bonus
-            const bonus = 25 + Math.floor(Math.random() * 76); // 25-100
+            const bonus = 25 + Math.floor(Math.random() * 76);
             this.money += bonus;
             this.score += bonus;
-            this._addFloatingText(`+$${bonus} BONUS!`, this.canvas.width / 2, 120, '#ffdd00');
-            this._spawnParticles(this.canvas.width / 2, 120, '#ffdd00', 12);
+            this._addFloatingText(`+$${bonus} BONUS!`, this.canvas.width / 2, 120, this.PAL.gold);
+            this._spawnParticles(this.canvas.width / 2, 120, this.PAL.gold, 12);
             if (window.soundManager) window.soundManager.playWin();
             if (window.gameManager) {
                 window.gameManager.checkAndUpdateHighScore('gardenempire', this.score);
@@ -1372,14 +1417,11 @@ class GardenEmpire {
         if (plants.length === 0) return;
 
         const target = plants[Math.floor(Math.random() * plants.length)];
-        const cell = this.grid[target.r][target.c];
-        const plant = this.PLANTS[cell.type];
 
-        // Death effects
         const cx = this.gardenOffsetX + target.c * (this.CELL_SIZE + this.GRID_PADDING) + this.CELL_SIZE / 2;
         const cy = this.gardenOffsetY + target.r * (this.CELL_SIZE + this.GRID_PADDING) + this.CELL_SIZE / 2;
-        this._spawnParticles(cx, cy, '#ff4444', 8);
-        this._addFloatingText('🐛 ✕', cx, cy, '#ff4444');
+        this._spawnParticles(cx, cy, this.PAL.oxblood, 8);
+        this._addFloatingText('🐛 ✕', cx, cy, this.PAL.oxblood);
 
         this.grid[target.r][target.c] = null;
         if (window.soundManager) window.soundManager.playDeath();
@@ -1389,11 +1431,11 @@ class GardenEmpire {
         for (let i = 0; i < count; i++) {
             this.particles.push({
                 x, y,
-                vx: (Math.random() - 0.5) * 200,
-                vy: (Math.random() - 0.5) * 200 - 50,
+                vx: (Math.random() - 0.5) * 180,
+                vy: (Math.random() - 0.5) * 180 - 40,
                 life: 1,
                 decay: 1.5 + Math.random(),
-                size: Math.random() * 4 + 1.5,
+                size: Math.random() * 3.5 + 1.5,
                 color
             });
         }
