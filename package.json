@@ -60,5 +60,5 @@
     "ui:compile-win": "wsl bash -c \"cd /mnt/c/Users/tarik/OneDrive/Belgeler/lightninggames/build-ui && bash setup-win.sh\"",
     "ui:native": "cmd /c \"build-ui\\build_win\\lightning-build-ui.exe\""
   },
-  "version": "2.4.0"
+  "version": "2.4.9"
 }

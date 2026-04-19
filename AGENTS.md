@@ -1,6 +1,6 @@
 # ⚡ Lightning Games - Complete Technical Documentation
 
-> **Version:** 2.4.0  
+> **Version:** 2.4.9  
 > **Last Updated:** 2026-04-05  
 > **Author:** Tarik  
 > **Status:** Production Ready  
