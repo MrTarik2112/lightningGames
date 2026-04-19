@@ -152,8 +152,11 @@ function createWindow() {
   // Smooth startup: show window invisible, then fade in after content loads
   mainWindow.once('ready-to-show', () => {
     mainWindow.setOpacity(0);
-    mainWindow.show();
-    mainWindow.focus();
+    const isMinimized = process.argv.includes('--minimized');
+    if (!isMinimized) {
+        mainWindow.show();
+        mainWindow.focus();
+    }
   });
 
   mainWindow.webContents.once('did-finish-load', () => {
@@ -187,6 +190,11 @@ function createWindow() {
 
   mainWindow.on('focus', () => {
     clearTimeout(blurTimeout);
+  });
+
+  mainWindow.on('minimize', (e) => {
+    e.preventDefault();
+    hideWindow();
   });
 }
 
