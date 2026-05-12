@@ -9,6 +9,9 @@
   <a href="https://discord.gg/hbNRTQFbjT" target="_blank">
     <img src="https://img.shields.io/badge/Discord-Join%20Server-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord" />
   </a>
+  <a href="https://quantum-wave-1.gitbook.io/lightning-games" target="_blank">
+    <img src="https://img.shields.io/badge/DOC-Documentation-00ff88?style=for-the-badge&logo=book&logoColor=white" alt="Documentation" />
+  </a>
 </p>
 
 <p align="center">
