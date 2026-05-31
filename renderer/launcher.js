@@ -628,45 +628,7 @@
     const volumeSlider = document.getElementById('volume-slider');
 
     if (launcherView) {
-        let targetScrollTop = launcherView.scrollTop;
-        let scrollAnimId = null;
-
-        const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
-
-        const tickScroll = () => {
-            const current = launcherView.scrollTop;
-            const delta = targetScrollTop - current;
-
-            if (Math.abs(delta) < 0.5) {
-                launcherView.scrollTop = targetScrollTop;
-                scrollAnimId = null;
-                return;
-            }
-
-            launcherView.scrollTop = current + delta * 0.2;
-            scrollAnimId = requestAnimationFrame(tickScroll);
-        };
-
-        launcherView.addEventListener('scroll', () => {
-            if (!scrollAnimId) {
-                targetScrollTop = launcherView.scrollTop;
-            }
-        }, { passive: true });
-
-        launcherView.addEventListener('wheel', (e) => {
-            const settingsNow = gm.getSettings ? gm.getSettings() : { reducedMotion: false };
-            if (settingsNow.reducedMotion) return;
-            if (launcherView.classList.contains('hidden')) return;
-
-            e.preventDefault();
-
-            const maxScroll = launcherView.scrollHeight - launcherView.clientHeight;
-            targetScrollTop = clamp(targetScrollTop + e.deltaY, 0, Math.max(0, maxScroll));
-
-            if (!scrollAnimId) {
-                scrollAnimId = requestAnimationFrame(tickScroll);
-            }
-        }, { passive: false });
+        // Native scroll - CSS scroll-behavior: smooth handles animation
     }
     const achievementContainer = document.getElementById('achievement-container');
     const tabBtns = document.querySelectorAll('.tab-btn');
