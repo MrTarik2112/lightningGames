@@ -1,25 +1,13 @@
 const { app, BrowserWindow, Tray, Menu, globalShortcut, ipcMain, nativeImage } = require('electron');
 const path = require('path');
 
-// Extreme Hardware & GPU Optimization
+// Hardware acceleration flags
 app.commandLine.appendSwitch('enable-gpu-rasterization');
 app.commandLine.appendSwitch('enable-oop-rasterization');
-app.commandLine.appendSwitch('enable-accelerated-video-decode');
-app.commandLine.appendSwitch('enable-gpu-compositing');
-app.commandLine.appendSwitch('enable-zero-copy');
-app.commandLine.appendSwitch('enable-native-gpu-memory-buffers');
-app.commandLine.appendSwitch('enable-hardware-overlays');
 app.commandLine.appendSwitch('ignore-gpu-blocklist');
-app.commandLine.appendSwitch('disable-software-rasterizer');
-app.commandLine.appendSwitch('disable-gpu-driver-bug-workarounds');
 app.commandLine.appendSwitch('disable-background-timer-throttle');
 app.commandLine.appendSwitch('disable-renderer-backgrounding');
 app.commandLine.appendSwitch('force-color-profile', 'srgb');
-
-// Disable DNS prefetching and external DNS requests
-app.commandLine.appendSwitch('disable-dns-prefetch');
-app.commandLine.appendSwitch('disable-features', 'DnsOverHttps,SecureDns');
-app.commandLine.appendSwitch('no-proxy-server');
 
 let mainWindow = null;
 let tray = null;

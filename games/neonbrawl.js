@@ -670,7 +670,7 @@ class NeonBrawl {
         
         // UI Overlay
         ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 24px Orbitron, sans-serif';
+        ctx.font = 'bold 24px Inter, sans-serif';
         ctx.textAlign = 'left';
         ctx.fillText(`WAVE ${this.wave}`, 20, 40);
         
@@ -680,7 +680,7 @@ class NeonBrawl {
         // Combo display
         if (this.combo > 1) {
             ctx.fillStyle = `rgba(255, 204, 0, ${Math.min(1, this.comboTimer)})`;
-            ctx.font = 'bold 20px Orbitron, sans-serif';
+            ctx.font = 'bold 20px Inter, sans-serif';
             ctx.textAlign = 'center';
             ctx.fillText(`${this.combo}x COMBO!`, canvas.width/2, 40);
         }
@@ -688,7 +688,7 @@ class NeonBrawl {
         // Rage mode indicator
         if (this.isRageMode) {
             ctx.fillStyle = `rgba(255, 0, 170, ${0.5 + Math.sin(Date.now() / 100) * 0.5})`;
-            ctx.font = 'bold 18px Orbitron, sans-serif';
+            ctx.font = 'bold 18px Inter, sans-serif';
             ctx.textAlign = 'center';
             ctx.fillText('RAGE MODE!', canvas.width/2, 70);
         }
