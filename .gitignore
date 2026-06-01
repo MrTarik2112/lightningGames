@@ -9,8 +9,8 @@ styles/tailwind-output.css
 styles/tailwind-output.css.map
 
 # Build artifacts
-
-haBuildLogs/
+dist/
+BuildLogs/
 
 # Temporary files
 temp_*
@@ -26,6 +26,20 @@ temp_extracted/
 
 # Temporary build directories
 lightning-games-build-*/
+build-ui/build/
+build-ui/build_win/
+
+# Binary executables and libraries
+*.exe
+*.AppImage
+*.dll
+*.pak
+*.so
+*.dat
+*.a
+*.o
+*.bin
+*.zip
 
 # Log files
 *.log
