@@ -9,12 +9,12 @@
 <table align="center">
   <tr>
     <td align="center" width="50%">
-      <a href="https://codeberg.org/TRK/Lightning-Games" target="_blank">
+      <a href="https://codeberg.org/MrTarik2112/lightningGames" target="_blank">
         <img src="https://img.shields.io/badge/Codeberg-Repository-2185D0?style=for-the-badge&logo=codeberg&logoColor=white" alt="Codeberg Repo" />
       </a>
     </td>
     <td align="center" width="50%">
-      <a href="https://github.com/kaankaltakkiran/Lightning-Games" target="_blank">
+      <a href="https://github.com/MrTarik2112/lightningGames" target="_blank">
         <img src="https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Repo" />
       </a>
     </td>
@@ -376,7 +376,7 @@ Lightning Games lives in your system tray (bottom-right corner of Windows taskba
 
 **1. Clone the repository**
 ```bash
-git clone https://github.com/tarikbc/lightning-games.git
+git clone https://github.com/MrTarik2112/lightningGames.git
 cd lightning-games
 ```
 
@@ -1880,11 +1880,11 @@ A quick reference for picking a game based on how hard you want to be challenged
 ## 🌟 Star on Your Favorite Platform
 
 <p align="center">
-  <a href="https://codeberg.org/TRK/Lightning-Games" target="_blank">
+  <a href="https://codeberg.org/MrTarik2112/lightningGames" target="_blank">
     <img src="https://img.shields.io/badge/Codeberg-⭐%20Star-2185D0?style=for-the-badge&logo=codeberg&logoColor=white" alt="Codeberg" />
   </a>
   &nbsp;&nbsp;&nbsp;&nbsp;
-  <a href="https://github.com/kaankaltakkiran/Lightning-Games" target="_blank">
+  <a href="https://github.com/MrTarik2112/lightningGames" target="_blank">
     <img src="https://img.shields.io/badge/GitHub-⭐%20Star-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub" />
   </a>
 </p>
