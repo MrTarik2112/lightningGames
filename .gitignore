@@ -48,3 +48,6 @@ build-ui/build_win/
 .DS_Store
 Thumbs.db
 nul
+
+# Bun
+bunfig.toml
