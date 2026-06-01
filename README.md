@@ -10,18 +10,12 @@
   <tr>
     <td align="center" width="50%">
       <a href="https://codeberg.org/TRK/Lightning-Games" target="_blank">
-        <img src="https://img.shields.io/badge/Codeberg-Repository-2185D0?style=for-the-badge&logo=codeberg&logoColor=white" alt="Codeberg Repo" /><br/>
-        <img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fcodeberg.org%2Fapi%2Fv1%2Frepos%2FTRK%2FLightning-Games&query=%24.release.tag_name&style=flat-square&label=release&color=2185D0" alt="Codeberg Release" />
-        <img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fcodeberg.org%2Fapi%2Fv1%2Frepos%2FTRK%2FLightning-Games&query=%24.stars_count&style=flat-square&label=stars&color=ffcc00" alt="Codeberg Stars" />
-        <img src="https://img.shields.io/github/repo-size/kaankaltakkiran/Lightning-Games?style=flat-square&label=size&color=00ff88" alt="Repo Size" />
+        <img src="https://img.shields.io/badge/Codeberg-Repository-2185D0?style=for-the-badge&logo=codeberg&logoColor=white" alt="Codeberg Repo" />
       </a>
     </td>
     <td align="center" width="50%">
       <a href="https://github.com/kaankaltakkiran/Lightning-Games" target="_blank">
-        <img src="https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Repo" /><br/>
-        <img src="https://img.shields.io/github/v/release/kaankaltakkiran/Lightning-Games?style=flat-square&label=release&color=00d4ff" alt="GitHub Release" />
-        <img src="https://img.shields.io/github/stars/kaankaltakkiran/Lightning-Games?style=flat-square&label=stars&color=ffcc00" alt="GitHub Stars" />
-        <img src="https://img.shields.io/github/repo-size/kaankaltakkiran/Lightning-Games?style=flat-square&label=size&color=00ff88" alt="GitHub Size" />
+        <img src="https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Repo" />
       </a>
     </td>
   </tr>
