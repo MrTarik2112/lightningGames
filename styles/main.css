@@ -212,17 +212,17 @@ body.theme-fire {
 
 /* Window enter/leave animations */
 .app-container.window-entering {
-  animation: windowEnter 0.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: windowEnter 0.25s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 .app-container.window-leaving {
-  animation: windowLeave 0.15s cubic-bezier(0.4, 0, 1, 1) forwards;
+  animation: windowLeave 0.2s cubic-bezier(0.4, 0, 1, 1) forwards;
 }
 
 @keyframes windowEnter {
   from {
     opacity: 0;
-    transform: scale(0.97) translateY(6px);
+    transform: scale(0.95) translateY(10px);
   }
   to {
     opacity: 1;
@@ -237,7 +237,7 @@ body.theme-fire {
   }
   to {
     opacity: 0;
-    transform: scale(0.97) translateY(-4px);
+    transform: scale(0.95) translateY(-6px);
   }
 }
 
@@ -762,6 +762,8 @@ body.theme-fire {
   gap: 10px;
   cursor: pointer;
   transition: var(--transition-normal);
+  animation: fadeIn 0.3s ease forwards;
+  opacity: 0;
 }
 
 .recent-item:hover {
@@ -819,13 +821,14 @@ body.theme-fire {
 }
 
 .game-card:hover {
-  transform: translateY(-2px);
+  transform: translateY(-4px);
   border-color: var(--card-border, var(--border-glow));
   background: var(--bg-card-hover);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
 }
 
 .game-card:active {
-  transform: translateY(0);
+  transform: translateY(-1px) scale(0.98);
 }
 
 .game-card-icon {
@@ -980,7 +983,6 @@ body.theme-fire {
 .tab-btn.active {
   background: rgba(255, 255, 255, 0.06);
   color: var(--accent-cyan);
-  text-shadow: 0 0 10px rgba(0, 220, 255, 0.3);
 }
 
 /* Achievement Popup */
@@ -2920,7 +2922,28 @@ body.theme-fire {
 
 /* Card entrance */
 .game-card {
-  animation: fadeIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: cardEnter 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  opacity: 0;
+}
+
+.game-card:nth-child(1) { animation-delay: 0.03s; }
+.game-card:nth-child(2) { animation-delay: 0.06s; }
+.game-card:nth-child(3) { animation-delay: 0.09s; }
+.game-card:nth-child(4) { animation-delay: 0.12s; }
+.game-card:nth-child(5) { animation-delay: 0.15s; }
+.game-card:nth-child(6) { animation-delay: 0.18s; }
+.game-card:nth-child(7) { animation-delay: 0.21s; }
+.game-card:nth-child(8) { animation-delay: 0.24s; }
+
+@keyframes cardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* New high score flash */
@@ -3270,7 +3293,8 @@ body.theme-fire {
 
 /* Improved Game Card Hover */
 .game-card:hover .game-card-icon {
-  animation: cardIconFloat 0.4s ease;
+  transform: scale(1.15);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 @keyframes cardIconFloat {
@@ -3335,9 +3359,15 @@ body.theme-fire {
 /* Achievement Item Hover */
 .achievement-item {
   cursor: default;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .achievement-item.unlocked:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.achievement-item.locked:hover {
   transform: translateY(-1px);
 }
 
