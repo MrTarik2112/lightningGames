@@ -10,3 +10,4 @@ if exist "build-ui\build_win\lightning-build-ui.exe" (
     echo Please run 'npm run ui:compile-win' first to build the Windows version.
     pause
 )
+
