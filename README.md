@@ -24,8 +24,6 @@
 <br/>
 
 <p align="center">
-  <a href="https://more-game.com/" target="_blank" style="text-decoration: none; color: inherit;">
-    <img src="https://img.shields.io/badge/🎮%20Official%20Website-more--game.com-00d4ff?style=for-the-badge&logoColor=white" alt="More Games" />
   </a>
   <a href="https://discord.gg/hbNRTQFbjT" target="_blank">
     <img src="https://img.shields.io/badge/Discord-Join%20Server-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord" />
@@ -56,9 +54,6 @@
   <img src="https://img.shields.io/badge/achievements-100+-ffcc00?style=for-the-badge&logoColor=white" alt="Achievements" />
   <img src="https://img.shields.io/badge/themes-11-00ff88?style=for-the-badge&logoColor=white" alt="Themes" />
   <img src="https://img.shields.io/badge/launch%20time-%3C1s-00d4ff?style=for-the-badge&logoColor=white" alt="Launch Time" />
-  <a href="https://discord.gg/hbNRTQFbjT" target="_blank">
-    <img src="https://img.shields.io/discord/1330644347715092520?color=5865F2&label=Discord&logo=discord&logoColor=white&style=for-the-badge" alt="Discord Members" />
-  </a>
 </p>
 
 <p align="center">
