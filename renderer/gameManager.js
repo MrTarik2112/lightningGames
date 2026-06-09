@@ -38,6 +38,9 @@ class GameManager {
             pauseOverlay: null
         };
 
+        // Lazy loading cache
+        this._loadingGames = {};
+
         // Timer for play time
         this._lastTimeUpdate = Date.now();
         setInterval(() => this._trackPlayTime(), 10000); // Every 10s
@@ -278,6 +281,7 @@ class GameManager {
         
         try {
             await promise;
+            this._loadingGames[id] = null;
             return true;
         } catch (e) {
             console.error(`[GameManager] Failed to load game ${id}:`, e);
