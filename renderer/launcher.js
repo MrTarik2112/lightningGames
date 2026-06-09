@@ -1479,8 +1479,8 @@
         if (isOpening) return;
         isOpening = true;
 
-        console.log('[Launcher] Opening game:', id, name);
         
+
         sfx.play('select');
         launcherView.classList.add('hidden');
         gameView.classList.remove('hidden');
@@ -1502,27 +1502,24 @@
             return;
         }
         
-        console.log('[Launcher] Game found:', gm.games[id]);
-
         // Get canvas element
         const canvas = document.getElementById('game-canvas');
-        console.log('[Launcher] Canvas element:', canvas);
         
+
         // Show loading indicator with game name
         const loadingEl = document.getElementById('game-loading');
         const loadingName = document.getElementById('loading-game-name');
         if (loadingName) loadingName.textContent = name;
         if (loadingEl) loadingEl.classList.remove('hidden');
         
-        console.log('[Launcher] Calling gm.startGame...');
         
+
         // Start game with proper error handling
         try {
             gm.startGame(id);
-            console.log('[Launcher] gm.startGame completed');
             
+
             // Verify canvas was updated
-            console.log('[Launcher] Canvas size after startGame:', canvas ? canvas.width + 'x' + canvas.height : 'N/A');
         } catch(e) {
             console.error('[Launcher] Failed to start game:', e);
             alert('Error: ' + e.message);
@@ -1532,7 +1529,6 @@
         
         // Check if game is actually running
         setTimeout(() => {
-            console.log('[Launcher] Active game:', gm.activeGame);
             if (loadingEl) loadingEl.classList.add('hidden');
         }, 500);
 
@@ -2203,7 +2199,6 @@
     const settingsDifficulty = document.getElementById('settings-difficulty');
     if (settingsDifficulty) {
         settingsDifficulty.addEventListener('change', () => {
-            console.log(`[Launcher] Difficulty changed to: ${settingsDifficulty.value}`);
             gm.updateSettings && gm.updateSettings({ difficulty: settingsDifficulty.value });
         });
     }
