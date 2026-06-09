@@ -698,6 +698,8 @@
         return `${Math.floor(days / 30)}mo ago`;
     }
 
+    let sortMode = 'default';
+
     function renderGameCards(filter = '') {
         const gamesState = gm.getGameList();
         gamesGrid.innerHTML = '';
@@ -708,7 +710,7 @@
             return { ...config, ...state };
         });
 
-        const filtered = mergedGames.filter(g => {
+        let filtered = mergedGames.filter(g => {
             const matchesSearch = g.name.toLowerCase().includes(filter.toLowerCase()) ||
                 (g.desc && g.desc.toLowerCase().includes(filter.toLowerCase()));
 
@@ -720,6 +722,22 @@
             }
             return matchesSearch;
         });
+
+        // Sort
+        switch (sortMode) {
+            case 'name':
+                filtered.sort((a, b) => a.name.localeCompare(b.name));
+                break;
+            case 'lastPlayed':
+                filtered.sort((a, b) => (b.lastPlayed || 0) - (a.lastPlayed || 0));
+                break;
+            case 'highScore':
+                filtered.sort((a, b) => (b.highScore || 0) - (a.highScore || 0));
+                break;
+            case 'playCount':
+                filtered.sort((a, b) => (b.playCount || 0) - (a.playCount || 0));
+                break;
+        }
 
         if (filtered.length === 0) {
             const noResults = document.createElement('div');
@@ -1608,6 +1626,15 @@
                 const randomGame = games[Math.floor(Math.random() * games.length)];
                 openGame(randomGame.id, randomGame.name, randomGame.icon);
             }
+        });
+    }
+
+    // Sort Select
+    const sortSelect = document.getElementById('sort-select');
+    if (sortSelect) {
+        sortSelect.addEventListener('change', () => {
+            sortMode = sortSelect.value;
+            renderGameCards(gameSearch.value);
         });
     }
 
