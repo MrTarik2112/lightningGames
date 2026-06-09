@@ -2329,10 +2329,75 @@
         renderGameCards(gameSearch.value);
     });
 
+    // Tooltip element
+    let tooltipEl = null;
+    let tooltipHideTimeout = null;
+
+    function getTooltip() {
+        if (!tooltipEl) {
+            tooltipEl = document.createElement('div');
+            tooltipEl.className = 'game-card-tooltip hidden';
+            document.body.appendChild(tooltipEl);
+        }
+        return tooltipEl;
+    }
+
+    function showTooltip(gameId, config) {
+        const tip = getTooltip();
+        clearTimeout(tooltipHideTimeout);
+        const highScore = gm.getHighScore(gameId) || 0;
+        const lastPlayed = gm.lastPlayed && gm.lastPlayed[gameId];
+        let lastPlayedStr = '';
+        if (lastPlayed) {
+            const diff = Date.now() - lastPlayed;
+            const mins = Math.floor(diff / 60000);
+            lastPlayedStr = mins < 1 ? 'just now' : mins < 60 ? `${mins}m ago` : `${Math.floor(mins / 60)}h ago`;
+        }
+
+        // Count achievements that reference this game
+        const achievementCount = ALL_ACHIEVEMENTS.filter(a =>
+            a.id.startsWith(gameId + '_') || (a.desc && a.desc.toLowerCase().includes(config.name.toLowerCase()))
+        ).length;
+
+        tip.innerHTML = `
+            <div class="tooltip-header">
+                <span class="tooltip-icon">${config.icon}</span>
+                <span class="tooltip-name">${config.name}</span>
+            </div>
+            <div class="tooltip-desc">${config.desc}</div>
+            <div class="tooltip-stats">
+                ${highScore > 0 ? `<span class="tooltip-stat">🏆 ${highScore}</span>` : ''}
+                ${lastPlayedStr ? `<span class="tooltip-stat">🕐 ${lastPlayedStr}</span>` : ''}
+                ${achievementCount > 0 ? `<span class="tooltip-stat">🏅 ${achievementCount}</span>` : ''}
+            </div>
+        `;
+        tip.classList.remove('hidden');
+
+        // Position tooltip - below and to the right of cursor
+        const rect = tip.getBoundingClientRect();
+        let tipX = x + 15;
+        let tipY = y + 15;
+        if (tipX + rect.width > window.innerWidth - 10) tipX = x - rect.width - 15;
+        if (tipY + rect.height > window.innerHeight - 10) tipY = y - rect.height - 15;
+        tip.style.left = tipX + 'px';
+        tip.style.top = tipY + 'px';
+    }
+
+    function hideTooltip() {
+        if (tooltipEl) {
+            tooltipEl.classList.add('hidden');
+        }
+    }
+
     gamesGrid.addEventListener('mouseover', (e) => {
         const gameCard = e.target.closest('.game-card');
         if (gameCard) {
             sfx.play('hover');
+            const gameId = gameCard.dataset.gameId;
+            const config = GAME_CARDS_CONFIG.find(g => g.id === gameId);
+            if (config) {
+                showTooltip(gameId, config);
+            }
         }
     });
 
@@ -2342,20 +2407,31 @@
     const settings = gm.getSettings ? gm.getSettings() : { reducedMotion: false };
 
     gamesGrid.addEventListener('mousemove', (e) => {
+        const gameCard = e.target.closest('.game-card');
+
+        // Update tooltip position relative to cursor
+        if (gameCard && tooltipEl && !tooltipEl.classList.contains('hidden')) {
+            const tipRect = tooltipEl.getBoundingClientRect();
+            let tipX = e.clientX + 15;
+            let tipY = e.clientY + 15;
+            if (tipX + tipRect.width > window.innerWidth - 10) tipX = e.clientX - tipRect.width - 15;
+            if (tipY + tipRect.height > window.innerHeight - 10) tipY = e.clientY - tipRect.height - 15;
+            tooltipEl.style.left = tipX + 'px';
+            tooltipEl.style.top = tipY + 'px';
+        }
+
+        // 3D tilt effect
         if (settings.reducedMotion) return;
 
-        const gameCard = e.target.closest('.game-card');
         const gameCardContent = gameCard ? gameCard.querySelector('.game-card-content') : null;
 
         if (gameCardContent && gameCardContent !== lastCardContent) {
-            // New card hovered, reset previous if any
             if (lastCardContent) {
                 lastCardContent.style.transform = 'translateZ(0)';
             }
             lastCardContent = gameCardContent;
             lastCardRect = gameCard.getBoundingClientRect();
         } else if (!gameCardContent && lastCardContent) {
-            // Mouse left all cards
             lastCardContent.style.transform = 'translateZ(0)';
             lastCardContent = null;
             lastCardRect = null;
@@ -2382,12 +2458,17 @@
     });
 
     gamesGrid.addEventListener('mouseout', (e) => {
+        const gameCard = e.target.closest('.game-card');
+
+        // Hide tooltip when leaving cards
+        if (!gameCard) {
+            hideTooltip();
+        }
+
         if (settings.reducedMotion) return;
 
-        const gameCard = e.target.closest('.game-card');
         const gameCardContent = gameCard ? gameCard.querySelector('.game-card-content') : null;
 
-        // Only reset if the mouse is truly leaving the current card, not just moving to a child element
         if (lastCardContent && (!gameCardContent || gameCardContent !== lastCardContent)) {
             window.requestAnimationFrame(() => {
                 if (lastCardContent) {
@@ -2397,6 +2478,12 @@
             });
         }
     });
+
+    // Hide tooltip when mouse leaves the grid entirely
+    const launcherViewEl = document.getElementById('launcher-view');
+    if (launcherViewEl) {
+        launcherViewEl.addEventListener('mouseleave', hideTooltip);
+    }
 
     // Screenshot High Score Function
     function generateHighScoreScreenshot() {
