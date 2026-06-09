@@ -3460,40 +3460,6 @@ body .hidden {
   vertical-align: middle;
 }
 
-/* Improved Stats Cards */
-.stats-cards {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-}
-
-.stat-icon {
-  font-size: 20px;
-  margin-bottom: 4px;
-  opacity: 0.8;
-}
-
-.stat-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
-  opacity: 0;
-  transition: var(--transition-normal);
-}
-
-.stat-card:hover::before {
-  opacity: 1;
-}
-
-.stat-card:hover .stat-value {
-  transform: scale(1.05);
-  text-shadow: 0 0 30px rgba(0, 220, 255, 0.5);
-}
-
 /* Achievements Title */
 .achievements-title {
   font-size: 11px;
