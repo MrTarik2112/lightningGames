@@ -79,12 +79,29 @@ class GameManager {
     }
 
     _loadAchievements() {
-        try { return JSON.parse(localStorage.getItem('lg_achievements') || '[]'); }
+        try {
+            const raw = JSON.parse(localStorage.getItem('lg_achievements') || '[]');
+            // Migrate old string[] format to {id, time}[]
+            if (raw.length > 0 && typeof raw[0] === 'string') {
+                return raw.map(id => ({ id, time: Date.now() }));
+            }
+            return raw;
+        }
         catch { return []; }
     }
 
     _saveAchievements() {
         localStorage.setItem('lg_achievements', JSON.stringify(this.achievements));
+    }
+
+    getRecentAchievements(count = 5) {
+        return [...this.achievements].reverse().slice(0, count);
+    }
+
+    getAchievementTimes() {
+        const map = {};
+        this.achievements.forEach(a => { map[a.id] = a.time; });
+        return map;
     }
 
     _loadFavorites() {
@@ -576,9 +593,9 @@ class GameManager {
     }
 
     unlockAchievement(id, title, desc, icon, ultra = false) {
-        if (this.achievements.includes(id)) return;
+        if (this.achievements.some(a => a.id === id)) return;
 
-        this.achievements.push(id);
+        this.achievements.push({ id, time: Date.now() });
         this._saveAchievements();
 
         if (window.soundManager) window.soundManager.playAchievement();
