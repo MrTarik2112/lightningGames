@@ -398,6 +398,28 @@ body.theme-fire {
   letter-spacing: 0.5px;
 }
 
+.no-results-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 8px;
+}
+
+.no-results-clear {
+  background: none;
+  border: none;
+  color: var(--accent-cyan);
+  font-family: var(--font);
+  font-size: 12px;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.no-results-clear:hover {
+  color: var(--accent-magenta);
+}
+
 .title-right {
   display: flex;
   align-items: center;

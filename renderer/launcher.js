@@ -711,10 +711,25 @@
         if (filtered.length === 0) {
             const noResults = document.createElement('div');
             noResults.className = 'no-results';
+            const hasFilter = filter.length > 0;
+            const isFavorites = currentCategory === 'favorites';
+            const isCategory = currentCategory !== 'all';
             noResults.innerHTML = `
-                <span class="no-results-icon">🔍</span>
-                <span class="no-results-text">No games found matching "${filter}".</span>
+                <span class="no-results-icon">${hasFilter ? '🔍' : isFavorites ? '⭐' : '🎮'}</span>
+                <span class="no-results-text">${hasFilter ? `No games found matching "${filter}".` : isFavorites ? 'No favorite games yet.' : isCategory ? `No ${currentCategory} games found.` : 'No games available.'}</span>
+                <span class="no-results-hint">${hasFilter ? 'Try a different search term or ' : ''}${isFavorites && hasFilter ? 'Try a different search or ' : ''}<button class="no-results-clear btn-link">clear all filters</button></span>
             `;
+            const clearBtn = noResults.querySelector('.no-results-clear');
+            clearBtn.addEventListener('click', () => {
+                gameSearch.value = '';
+                if (searchClear) searchClear.classList.add('hidden');
+                currentCategory = 'all';
+                document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+                const allTab = document.querySelector('.category-tab[data-category="all"]');
+                if (allTab) allTab.classList.add('active');
+                renderGameCards('');
+                if (launcherView) launcherView.scrollTop = 0;
+            });
             gamesGrid.appendChild(noResults);
         }
 
