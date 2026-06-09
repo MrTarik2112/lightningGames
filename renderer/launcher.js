@@ -2380,15 +2380,20 @@
         return result;
     };
     
-    // Track search usage
+    // Track search usage (count distinct searches, not keystrokes)
     let searchCount = 0;
-    gameSearch.addEventListener('input', () => {
-        if (gameSearch.value.length > 0) {
+    let lastSearchValue = '';
+    gameSearch.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && gameSearch.value.length > 0 && gameSearch.value !== lastSearchValue) {
             searchCount++;
+            lastSearchValue = gameSearch.value;
             if (searchCount >= 25) {
                 gm.unlockAchievement('search_master', 'Search Master', 'Used the search bar 25 times.', '🔍', true);
             }
         }
+    });
+    gameSearch.addEventListener('blur', () => {
+        lastSearchValue = '';
     });
 
     window.addEventListener('settingsChanged', (e) => {
