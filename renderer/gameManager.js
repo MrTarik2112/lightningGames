@@ -30,6 +30,7 @@ class GameManager {
         this.uniqueGamesPlayed = JSON.parse(localStorage.getItem('lg_uniqueGames') || '[]');
         this.totalAsteroidsDestroyed = parseInt(localStorage.getItem('lg_totalAsteroids') || '0');
         this.favorites = this._loadFavorites();
+        this.perGamePlayCount = JSON.parse(localStorage.getItem('lg_perGameCount') || '{}');
 
         // UI Caching
         this._ui = {
@@ -423,6 +424,8 @@ class GameManager {
             game.hasState = true;
             this.totalGamesPlayed++;
             this._saveTotalGames();
+            this.perGamePlayCount[id] = (this.perGamePlayCount[id] || 0) + 1;
+            localStorage.setItem('lg_perGameCount', JSON.stringify(this.perGamePlayCount));
         } else if (game.hasState) {
             game.instance.resume();
         } else {
@@ -436,6 +439,9 @@ class GameManager {
             game.hasState = true;
             this.totalGamesPlayed++;
             this._saveTotalGames();
+            // Track per-game play count
+            this.perGamePlayCount[id] = (this.perGamePlayCount[id] || 0) + 1;
+            localStorage.setItem('lg_perGameCount', JSON.stringify(this.perGamePlayCount));
         }
 
         // Update last played
@@ -965,6 +971,10 @@ class GameManager {
         return this.activeGame ? this.activeGame.id : null;
     }
 
+    getGamePlayCount(gameId) {
+        return this.perGamePlayCount[gameId] || 0;
+    }
+
     getGameList() {
         return Object.values(this.games).map(g => ({
             id: g.id,
@@ -973,7 +983,8 @@ class GameManager {
             score: g.instance ? g.instance.getScore() : 0,
             highScore: this.highScores[g.id] || 0,
             lastPlayed: this.lastPlayed[g.id] || 0,
-            isFavorite: this.isFavorite(g.id)
+            isFavorite: this.isFavorite(g.id),
+            playCount: this.getGamePlayCount(g.id)
         }));
     }
 
