@@ -3,20 +3,20 @@
    =========================== */
 
 :root {
-  --bg-primary: #06060f;
-  --bg-secondary: #0c0c1e;
+  --bg-primary: #050512;
+  --bg-secondary: rgba(10, 10, 25, 0.75);
   --bg-card: rgba(16, 16, 42, 0.65);
   --bg-card-hover: rgba(24, 24, 60, 0.85);
   --bg-glass: rgba(255, 255, 255, 0.03);
-  --border-glass: rgba(255, 255, 255, 0.06);
+  --border-glass: rgba(255, 255, 255, 0.1);
   --border-glow: rgba(0, 220, 255, 0.3);
 
-  --text-primary: #eeeeff;
-  --text-secondary: #8888aa;
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.7);
   --text-muted: #555577;
   --text-dim: #333355;
 
-  --accent-cyan: #00dcff;
+  --accent-cyan: #00d4ff;
   --accent-magenta: #ff00aa;
   --accent-green: #00ff88;
   --accent-yellow: #ffcc00;
@@ -58,24 +58,6 @@ body {
   user-select: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-/* ===========================
-   App Container
-   =========================== */
-/* ===========================
-   Themes
-   =========================== */
-:root {
-  --bg-primary: #050512;
-  --bg-secondary: rgba(10, 10, 25, 0.75);
-  --accent-cyan: #00d4ff;
-  --accent-magenta: #ff00aa;
-  --accent-yellow: #ffcc00;
-  --accent-green: #00ff88;
-  --text-primary: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.7);
-  --border-glass: rgba(255, 255, 255, 0.1);
 }
 
 /* ===== THEME: RETRO ===== */
