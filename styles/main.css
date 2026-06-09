@@ -3387,6 +3387,7 @@ body.theme-fire {
 
 /* Focus States for Accessibility */
 .game-card:focus,
+.game-card.keyboard-focus,
 .btn-settings:focus,
 .btn-close:focus,
 .btn-back:focus,

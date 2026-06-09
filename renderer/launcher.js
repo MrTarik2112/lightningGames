@@ -1602,7 +1602,45 @@
             }
         }
 
-        // Keyboard navigation for game search
+        // Keyboard navigation for game grid
+        if (document.activeElement === gameSearch && !gameView.classList.contains('hidden')) {
+            const cards = [...gamesGrid.querySelectorAll('.game-card')];
+            const currentIndex = cards.findIndex(c => c.classList.contains('keyboard-focus'));
+
+            if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+                e.preventDefault();
+                const next = currentIndex < 0 ? 0 : Math.min(currentIndex + 1, cards.length - 1);
+                cards.forEach(c => c.classList.remove('keyboard-focus'));
+                if (cards[next]) cards[next].classList.add('keyboard-focus');
+                if (cards[next]) cards[next].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+                return;
+            }
+
+            if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+                e.preventDefault();
+                const prev = currentIndex < 0 ? cards.length - 1 : Math.max(currentIndex - 1, 0);
+                cards.forEach(c => c.classList.remove('keyboard-focus'));
+                if (cards[prev]) cards[prev].classList.add('keyboard-focus');
+                if (cards[prev]) cards[prev].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+                return;
+            }
+
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                // If a card has keyboard focus, click it
+                const focused = cards.find(c => c.classList.contains('keyboard-focus'));
+                if (focused) {
+                    focused.click();
+                    return;
+                }
+                // Otherwise, open first game
+                if (cards.length > 0) {
+                    cards[0].click();
+                }
+                return;
+            }
+        }
+
         if (e.key === 'Enter') {
             // If game over overlay exists, restart game
             const gameOverOverlay = document.querySelector('.game-over-overlay');
@@ -1611,14 +1649,6 @@
                 if (restartBtn) {
                     restartBtn.click();
                     return;
-                }
-            }
-
-            // If search is focused, open first game
-            if (document.activeElement === gameSearch) {
-                const firstCard = gamesGrid.querySelector('.game-card');
-                if (firstCard) {
-                    firstCard.click();
                 }
             }
         }
