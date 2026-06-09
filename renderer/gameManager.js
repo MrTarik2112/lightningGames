@@ -429,71 +429,44 @@ class GameManager {
         const wasGameOver = game.instance && game.instance.isGameOver && game.instance.isGameOver();
 
         if (!game.instance || wasGameOver) {
-            // Clean up old instance if it exists
             if (game.instance && game.instance.destroy) {
                 game.instance.destroy();
             }
             game.instance = new game.GameClass();
-            
-            // Reload settings to ensure we have the latest difficulty
-            this.settings = this._loadSettings();
-            
-            // Apply difficulty setting BEFORE init if game supports it (Tower Defense)
-            if (game.instance.setDifficulty && this.settings && this.settings.difficulty) {
-                console.log(`[GameManager] Applying difficulty: ${this.settings.difficulty}`, this.settings);
-                game.instance.setDifficulty(this.settings.difficulty);
-            } else {
-                console.log(`[GameManager] No difficulty applied. setDifficulty: ${!!game.instance.setDifficulty}, settings: ${!!this.settings}, difficulty: ${this.settings?.difficulty}`);
-            }
-            
-            try {
-                game.instance.init(canvas, ctx);
-            } catch (e) {
-                console.error(`[GameManager] Game ${id} crashed during init:`, e);
-                if (game.instance && game.instance.destroy) game.instance.destroy();
-                game.instance = null;
-                game.hasState = false;
-                this.activeGame = null;
-                window.dispatchEvent(new CustomEvent('gameError', {
-                    detail: { message: `Failed to start ${game.meta?.name || id}: ${e.message}` }
-                }));
-                return;
-            }
-            
-            game.hasState = true;
-            this.totalGamesPlayed++;
-            this._saveTotalGames();
-            this.perGamePlayCount[id] = (this.perGamePlayCount[id] || 0) + 1;
-            localStorage.setItem('lg_perGameCount', JSON.stringify(this.perGamePlayCount));
-        } else if (game.hasState) {
-            game.instance.resume();
-        } else {
-            try {
-                game.instance.init(canvas, ctx);
-            } catch (e) {
-                console.error(`[GameManager] Game ${id} crashed during init (path B):`, e);
-                if (game.instance && game.instance.destroy) game.instance.destroy();
-                game.instance = null;
-                game.hasState = false;
-                this.activeGame = null;
-                window.dispatchEvent(new CustomEvent('gameError', {
-                    detail: { message: `Failed to start ${game.meta?.name || id}: ${e.message}` }
-                }));
-                return;
-            }
-            
-            // Apply difficulty setting if game supports it (Tower Defense)
-            if (game.instance.setDifficulty && this.settings && this.settings.difficulty) {
-                game.instance.setDifficulty(this.settings.difficulty);
-            }
-            
-            game.hasState = true;
-            this.totalGamesPlayed++;
-            this._saveTotalGames();
-            // Track per-game play count
-            this.perGamePlayCount[id] = (this.perGamePlayCount[id] || 0) + 1;
-            localStorage.setItem('lg_perGameCount', JSON.stringify(this.perGamePlayCount));
+            game.hasState = false;
         }
+
+        if (game.hasState && game.instance.resume) {
+            game.instance.resume();
+            return;
+        }
+
+        // Common init path: reload settings, apply difficulty, init, track
+        this.settings = this._loadSettings();
+
+        if (game.instance.setDifficulty && this.settings?.difficulty) {
+            game.instance.setDifficulty(this.settings.difficulty);
+        }
+
+        try {
+            game.instance.init(canvas, ctx);
+        } catch (e) {
+            console.error(`[GameManager] Game ${id} crashed during init:`, e);
+            if (game.instance && game.instance.destroy) game.instance.destroy();
+            game.instance = null;
+            game.hasState = false;
+            this.activeGame = null;
+            window.dispatchEvent(new CustomEvent('gameError', {
+                detail: { message: `Failed to start ${game.meta?.name || id}: ${e.message}` }
+            }));
+            return;
+        }
+
+        game.hasState = true;
+        this.totalGamesPlayed++;
+        this._saveTotalGames();
+        this.perGamePlayCount[id] = (this.perGamePlayCount[id] || 0) + 1;
+        localStorage.setItem('lg_perGameCount', JSON.stringify(this.perGamePlayCount));
 
         // Update last played
         this.lastPlayed[id] = Date.now();
@@ -508,7 +481,6 @@ class GameManager {
         this._checkConsecutive(id);
         this._checkTotalPlayed();
 
-        game.hasState = true;
         this.lastTime = performance.now();
         console.log('[GameManager] Calling startLoop...');
         this.startLoop();
