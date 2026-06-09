@@ -1102,6 +1102,7 @@ body.theme-fire {
 }
 
 .theme-btn {
+  position: relative;
   background: var(--bg-glass);
   border: 1px solid var(--border-glass);
   border-radius: 8px;
@@ -5301,6 +5302,7 @@ input[type="range"]::-moz-range-thumb:hover {
 }
 
 .theme-btn {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
