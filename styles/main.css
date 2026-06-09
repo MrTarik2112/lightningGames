@@ -370,7 +370,7 @@ body.theme-fire {
   align-items: center;
   justify-content: center;
   padding: 60px 20px;
-  color: #555577;
+  color: var(--text-muted);
   text-align: center;
 }
 
@@ -421,7 +421,7 @@ body.theme-fire {
   height: 30px;
   border-radius: 999px;
   border: 1px solid var(--border-glass);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-glass);
   color: var(--text-secondary);
   cursor: pointer;
   display: flex;
@@ -445,7 +445,7 @@ body.theme-fire {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-glass);
   padding: 4px 10px;
   border-radius: 20px;
   border: 1px solid var(--border-glass);
@@ -466,7 +466,7 @@ body.theme-fire {
   height: 4px;
   -webkit-appearance: none;
   appearance: none;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--border-glass);
   border-radius: 2px;
   outline: none;
 }
@@ -490,7 +490,7 @@ body.theme-fire {
   gap: 4px;
   padding: 4px 8px;
   border-radius: var(--radius-sm);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-glass);
   border: 1px solid var(--border-glass);
 }
 
@@ -519,7 +519,7 @@ body.theme-fire {
   height: 28px;
   border-radius: 50%;
   border: 1px solid var(--border-glass);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-glass);
   color: var(--text-muted);
   cursor: pointer;
   display: flex;
@@ -559,7 +559,7 @@ body.theme-fire {
 }
 
 .launcher-view::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--border-glass);
   border-radius: 10px;
 }
 
@@ -608,7 +608,7 @@ body.theme-fire {
 #game-search {
   width: 100%;
   padding: 12px 20px 12px 42px;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-glass);
   border: 1px solid var(--border-glass);
   border-radius: 12px;
   color: var(--text-primary);
@@ -639,7 +639,7 @@ body.theme-fire {
 
 .search-clear:hover {
   color: var(--text-primary);
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--border-glass);
 }
 
 .search-clear.hidden {
@@ -664,7 +664,7 @@ body.theme-fire {
   display: flex;
   gap: 8px;
   padding: 4px;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-glass);
   border: 1px solid var(--border-glass);
   border-radius: 14px;
 }
@@ -703,7 +703,7 @@ body.theme-fire {
   height: 46px;
   border-radius: 12px;
   border: 1px solid var(--border-glass);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-glass);
   font-size: 20px;
   cursor: pointer;
   display: flex;
@@ -998,7 +998,7 @@ body.theme-fire {
 /* Tab Controls */
 .tab-controls {
   display: inline-flex;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-glass);
   padding: 3px;
   border-radius: 8px;
   border: 1px solid var(--border-glass);
@@ -1102,7 +1102,7 @@ body.theme-fire {
 }
 
 .theme-btn {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-glass);
   border: 1px solid var(--border-glass);
   border-radius: 8px;
   padding: 10px 5px;
@@ -1176,7 +1176,7 @@ body.theme-fire {
   width: 50px;
   height: 50px;
   border: 3px solid rgba(0, 212, 255, 0.2);
-  border-top-color: #00d4ff;
+  border-top-color: var(--accent-cyan);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
   margin: 0 auto 15px;
@@ -1187,7 +1187,7 @@ body.theme-fire {
 }
 
 .loading-text {
-  color: #00d4ff;
+  color: var(--accent-cyan);
   font-family: var(--font);
   font-size: 14px;
   text-transform: uppercase;
@@ -1242,7 +1242,7 @@ body.theme-fire {
   flex-direction: column;
   align-items: center;
   gap: 2px;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-glass);
   padding: 4px 14px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border-glass);
@@ -1279,7 +1279,7 @@ body.theme-fire {
   padding: 7px 14px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border-glass);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-glass);
   color: var(--text-secondary);
   font-size: 12px;
   font-weight: 600;
@@ -1293,7 +1293,7 @@ body.theme-fire {
 
 .btn-back:hover,
 .btn-reset:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--border-glass);
   color: var(--text-primary);
   border-color: var(--accent-cyan);
   transform: translateY(-2px);
@@ -1374,7 +1374,7 @@ body.theme-fire {
 }
 
 .achievements-list::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--border-glass);
   border-radius: 10px;
 }
 
@@ -1451,7 +1451,7 @@ body.theme-fire {
 .stat-progress-bar {
   width: 100%;
   height: 4px;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--border-glass);
   border-radius: 2px;
   overflow: hidden;
   margin-top: 8px;
@@ -1629,7 +1629,7 @@ body.theme-fire {
 .category-stat-bar {
   width: 100%;
   height: 8px;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--border-glass);
   border-radius: 4px;
   overflow: hidden;
 }
@@ -1648,7 +1648,7 @@ body.theme-fire {
   align-items: center;
   margin-top: 8px;
   padding-top: 8px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid var(--border-glass);
 }
 
 .category-stat-label {
@@ -1690,7 +1690,7 @@ body.theme-fire {
 .achievement-progress-bar {
   width: 100%;
   height: 12px;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--border-glass);
   border-radius: 6px;
   overflow: hidden;
 }
@@ -2143,7 +2143,7 @@ body.theme-fire {
 .milestone-progress-bar {
   width: 100%;
   height: 8px;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--border-glass);
   border-radius: 4px;
   overflow: hidden;
 }
@@ -2432,7 +2432,7 @@ body.theme-fire {
 .milestone-progress-bar {
   width: 100%;
   height: 8px;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--border-glass);
   border-radius: 4px;
   overflow: hidden;
 }
@@ -2609,7 +2609,7 @@ body.theme-fire {
 }
 
 .settings-content::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-glass);
   border-radius: 3px;
 }
 
@@ -2669,7 +2669,7 @@ body.theme-fire {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: #ffffff;
+  background: var(--text-primary);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
   transition: var(--transition-fast);
 }
@@ -2681,7 +2681,7 @@ body.theme-fire {
 
 .settings-toggle input:checked+.settings-toggle-indicator::before {
   transform: translateX(16px);
-  background: #fff;
+  background: var(--text-primary);
 }
 
 .settings-toggle-label {
@@ -2717,7 +2717,7 @@ body.theme-fire {
   appearance: none;
   height: 4px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--border-glass);
   outline: none;
 }
 
@@ -2749,7 +2749,7 @@ body.theme-fire {
   appearance: none;
   height: 4px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--border-glass);
   outline: none;
 }
 
@@ -2795,7 +2795,7 @@ body.theme-fire {
   height: 18px;
   border-radius: 4px;
   border: 1px solid var(--border-glass);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-glass);
   cursor: pointer;
   appearance: none;
   -webkit-appearance: none;
@@ -3090,7 +3090,7 @@ body.theme-fire {
 
 .game-over-btn-secondary {
   border-color: var(--border-glass);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-glass);
   color: var(--text-secondary);
 }
 
@@ -3165,7 +3165,7 @@ body.theme-fire {
   padding: 10px 20px;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-glass);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-glass);
   color: var(--text-secondary);
   font-size: 13px;
   font-weight: 600;
@@ -3729,7 +3729,7 @@ input,
 }
 
 .settings-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--border-glass);
   border-color: var(--text-secondary);
 }
 
@@ -3826,7 +3826,7 @@ input,
 }
 
 .screenshot-actions .btn-close {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--border-glass);
   color: var(--text-secondary);
 }
 /* Hard Reset Button */
@@ -3945,7 +3945,7 @@ input,
 }
 
 .reset-btn-cancel {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--border-glass);
   color: var(--text-secondary);
 }
 
@@ -4050,7 +4050,7 @@ input,
   display: flex;
   justify-content: space-between;
   padding: 8px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--border-glass);
   font-size: 13px;
 }
 
@@ -4084,7 +4084,7 @@ input,
 }
 
 .data-btn-cancel {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--border-glass);
   color: var(--text-secondary);
 }
 
@@ -4188,7 +4188,7 @@ input,
 .tutorial-progress-bar {
   flex: 1;
   height: 4px;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--border-glass);
   border-radius: 2px;
   overflow: hidden;
   position: relative;
@@ -5243,7 +5243,7 @@ input[type="range"]::-moz-range-thumb:hover {
 
 .settings-select:focus {
   outline: none;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--border-glass);
   border-color: var(--accent-cyan);
   box-shadow: 0 0 15px rgba(0, 220, 255, 0.2);
 }
@@ -5423,7 +5423,7 @@ input[type="range"]::-moz-range-thumb:hover {
 }
 
 .data-btn-cancel:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--border-glass);
   border-color: rgba(0, 220, 255, 0.2);
 }
 
