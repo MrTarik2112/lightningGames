@@ -607,6 +607,10 @@
     const launcherView = document.getElementById('launcher-view');
     const gameView = document.getElementById('game-view');
     const gamesGrid = document.getElementById('games-grid');
+    if (!gamesGrid) {
+        console.error('[Launcher] games-grid element not found');
+        return;
+    }
     const statsView = document.getElementById('stats-view');
     const achievementsList = document.getElementById('achievements-list');
     const statTotalPlayed = document.getElementById('stat-total-played');
