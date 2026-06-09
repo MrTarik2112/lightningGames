@@ -1435,8 +1435,10 @@
         const canvas = document.getElementById('game-canvas');
         console.log('[Launcher] Canvas element:', canvas);
         
-        // Show loading indicator
+        // Show loading indicator with game name
         const loadingEl = document.getElementById('game-loading');
+        const loadingName = document.getElementById('loading-game-name');
+        if (loadingName) loadingName.textContent = name;
         if (loadingEl) loadingEl.classList.remove('hidden');
         
         console.log('[Launcher] Calling gm.startGame...');
@@ -1478,6 +1480,10 @@
         // Hide ESC hint
         const escHint = document.getElementById('esc-hint');
         if (escHint) escHint.classList.add('hidden');
+
+        // Clear loading game name
+        const loadingName = document.getElementById('loading-game-name');
+        if (loadingName) loadingName.textContent = '';
 
         // Remove any leftover overlays
         const overlay = document.querySelector('.game-over-overlay');
