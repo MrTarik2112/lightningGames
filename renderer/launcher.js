@@ -2877,8 +2877,12 @@
     }
     
     function performHardReset() {
-        // Clear all localStorage
-        localStorage.clear();
+        // Clear only Lightning Games localStorage keys
+        Object.keys(localStorage).forEach(key => {
+            if (key.startsWith('lg_')) {
+                localStorage.removeItem(key);
+            }
+        });
         
         // Reload page
         location.reload();
