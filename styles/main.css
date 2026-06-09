@@ -646,7 +646,12 @@ body.theme-fire {
   display: none;
 }
 
-#game-search:focus {
+#game-search:focus-visible {
+  border-color: var(--accent-cyan);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+#game-search:focus:not(:focus-visible) {
   border-color: var(--accent-cyan);
   background: rgba(255, 255, 255, 0.05);
 }
@@ -3469,17 +3474,28 @@ body .hidden {
 }
 
 /* Focus States for Accessibility */
-.game-card:focus,
+.game-card:focus-visible,
 .game-card.keyboard-focus,
-.btn-settings:focus,
-.btn-close:focus,
-.btn-back:focus,
-.btn-reset:focus,
-.category-tab:focus,
-.tab-btn:focus,
-.theme-btn:focus {
+.btn-settings:focus-visible,
+.btn-close:focus-visible,
+.btn-back:focus-visible,
+.btn-reset:focus-visible,
+.category-tab:focus-visible,
+.tab-btn:focus-visible,
+.theme-btn:focus-visible {
   outline: 2px solid var(--accent-cyan);
   outline-offset: 2px;
+}
+
+.game-card:focus:not(:focus-visible),
+.btn-settings:focus:not(:focus-visible),
+.btn-close:focus:not(:focus-visible),
+.btn-back:focus:not(:focus-visible),
+.btn-reset:focus:not(:focus-visible),
+.category-tab:focus:not(:focus-visible),
+.tab-btn:focus:not(:focus-visible),
+.theme-btn:focus:not(:focus-visible) {
+  outline: none;
 }
 
 /* Improved Button Micro-interactions */
