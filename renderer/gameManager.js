@@ -581,7 +581,7 @@ class GameManager {
             this.unlockAchievement('collector', 'Collector', 'Unlocked 15 achievements.', '👑', true);
         }
 
-        const total = this.totalAchievementsCount || 35;
+        const total = this.totalAchievementsCount || this._knownAchievementIds?.length || this.achievements.length + 10;
         if (this.achievements.length >= total - 1) {
             this.unlockAchievement('godly', 'Godly', 'Unlocked all achievements.', '⛩️', true);
         }
