@@ -42,6 +42,16 @@ class GameManager {
         // Lazy loading cache
         this._loadingGames = {};
 
+        // Auto-pause on window blur (if setting enabled)
+        this._blurHandler = () => {
+            if (this.settings?.autoPause && !this.isPaused && this.activeGame?.instance) {
+                if (!this.activeGame.instance.isGameOver || !this.activeGame.instance.isGameOver()) {
+                    this.pauseCurrentGame();
+                }
+            }
+        };
+        window.addEventListener('blur', this._blurHandler);
+
         // Timer for play time
         this._lastTimeUpdate = Date.now();
         setInterval(() => this._trackPlayTime(), 10000); // Every 10s

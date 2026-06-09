@@ -1517,7 +1517,8 @@
 
     function showLauncher(force = false) {
         // Check if game is active with score > 0 and needs confirmation
-        if (!force && gm.activeGame && gm.activeGame.instance && !gm.activeGame.instance.isGameOver()) {
+        const settings = gm.getSettings ? gm.getSettings() : { confirmExit: false };
+        if (!force && settings.confirmExit && gm.activeGame && gm.activeGame.instance && !gm.activeGame.instance.isGameOver()) {
             const currentScore = gm.activeGame.instance.getScore ? gm.activeGame.instance.getScore() : 0;
             if (currentScore > 0) {
                 showExitConfirm(currentScore);
