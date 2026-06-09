@@ -1,5 +1,6 @@
-const { app, BrowserWindow, Tray, Menu, globalShortcut, ipcMain, nativeImage } = require('electron');
+const { app, BrowserWindow, Tray, Menu, globalShortcut, ipcMain, nativeImage, screen } = require('electron');
 const path = require('path');
+const fs = require('fs');
 
 // Hardware acceleration flags
 app.commandLine.appendSwitch('enable-gpu-rasterization');
@@ -16,6 +17,33 @@ let isAnimating = false;
 let isStartingUp = true;
 let blurTimeout = null;
 
+// Window position persistence
+function loadWindowState() {
+    try {
+        const p = path.join(app.getPath('userData'), 'window-state.json');
+        if (fs.existsSync(p)) return JSON.parse(fs.readFileSync(p, 'utf8'));
+    } catch (e) { /* ignore */ }
+    return null;
+}
+
+function saveWindowState() {
+    if (!mainWindow) return;
+    try {
+        const bounds = mainWindow.getBounds();
+        const state = { x: bounds.x, y: bounds.y, width: bounds.width, height: bounds.height };
+        const p = path.join(app.getPath('userData'), 'window-state.json');
+        fs.writeFileSync(p, JSON.stringify(state));
+    } catch (e) { /* ignore */ }
+}
+
+function isValidPosition(x, y) {
+    return screen.getAllDisplays().some(d => {
+        const b = d.workArea;
+        return x >= b.x - 100 && x <= b.x + b.width + 100 &&
+               y >= b.y - 100 && y <= b.y + b.height + 100;
+    });
+}
+
 // Shared functions
 function showWindow() {
   if (!mainWindow || isAnimating) return;
@@ -24,7 +52,12 @@ function showWindow() {
   isAnimating = true;
   clearTimeout(blurTimeout);
 
-  mainWindow.center();
+  const state = loadWindowState();
+  if (state && isValidPosition(state.x, state.y)) {
+    mainWindow.setBounds({ x: state.x, y: state.y }, false);
+  } else {
+    mainWindow.center();
+  }
   mainWindow.show();
   mainWindow.focus();
   mainWindow.webContents.send('window-showing');
@@ -39,6 +72,7 @@ function hideWindow() {
   isAnimating = true;
   clearTimeout(blurTimeout);
 
+  saveWindowState();
   mainWindow.webContents.send('window-hiding');
   setTimeout(() => {
     if (mainWindow) mainWindow.hide();
@@ -156,9 +190,12 @@ function createWindow() {
     }, 50);
   });
 
+  mainWindow.on('moved', () => saveWindowState());
+
   mainWindow.on('close', (e) => {
     if (!isQuitting) {
       e.preventDefault();
+      saveWindowState();
       hideWindow();
     }
   });
