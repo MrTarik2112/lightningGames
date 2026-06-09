@@ -868,6 +868,20 @@ body.theme-fire {
   opacity: 0.7;
 }
 
+.game-card-desc {
+  font-size: 10px;
+  color: var(--text-muted);
+  z-index: 1;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-align: center;
+  max-width: 100%;
+  padding: 0 4px;
+}
+
 .game-card-status {
   position: absolute;
   top: 12px;
@@ -2852,7 +2866,8 @@ body.theme-fire {
 }
 
 .games-grid.compact-mode .game-card-desc {
-  font-size: 10px;
+  font-size: 9px;
+  -webkit-line-clamp: 1;
 }
 
 /* Card Scaling */

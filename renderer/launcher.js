@@ -753,6 +753,7 @@
                 <div class="game-card-status ${config.hasState ? 'active' : ''}"></div>
                 <span class="game-card-icon">${config.icon}</span>
                 <span class="game-card-name">${config.name}</span>
+                <span class="game-card-desc">${config.desc}</span>
                 ${scoreHTML}
                 ${highScoreHTML}
             `;
