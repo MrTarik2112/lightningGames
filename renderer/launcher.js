@@ -1304,6 +1304,13 @@
                 </div>
                 <div class="recent-activity-time">${timeText}</div>
             `;
+            item.style.cursor = 'pointer';
+            item.title = `Play ${game.name}`;
+            item.addEventListener('click', () => {
+                const tab = document.querySelector('.tab-btn[data-tab="games"]');
+                if (tab) tab.click();
+                openGame(game.id, game.name, game.icon);
+            });
             
             recentActivityList.appendChild(item);
         });
