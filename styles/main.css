@@ -5602,7 +5602,7 @@ input[type="range"]::-moz-range-thumb:hover {
 .sort-select {
   background: var(--bg-glass, rgba(255,255,255,0.03));
   border: 1px solid var(--border-glass, rgba(255,255,255,0.1));
-  border-radius: 8px;
+  border-radius: 15%;
   color: var(--text-secondary, rgba(255,255,255,0.7));
   padding: 6px 10px;
   font-size: 12px;
