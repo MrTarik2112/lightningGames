@@ -3221,11 +3221,17 @@ body.theme-fire {
   min-width: 180px;
   max-width: 260px;
   box-shadow: var(--glow-cyan), var(--shadow-lg);
-  animation: tooltipIn 0.2s ease;
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition: opacity 0.05s ease, visibility 0.05s ease, transform 0.05s ease;
 }
 
 .game-card-tooltip.hidden {
-  display: none;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(4px);
 }
 
 @keyframes tooltipIn {
