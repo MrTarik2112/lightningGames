@@ -231,9 +231,8 @@ class GameManager {
             this._lastTimeUpdate = now;
             localStorage.setItem('lg_totalPlayTime', this.totalPlayTime.toString());
 
-            if (this.totalPlayTime >= 3600) {
-                this.unlockAchievement('addict', 'Addict', 'Total playtime exceeded 1 hour.', '💊', true);
-            }
+            // Periodic playtime achievement checks (every 10s)
+            this._checkTotalPlayed();
         } else {
             this._lastTimeUpdate = Date.now();
         }
