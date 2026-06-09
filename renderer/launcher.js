@@ -2283,6 +2283,16 @@
         showLauncher();
     });
 
+    // Game error from GameManager (init crash recovery)
+    window.addEventListener('gameError', (e) => {
+        console.error('[Launcher] Game error:', e.detail.message);
+        showLauncher();
+        // Show error toast if available
+        if (typeof showToast === 'function') {
+            showToast(e.detail.message, 'error', 4000);
+        }
+    });
+
     // Initial render
     gm.totalAchievementsCount = ALL_ACHIEVEMENTS.length;
     renderGameCards();

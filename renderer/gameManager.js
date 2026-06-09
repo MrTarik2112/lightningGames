@@ -419,7 +419,19 @@ class GameManager {
                 console.log(`[GameManager] No difficulty applied. setDifficulty: ${!!game.instance.setDifficulty}, settings: ${!!this.settings}, difficulty: ${this.settings?.difficulty}`);
             }
             
-            game.instance.init(canvas, ctx);
+            try {
+                game.instance.init(canvas, ctx);
+            } catch (e) {
+                console.error(`[GameManager] Game ${id} crashed during init:`, e);
+                if (game.instance && game.instance.destroy) game.instance.destroy();
+                game.instance = null;
+                game.hasState = false;
+                this.activeGame = null;
+                window.dispatchEvent(new CustomEvent('gameError', {
+                    detail: { message: `Failed to start ${game.meta?.name || id}: ${e.message}` }
+                }));
+                return;
+            }
             
             game.hasState = true;
             this.totalGamesPlayed++;
@@ -429,7 +441,19 @@ class GameManager {
         } else if (game.hasState) {
             game.instance.resume();
         } else {
-            game.instance.init(canvas, ctx);
+            try {
+                game.instance.init(canvas, ctx);
+            } catch (e) {
+                console.error(`[GameManager] Game ${id} crashed during init (path B):`, e);
+                if (game.instance && game.instance.destroy) game.instance.destroy();
+                game.instance = null;
+                game.hasState = false;
+                this.activeGame = null;
+                window.dispatchEvent(new CustomEvent('gameError', {
+                    detail: { message: `Failed to start ${game.meta?.name || id}: ${e.message}` }
+                }));
+                return;
+            }
             
             // Apply difficulty setting if game supports it (Tower Defense)
             if (game.instance.setDifficulty && this.settings && this.settings.difficulty) {
