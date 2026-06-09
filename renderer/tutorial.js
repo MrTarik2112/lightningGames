@@ -206,6 +206,8 @@ class TutorialSystem {
         const existing = document.getElementById('tutorial-container');
         if (existing) existing.remove();
 
+        this._boundKeyHandler = (e) => this.handleKeyboard(e);
+
         // Create main container
         this.tutorialContainer = document.createElement('div');
         this.tutorialContainer.id = 'tutorial-container';
@@ -247,7 +249,7 @@ class TutorialSystem {
         this.tutorialContainer.querySelector('.tutorial-btn-next').addEventListener('click', () => this.nextStep());
 
         // Keyboard navigation
-        document.addEventListener('keydown', (e) => this.handleKeyboard(e));
+        document.addEventListener('keydown', this._boundKeyHandler);
     }
 
     showStep(stepIndex) {
@@ -425,7 +427,8 @@ class TutorialSystem {
 
         this.isActive = false;
         this.tutorialContainer?.remove();
-        document.removeEventListener('keydown', (e) => this.handleKeyboard(e));
+        if (this._boundKeyHandler) document.removeEventListener('keydown', this._boundKeyHandler);
+        this._boundKeyHandler = null;
         
         // Mark tutorial as completed
         localStorage.setItem('lg_tutorial_completed', 'true');
