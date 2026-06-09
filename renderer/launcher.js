@@ -2520,7 +2520,7 @@
         return tooltipEl;
     }
 
-    function showTooltip(gameId, config) {
+    function showTooltip(gameId, config, cursorX, cursorY) {
         const tip = getTooltip();
         clearTimeout(tooltipHideTimeout);
         const highScore = gm.getHighScore(gameId) || 0;
@@ -2553,10 +2553,10 @@
 
         // Position tooltip - below and to the right of cursor
         const rect = tip.getBoundingClientRect();
-        let tipX = x + 15;
-        let tipY = y + 15;
-        if (tipX + rect.width > window.innerWidth - 10) tipX = x - rect.width - 15;
-        if (tipY + rect.height > window.innerHeight - 10) tipY = y - rect.height - 15;
+        let tipX = cursorX + 15;
+        let tipY = cursorY + 15;
+        if (tipX + rect.width > window.innerWidth - 10) tipX = cursorX - rect.width - 15;
+        if (tipY + rect.height > window.innerHeight - 10) tipY = cursorY - rect.height - 15;
         tip.style.left = tipX + 'px';
         tip.style.top = tipY + 'px';
     }
@@ -2574,7 +2574,7 @@
             const gameId = gameCard.dataset.gameId;
             const config = GAME_CARDS_CONFIG.find(g => g.id === gameId);
             if (config) {
-                showTooltip(gameId, config);
+                showTooltip(gameId, config, e.clientX, e.clientY);
             }
         }
     });
