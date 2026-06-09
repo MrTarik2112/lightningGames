@@ -2921,8 +2921,8 @@ body.theme-fire {
 /* ===========================
    Animations
    =========================== */
-.hidden {
-  display: none !important;
+body .hidden {
+  display: none;
 }
 
 .fade-in {
