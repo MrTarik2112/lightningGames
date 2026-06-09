@@ -1483,7 +1483,49 @@
         setTimeout(() => { isOpening = false; }, 500);
     }
 
-    function showLauncher() {
+    let confirmExitCallback = null;
+
+    function removeExitConfirm() {
+        const el = document.querySelector('.exit-confirm-overlay');
+        if (el) el.remove();
+    }
+
+    function showExitConfirm(score) {
+        const existing = document.querySelector('.exit-confirm-overlay');
+        if (existing) return;
+
+        const overlay = document.createElement('div');
+        overlay.className = 'exit-confirm-overlay';
+        overlay.innerHTML = `
+            <div class="exit-confirm-box">
+                <div class="exit-confirm-title">Leave game?</div>
+                <div class="exit-confirm-score">Current score: ${score}</div>
+                <div class="exit-confirm-desc">Your progress will be lost if you leave.</div>
+                <div class="exit-confirm-buttons">
+                    <button class="exit-confirm-btn exit-confirm-cancel">Continue Playing</button>
+                    <button class="exit-confirm-btn exit-confirm-leave">Leave Anyway</button>
+                </div>
+            </div>
+        `;
+        document.querySelector('.game-view').appendChild(overlay);
+        overlay.querySelector('.exit-confirm-cancel').addEventListener('click', removeExitConfirm);
+        overlay.querySelector('.exit-confirm-leave').addEventListener('click', () => {
+            removeExitConfirm();
+            showLauncher(true);
+        });
+    }
+
+    function showLauncher(force = false) {
+        // Check if game is active with score > 0 and needs confirmation
+        if (!force && gm.activeGame && gm.activeGame.instance && !gm.activeGame.instance.isGameOver()) {
+            const currentScore = gm.activeGame.instance.getScore ? gm.activeGame.instance.getScore() : 0;
+            if (currentScore > 0) {
+                showExitConfirm(currentScore);
+                return;
+            }
+        }
+        confirmExitCallback = null;
+        removeExitConfirm();
         gm.goBackToLauncher();
         gameView.classList.add('hidden');
         gameView.classList.remove('slide-in');
@@ -1547,6 +1589,12 @@
     // Keyboard
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
+            // If exit confirm is showing, dismiss it (same as clicking cancel)
+            const exitConfirm = document.querySelector('.exit-confirm-overlay');
+            if (exitConfirm) {
+                removeExitConfirm();
+                return;
+            }
             if (!gameView.classList.contains('hidden')) {
                 showLauncher();
             } else {
