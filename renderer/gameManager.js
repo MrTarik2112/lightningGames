@@ -1053,6 +1053,33 @@ class GameManager {
         if (this._shakeTimeout) clearTimeout(this._shakeTimeout);
         this._shakeTimeout = setTimeout(() => container.classList.remove('screen-shake'), 300);
     }
+
+    // Batch Data Operations
+    clearAllHighScores() {
+        if (!confirm('Clear all high scores? This cannot be undone.')) return;
+        this.highScores = {};
+        this._saveHighScores();
+        window.dispatchEvent(new CustomEvent('dataChanged'));
+    }
+
+    clearGameHighScore(gameId) {
+        delete this.highScores[gameId];
+        this._saveHighScores();
+        window.dispatchEvent(new CustomEvent('dataChanged'));
+    }
+
+    resetSingleGameData(gameId) {
+        if (!confirm(`Reset data for ${gameId}?`)) return;
+        delete this.highScores[gameId];
+        this._saveHighScores();
+        window.dispatchEvent(new CustomEvent('dataChanged'));
+    }
+
+    resetAllData() {
+        if (!confirm('Reset ALL data? This will erase all scores, achievements, and settings.')) return;
+        Object.keys(localStorage).filter(k => k.startsWith('lg_')).forEach(k => localStorage.removeItem(k));
+        window.location.reload();
+    }
 }
 
 // Global instance

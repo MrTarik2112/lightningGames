@@ -2284,6 +2284,11 @@
         showLauncher();
     });
 
+    // Data changed (batch operations)
+    window.addEventListener('dataChanged', () => {
+        renderGameCards(gameSearch.value);
+    });
+
     // Game error from GameManager (init crash recovery)
     window.addEventListener('gameError', (e) => {
         console.error('[Launcher] Game error:', e.detail.message);
