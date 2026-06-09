@@ -700,6 +700,18 @@
 
     let sortMode = 'default';
 
+    const toastContainer = document.getElementById('toast-container');
+
+    function showToast(message, type = 'info', duration = 3000) {
+        if (!toastContainer) return;
+        const el = document.createElement('div');
+        el.className = `toast-item toast-${type}`;
+        el.textContent = message;
+        toastContainer.appendChild(el);
+        setTimeout(() => el.classList.add('toast-out'), duration);
+        setTimeout(() => el.remove(), duration + 300);
+    }
+
     function renderGameCards(filter = '') {
         const gamesState = gm.getGameList();
         gamesGrid.innerHTML = '';
@@ -2436,10 +2448,7 @@
     window.addEventListener('gameError', (e) => {
         console.error('[Launcher] Game error:', e.detail.message);
         showLauncher();
-        // Show error toast if available
-        if (typeof showToast === 'function') {
-            showToast(e.detail.message, 'error', 4000);
-        }
+        showToast(e.detail.message, 'error', 4000);
     });
 
     // Initial render
