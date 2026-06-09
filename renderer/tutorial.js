@@ -38,7 +38,7 @@ class TutorialSystem {
             },
             {
                 title: "🎮 Game Gallery",
-                description: "This is your game library! You can see all 40 games available. Each card shows the game name, icon, and description. Click any card to start playing immediately.",
+                description: "This is your game library! You can see all 60 games available. Each card shows the game name, icon, and description. Click any card to start playing immediately.",
                 target: ".games-grid",
                 position: "bottom",
                 action: "highlight",

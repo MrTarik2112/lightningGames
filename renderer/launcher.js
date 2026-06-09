@@ -535,7 +535,7 @@
         { id: 'persistent', title: 'Persistent', desc: 'Played the same game 5 times in a row.', icon: '🔄', ultra: true },
         { id: 'super_persistent', title: 'Super Persistent', desc: 'Played the same game 10 times in a row.', icon: '🔄', legendary: true },
         { id: 'explorer', title: 'Explorer', desc: 'Played 10 different games.', icon: '🗺️', ultra: true },
-        { id: 'completionist', title: 'Completionist', desc: 'Played all 40 games at least once.', icon: '🎯', legendary: true },
+        { id: 'completionist', title: 'Completionist', desc: 'Played all 60 games at least once.', icon: '🎯', legendary: true },
         
         // ===== TIME-BASED ACHIEVEMENTS =====
         { id: 'night_owl', title: 'Night Owl', desc: 'Played a game after 10 PM.', icon: '🦉', ultra: true },

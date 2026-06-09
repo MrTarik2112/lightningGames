@@ -759,7 +759,7 @@ class GameManager {
             this.unlockAchievement('explorer', 'Explorer', 'Played 10 different games.', '🗺️', true);
         }
         if (uniqueCount >= 40) {
-            this.unlockAchievement('completionist', 'Completionist', 'Played all 40 games at least once.', '🎯', true);
+            this.unlockAchievement('completionist', 'Completionist', 'Played all 60 games at least once.', '🎯', true);
         }
     }
 
