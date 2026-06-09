@@ -1334,6 +1334,8 @@ body.theme-fire {
 }
 
 .stat-card {
+  position: relative;
+  overflow: hidden;
   background: var(--bg-card);
   border: 1px solid var(--border-glass);
   border-radius: 16px;
@@ -2201,6 +2203,8 @@ body.theme-fire {
 }
 
 .quick-stat-item {
+  position: relative;
+  overflow: hidden;
   display: flex;
   align-items: center;
   gap: 16px;
