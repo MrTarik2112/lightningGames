@@ -896,11 +896,17 @@ class GameManager {
             <div class="game-over-title">Game Over!</div>
             <div class="game-over-score">Score: ${score}</div>
             ${isNew ? '<div class="game-over-new">🎉 NEW RECORD!</div>' : `<div class="game-over-highscore">🏆 Record: ${hs}</div>`}
-            <button class="game-over-btn" id="${gameId}-restart">↻ Play Again</button>
+            <div class="game-over-buttons">
+                <button class="game-over-btn" id="${gameId}-restart">↻ Play Again</button>
+                <button class="game-over-btn game-over-btn-secondary" id="${gameId}-launcher">◀ Back to Games</button>
+            </div>
         `;
         container.appendChild(overlay);
         overlay.querySelector(`#${gameId}-restart`).addEventListener('click', () => {
             if (window.gameManager) window.gameManager.resetCurrentGame();
+        });
+        overlay.querySelector(`#${gameId}-launcher`).addEventListener('click', () => {
+            window.dispatchEvent(new CustomEvent('backToLauncher'));
         });
     }
 

@@ -2185,6 +2185,11 @@
         }, 4000);
     });
 
+    // Back to Launcher from Game Over overlay
+    window.addEventListener('backToLauncher', () => {
+        showLauncher();
+    });
+
     // Initial render
     gm.totalAchievementsCount = ALL_ACHIEVEMENTS.length;
     renderGameCards();

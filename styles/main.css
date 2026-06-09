@@ -3039,8 +3039,13 @@ body.theme-fire {
   animation: newHighScore 1s ease infinite;
 }
 
-.game-over-btn {
+.game-over-buttons {
+  display: flex;
+  gap: 12px;
   margin-top: 8px;
+}
+
+.game-over-btn {
   padding: 12px 32px;
   border-radius: var(--radius-md);
   border: 1px solid var(--accent-cyan);
@@ -3052,6 +3057,18 @@ body.theme-fire {
   cursor: pointer;
   transition: var(--transition-fast);
   letter-spacing: 0.3px;
+}
+
+.game-over-btn-secondary {
+  border-color: var(--border-glass);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-secondary);
+}
+
+.game-over-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: none;
+  transform: translateY(-2px);
 }
 
 .game-over-btn:hover {
