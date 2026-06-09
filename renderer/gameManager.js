@@ -1014,6 +1014,18 @@ class GameManager {
         return this.totalGamesPlayed;
     }
 
+    getRecentGames(count = 5) {
+        return Object.values(this.games)
+            .filter(g => this.lastPlayed[g.id])
+            .sort((a, b) => (this.lastPlayed[b.id] || 0) - (this.lastPlayed[a.id] || 0))
+            .slice(0, count)
+            .map(g => ({
+                id: g.id,
+                name: g.meta?.name || g.id,
+                icon: g.meta?.icon || '🎮'
+            }));
+    }
+
     // Screen shake effect
     shakeScreen(intensity = 1) {
         const settings = this.settings || this._loadSettings();

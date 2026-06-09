@@ -1479,6 +1479,12 @@
             if (loadingEl) loadingEl.classList.add('hidden');
         }, 500);
 
+        // Update tray with recent games
+        if (window.electronAPI?.updateTray) {
+            const recent = gm.getRecentGames ? gm.getRecentGames(5) : [];
+            window.electronAPI.updateTray({ recentGames: recent.map(g => ({ id: g.id, name: g.name, icon: g.icon })), volume: gm.volume || 0.7 });
+        }
+
         // Throttle back to false after animation
         setTimeout(() => { isOpening = false; }, 500);
     }
@@ -1683,6 +1689,23 @@
             }
         });
     });
+
+    // --- Tray integration ---
+    function updateTray() {
+        if (!window.electronAPI?.updateTray) return;
+        const recent = gm.getRecentGames ? gm.getRecentGames(5) : [];
+        const data = { recentGames: recent.map(g => ({ id: g.id, name: g.name, icon: g.icon })), volume: gm.volume || 0.7 };
+        window.electronAPI.updateTray(data);
+    }
+
+    if (window.electronAPI?.onTrayAction) {
+        window.electronAPI.onTrayAction((action) => {
+            if (action?.type === 'launch' && action.id) {
+                const game = GAME_CARDS_CONFIG.find(g => g.id === action.id);
+                if (game) openGame(game.id, game.name, game.icon);
+            }
+        });
+    }
 
     // --- Ultra Upgrade Event Listeners ---
 

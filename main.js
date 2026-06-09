@@ -110,6 +110,23 @@ function updateTrayMenu() {
     { label: '🎮 Open (Ctrl+Alt+G)', click: () => toggleWindow() }
   ];
 
+  // Recent games
+  if (trayRecentGames.length > 0) {
+    menuTemplate.push({ type: 'separator' });
+    menuTemplate.push({ label: '🕐 Recent Games', enabled: false });
+    trayRecentGames.forEach(g => {
+      menuTemplate.push({
+        label: `  ${g.icon} ${g.name}`,
+        click: () => { if (mainWindow) mainWindow.webContents.send('tray-action', { type: 'launch', id: g.id }); }
+      });
+    });
+  }
+
+  // Volume control
+  menuTemplate.push({ type: 'separator' });
+  const volPercent = Math.round(trayVolume * 100);
+  menuTemplate.push({ label: `🔊 Volume: ${volPercent}%`, enabled: false });
+
   // Add "Run at Startup" option only on Windows/macOS
   if (supportsLoginItems) {
     menuTemplate.push({
@@ -285,6 +302,15 @@ app.on('window-all-closed', (e) => {
 });
 
 ipcMain.on('close-window', toggleWindow);
+
+let trayRecentGames = [];
+let trayVolume = 0.7;
+
+ipcMain.on('update-tray', (e, data) => {
+    if (data.recentGames) trayRecentGames = data.recentGames.slice(0, 5);
+    if (typeof data.volume === 'number') trayVolume = data.volume;
+    updateTrayMenu();
+});
 
 ipcMain.on('quit-app', () => {
   isQuitting = true;
