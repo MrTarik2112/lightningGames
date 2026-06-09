@@ -7,6 +7,7 @@ class SoundManager {
         this.volume = parseFloat(localStorage.getItem('lg_volume') || '0.5');
         this.updateVolume(this.volume);
         this.enabled = true;
+        this._resumeOnInteraction = this.ctx.state === 'suspended';
 
         // Music state
         this._musicGain = this.ctx.createGain();
@@ -15,6 +16,19 @@ class SoundManager {
         this._musicTimers = [];
         this._musicPlaying = false;
         this._currentMusicId = null;
+
+        // Auto-resume AudioContext on first user interaction
+        if (this._resumeOnInteraction) {
+            const resume = () => {
+                if (this.ctx.state === 'suspended') this.ctx.resume();
+                document.removeEventListener('click', resume);
+                document.removeEventListener('keydown', resume);
+                document.removeEventListener('touchstart', resume);
+            };
+            document.addEventListener('click', resume);
+            document.addEventListener('keydown', resume);
+            document.addEventListener('touchstart', resume);
+        }
 
         // Note frequency map
         this._NOTE_FREQ = {
@@ -45,12 +59,31 @@ class SoundManager {
     startMusic(gameId) {
         if (!this.enabled || !this.ctx) return;
         if (this._musicPlaying && this._currentMusicId === gameId) return;
+
+        // Crossfade: fade out current, then start new
+        if (this._musicPlaying) {
+            const fadeTarget = this._musicGain;
+            const now = this.ctx.currentTime;
+            const currentVol = fadeTarget.gain.value;
+            fadeTarget.gain.cancelScheduledValues(now);
+            fadeTarget.gain.setValueAtTime(currentVol, now);
+            fadeTarget.gain.linearRampToValueAtTime(0.001, now + 0.15);
+        }
+
         this.stopMusic();
+
         this._currentMusicId = gameId;
         this._musicPlaying = true;
 
         const theme = this._getTheme(gameId);
         if (!theme) return;
+
+        // Fade in new music
+        const fadeTarget = this._musicGain;
+        const now = this.ctx.currentTime;
+        fadeTarget.gain.cancelScheduledValues(now);
+        fadeTarget.gain.setValueAtTime(0.001, now);
+        fadeTarget.gain.linearRampToValueAtTime(0.25, now + 0.2);
 
         this._playMusicLoop(theme);
     }
@@ -666,6 +699,7 @@ class SoundManager {
     // ==================== INTERNALS ====================
     _playTone(freq, type, duration, volScale = 1.0, startTime = null) {
         if (!this.enabled || !this.ctx) return;
+        if (this.ctx.state === 'suspended') this.ctx.resume();
         const now = startTime || this.ctx.currentTime;
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
@@ -681,6 +715,7 @@ class SoundManager {
 
     _playSweep(startFreq, endFreq, type, duration, volScale = 1.0) {
         if (!this.enabled || !this.ctx) return;
+        if (this.ctx.state === 'suspended') this.ctx.resume();
         const now = this.ctx.currentTime;
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
@@ -697,6 +732,7 @@ class SoundManager {
 
     _playNoise(duration, volScale = 1.0) {
         if (!this.enabled || !this.ctx) return;
+        if (this.ctx.state === 'suspended') this.ctx.resume();
         const now = this.ctx.currentTime;
         const bufferSize = Math.max(1, Math.floor(this.ctx.sampleRate * duration));
         const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
