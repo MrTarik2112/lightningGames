@@ -1523,6 +1523,7 @@
             tab.classList.add('active');
             currentCategory = tab.dataset.category;
             renderGameCards(gameSearch.value);
+            if (launcherView) launcherView.scrollTop = 0;
             sfx.play('select');
         });
     });
@@ -2155,6 +2156,7 @@
                 statsView.classList.remove('hidden');
                 renderStats();
             }
+            if (launcherView) launcherView.scrollTop = 0;
             gm.trackTabSwitch();
         });
     });
