@@ -1694,7 +1694,7 @@
         }
 
         // Keyboard navigation for game grid
-        if (document.activeElement === gameSearch && !gameView.classList.contains('hidden')) {
+        if (document.activeElement === gameSearch && gameView.classList.contains('hidden')) {
             const cards = [...gamesGrid.querySelectorAll('.game-card')];
             const currentIndex = cards.findIndex(c => c.classList.contains('keyboard-focus'));
 
@@ -1752,7 +1752,7 @@
         if (e.key === 'r' || e.key === 'R') {
             e.preventDefault();
             const diceBtn = document.getElementById('btn-random');
-            if (diceBtn && !gameView.classList.contains('hidden')) diceBtn.click();
+            if (diceBtn && gameView.classList.contains('hidden')) diceBtn.click();
             return;
         }
 
@@ -1760,7 +1760,7 @@
         if (e.key === 's' || e.key === 'S') {
             e.preventDefault();
             const settingsBtn = document.getElementById('btn-settings');
-            if (settingsBtn && !gameView.classList.contains('hidden')) settingsBtn.click();
+            if (settingsBtn && gameView.classList.contains('hidden')) settingsBtn.click();
             return;
         }
 
