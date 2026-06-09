@@ -44,7 +44,7 @@
         <!-- Ultra Upgrade: Volume & Settings -->
         <div class="volume-control">
           <span class="volume-icon">🔊</span>
-          <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="0.5">
+          <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="0.5" aria-label="Master volume">
         </div>
         <button id="btn-settings" class="btn-settings" title="Settings">
           <span class="settings-icon">⚙️</span>
@@ -85,7 +85,7 @@
         <div class="search-wrap">
           <div class="search-container">
             <div class="search-wrapper">
-            <input type="text" id="game-search" placeholder="Search game..." spellcheck="false">
+            <input type="text" id="game-search" placeholder="Search game..." spellcheck="false" aria-label="Search games">
             <button id="search-clear" class="search-clear hidden">✕</button>
           </div>
             <span class="search-icon">🔍</span>
@@ -93,7 +93,7 @@
           <button id="btn-random" class="btn-random" title="Random Game">
             🎲
           </button>
-          <select id="sort-select" class="sort-select" title="Sort games">
+          <select id="sort-select" class="sort-select" title="Sort games" aria-label="Sort games">
             <option value="default">Default</option>
             <option value="name">Name A-Z</option>
             <option value="lastPlayed">Last Played</option>
