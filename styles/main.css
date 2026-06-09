@@ -5527,3 +5527,96 @@ input[type="range"]::-moz-range-thumb:hover {
   }
 }
 
+/* Keyboard Shortcuts Help Overlay */
+.shortcuts-help {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.2s ease-out;
+}
+
+.shortcuts-help-content {
+  background: var(--bg-secondary, #0c0c1e);
+  border: 1px solid var(--border-glow, rgba(0,220,255,0.3));
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 640px;
+  width: 90%;
+  box-shadow: 0 0 60px rgba(0,220,255,0.15);
+}
+
+.shortcuts-help-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 22px;
+  color: var(--text-primary, #fff);
+  margin: 0 0 24px;
+  text-align: center;
+}
+
+.shortcuts-help-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.shortcuts-help-group h3 {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent-cyan, #00d4ff);
+  margin: 0 0 10px;
+}
+
+.shortcuts-help-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: var(--text-secondary, rgba(255,255,255,0.7));
+}
+
+.shortcuts-help-item kbd {
+  display: inline-block;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 4px;
+  padding: 2px 7px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-primary, #fff);
+  min-width: 24px;
+  text-align: center;
+}
+
+.shortcuts-help-close {
+  display: block;
+  margin: 24px auto 0;
+  padding: 10px 32px;
+  background: linear-gradient(135deg, var(--accent-cyan, #00d4ff), var(--accent-magenta, #ff00aa));
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+}
+
+.shortcuts-help-close:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(0,220,255,0.4);
+}
+
+@media (max-width: 500px) {
+  .shortcuts-help-grid { grid-template-columns: 1fr; }
+  .shortcuts-help-content { padding: 24px 16px; }
+}
+

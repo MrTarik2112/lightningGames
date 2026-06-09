@@ -1491,6 +1491,17 @@
 
     let confirmExitCallback = null;
 
+    function showShortcutsHelp() {
+        const overlay = document.getElementById('shortcuts-help');
+        if (!overlay) return;
+        overlay.classList.remove('hidden');
+        overlay.style.display = 'flex';
+        const close = overlay.querySelector('#shortcuts-help-close');
+        const handler = () => { overlay.classList.add('hidden'); overlay.style.display = ''; };
+        close.onclick = handler;
+        overlay.onclick = (e) => { if (e.target === overlay) handler(); };
+    }
+
     function removeExitConfirm() {
         const el = document.querySelector('.exit-confirm-overlay');
         if (el) el.remove();
@@ -1657,6 +1668,61 @@
                     restartBtn.click();
                     return;
                 }
+            }
+        }
+
+        // Global shortcuts (launcher visible, no input focused)
+        const tag = e.target.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+
+        // R - Random game
+        if (e.key === 'r' || e.key === 'R') {
+            e.preventDefault();
+            const diceBtn = document.getElementById('btn-random');
+            if (diceBtn && !gameView.classList.contains('hidden')) diceBtn.click();
+            return;
+        }
+
+        // S - Toggle settings
+        if (e.key === 's' || e.key === 'S') {
+            e.preventDefault();
+            const settingsBtn = document.getElementById('btn-settings');
+            if (settingsBtn && !gameView.classList.contains('hidden')) settingsBtn.click();
+            return;
+        }
+
+        // / - Focus search
+        if (e.key === '/') {
+            e.preventDefault();
+            gameSearch.focus();
+            return;
+        }
+
+        // F - Toggle favorite on focused card
+        if (e.key === 'f' || e.key === 'F') {
+            const cards = [...gamesGrid.querySelectorAll('.game-card')];
+            const focused = cards.find(c => c.classList.contains('keyboard-focus'));
+            if (focused) {
+                const star = focused.querySelector('.favorite-btn');
+                if (star) star.click();
+            }
+            return;
+        }
+
+        // H - Show keyboard shortcuts help
+        if (e.key === 'h' || e.key === 'H') {
+            e.preventDefault();
+            showShortcutsHelp();
+            return;
+        }
+
+        // 1-6 - Switch category tabs
+        const tabIndex = parseInt(e.key);
+        if (tabIndex >= 1 && tabIndex <= 6) {
+            const tabs = document.querySelectorAll('.tab-btn');
+            if (tabs[tabIndex - 1]) {
+                tabs[tabIndex - 1].click();
+                return;
             }
         }
     });
