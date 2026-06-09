@@ -824,6 +824,21 @@ body.theme-fire {
   gap: 14px;
   padding-bottom: 40px;
   flex-shrink: 0;
+  animation: fadeSlideIn 0.35s ease-out;
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.games-grid.reflow {
+  animation: none;
+  opacity: 0;
+}
+
+.games-grid.reflow-active {
+  animation: fadeSlideIn 0.35s ease-out;
 }
 
 .game-card {

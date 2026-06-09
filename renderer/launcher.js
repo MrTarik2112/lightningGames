@@ -1653,6 +1653,9 @@
     if (sortSelect) {
         sortSelect.addEventListener('change', () => {
             sortMode = sortSelect.value;
+            gamesGrid.classList.remove('reflow-active');
+            void gamesGrid.offsetWidth;
+            gamesGrid.classList.add('reflow-active');
             renderGameCards(gameSearch.value);
         });
     }
@@ -1664,6 +1667,10 @@
             categoryTabs.forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
             currentCategory = tab.dataset.category;
+            // Trigger reflow animation
+            gamesGrid.classList.remove('reflow-active');
+            void gamesGrid.offsetWidth;
+            gamesGrid.classList.add('reflow-active');
             renderGameCards(gameSearch.value);
             if (launcherView) launcherView.scrollTop = 0;
             sfx.play('select');
@@ -1850,6 +1857,9 @@
             searchClear.classList.toggle('hidden', !e.target.value);
         }
         searchTimeout = setTimeout(() => {
+            gamesGrid.classList.remove('reflow-active');
+            void gamesGrid.offsetWidth;
+            gamesGrid.classList.add('reflow-active');
             renderGameCards(e.target.value);
         }, 150);
     });
