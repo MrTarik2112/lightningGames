@@ -34,7 +34,7 @@ Once the app is running, you can open it in several ways:
 
 | Method | Description |
 |--------|-------------|
-| **Hotkey** | `Ctrl+Alt+G` - Opens from anywhere |
+| **Hotkey** | `Cmd+Alt+G` (macOS) / `Ctrl+Alt+G` (Windows/Linux) - Opens from anywhere |
 | **System Tray** | Click the lightning bolt icon |
 | **Right-click Menu** | Tray icon → Open |
 
@@ -44,7 +44,7 @@ Once the app is running, you can open it in several ways:
 
 ### Quick Play
 
-1. Press `Ctrl+Alt+G` to open the app
+1. Press `Cmd+Alt+G` (macOS) or `Ctrl+Alt+G` (Windows/Linux) to open the app
 2. Click any game card
 3. Play!
 

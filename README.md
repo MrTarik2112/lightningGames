@@ -411,10 +411,9 @@ Or: **System Preferences → Security & Privacy → Open Anyway**
 #### Prerequisites
 
 ```bash
-# Required software
 - Node.js 18 or later
 - npm (comes with Node.js)
-- Windows 10/11 (for building Windows executable)
+- Windows 10/11 (for Windows builds), Linux/WSL (for Linux builds), or macOS (for DMG builds)
 - Git (for cloning repository)
 ```
 
@@ -464,12 +463,17 @@ npm run dev        # Launch with dev tools open
 
 With Bun:
 ```bash
-bun run dist
+bun run dist   # Run build wizard (Choose Windows, Linux or macOS target)
 ```
 
 Or with npm:
 ```bash
-npm run dist
+npm run dist   # Run build wizard
+```
+
+To build macOS target directly:
+```bash
+node scripts/package.js mac
 ```
 
 #### Build Configuration
@@ -509,6 +513,7 @@ All commands work with both **Bun** and **npm**:
 | Start app | `bun start` | `npm start` | Launch in development mode |
 | Dev tools | `bun run dev` | `npm run dev` | Launch with DevTools open |
 | Terminal Build | `bun run dist` | `npm run dist` | Build portable executable (interactive) |
+| macOS Build | `node scripts/package.js mac` | `node scripts/package.js mac` | Direct macOS DMG compilation |
 
 **Package Manager Detection:** The project automatically detects and uses Bun if available, otherwise falls back to npm. You can override this with the `LIGHTNING_PM` environment variable:
 

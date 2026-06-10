@@ -29,10 +29,16 @@ npm run build:win
 npm run build:linux
 ```
 
+### macOS DMG
+
+```bash
+node scripts/package.js mac
+```
+
 ### All Platforms
 
 ```bash
-npm run build:all
+npm run dist # Select option 4 (All Platforms)
 ```
 
 ---
@@ -137,8 +143,10 @@ When build completes:
 
 ```
 dist/
-├── Lightning Games X.Y.Z.exe    # Windows portable
-└── Lightning Games-X.Y.Z.AppImage  # Linux AppImage
+├── Lightning Games.exe          # Windows portable
+├── Lightning Games.AppImage     # Linux AppImage
+├── Lightning Games.dmg          # macOS DMG installer
+└── mac/Lightning Games.app      # macOS unpacked app bundle
 ```
 
 ---
