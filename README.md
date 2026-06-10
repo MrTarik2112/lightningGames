@@ -49,7 +49,7 @@
 <br/>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-2.4.9-00d4ff?style=for-the-badge&logo=semver&logoColor=white" alt="Version" />
+  <img src="https://img.shields.io/badge/version-3.0.0-00d4ff?style=for-the-badge&logo=semver&logoColor=white" alt="Version" />
   <img src="https://img.shields.io/badge/games-59-ff00aa?style=for-the-badge&logoColor=white" alt="Games" />
   <img src="https://img.shields.io/badge/achievements-100+-ffcc00?style=for-the-badge&logoColor=white" alt="Achievements" />
   <img src="https://img.shields.io/badge/themes-11-00ff88?style=for-the-badge&logoColor=white" alt="Themes" />
@@ -421,22 +421,6 @@ Or with npm:
 npm run dist
 ```
 
-**5. Visual Build Wizard (Dear ImGui) 🎨**
-
-For a graphical and highly robust alternative, use the custom-built **C++ Build Wizard** powered by Dear ImGui. It features a High-DPI native neon interface, real-time color logs, and advanced artifact management.
-
-To launch the native Windows executable (Recommended):
-```bash
-npm run ui:native     # Or double-click LightningBuildUI_Native.bat
-```
-
-To launch the WSL/Linux version:
-```bash
-npm run ui            # Or double-click LightningBuildUI.bat
-```
-
-**Terminal Output:** `dist/Lightning Games.exe`
-
 #### Build Configuration
 
 The build process is configured in `package.json`:
@@ -474,9 +458,6 @@ All commands work with both **Bun** and **npm**:
 | Start app | `bun start` | `npm start` | Launch in development mode |
 | Dev tools | `bun run dev` | `npm run dev` | Launch with DevTools open |
 | Terminal Build | `bun run dist` | `npm run dist` | Build portable executable (interactive) |
-| UI Build (Win) | `bun run ui:native` | `npm run ui:native` | Launch High-DPI Visual Build Wizard (.exe) |
-| UI Build (WSL) | `bun run ui` | `npm run ui` | Launch Visual Build Wizard via WSL |
-| Compile UI | `bun run ui:compile-win` | `npm run ui:compile-win` | Compile the Windows native .exe build wizard |
 
 **Package Manager Detection:** The project automatically detects and uses Bun if available, otherwise falls back to npm. You can override this with the `LIGHTNING_PM` environment variable:
 

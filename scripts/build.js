@@ -16,6 +16,7 @@ const packageJsonPath = path.join(projectRoot, 'package.json');
 const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
 
 const isWindows = process.platform === 'win32';
+const isLinux = process.platform === 'linux';
 const pmDetector = new PackageManagerDetector();
 
 const rl = readline.createInterface({
@@ -64,22 +65,26 @@ function formatDuration(ms) {
   return `${s}s`;
 }
 
-function hasWSL() {
-  if (!isWindows) return false;
-  try {
-    // Check if wsl.exe exists
-    execSync('where wsl', { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] });
-    
-    // Try to run a simple command with timeout
-    execSync('wsl echo "test"', { 
-      encoding: 'utf8', 
-      stdio: ['pipe', 'pipe', 'pipe'],
-      timeout: 5000
-    });
-    return true;
-  } catch {
-    return false;
+function canBuildLinux() {
+  if (isLinux) {
+    try {
+      execSync('which dpkg', { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] });
+      execSync('which fakeroot', { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] });
+      return true;
+    } catch {
+      return false;
+    }
   }
+  if (isWindows) {
+    try {
+      execSync('where wsl', { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] });
+      execSync('wsl echo "test"', { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'], timeout: 5000 });
+      return true;
+    } catch {
+      return false;
+    }
+  }
+  return false;
 }
 
 function validateVersion(version) {
@@ -107,14 +112,18 @@ function runCommand(cmd, args, options = {}) {
 
 // ===================== CHECK LINUX DEPENDENCIES =====================
 async function checkLinuxDependencies() {
-  log.section('Checking Linux Dependencies');
+  log.section('Checking Linux Build Dependencies');
   
   const deps = ['dpkg', 'fakeroot'];
   const missing = [];
   
   for (const dep of deps) {
     try {
-      execSync(`wsl which ${dep}`, { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] });
+      if (isLinux) {
+        execSync(`which ${dep}`, { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] });
+      } else {
+        execSync(`wsl which ${dep}`, { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] });
+      }
       log.success(`${dep} found`);
     } catch {
       missing.push(dep);
@@ -124,7 +133,11 @@ async function checkLinuxDependencies() {
   
   if (missing.length > 0) {
     log.error(`Missing dependencies: ${missing.join(', ')}`);
-    log.info(`Install with: wsl sudo apt-get install -y ${missing.join(' ')}`);
+    if (isLinux) {
+      log.info(`Install with: sudo apt-get install -y ${missing.join(' ')}`);
+    } else {
+      log.info(`Install with: wsl sudo apt-get install -y ${missing.join(' ')}`);
+    }
     return false;
   }
   
@@ -168,11 +181,44 @@ async function buildWindows(compression, compressionName) {
   }
 }
 
+// ===================== BUILD LINUX (NATIVE) =====================
+async function buildLinuxNative(compression, compressionName) {
+  log.section('Building Linux AppImage + .deb');
+  
+  const pm = pmDetector.getPreferred();
+  const builderPath = pmDetector.getBuilderPath();
+  const icon = pm === 'bun' ? '⚡' : '📦';
+  
+  log.info(`Using ${icon} ${neon.yellow}${pm}${neon.reset} for build`);
+  
+  if (compressionName === 'ULTRA MEGA') {
+    log.step(`Running: ${builderPath} --linux AppImage,deb --config.compression=maximum`);
+    try {
+      await runCommand(builderPath, ['--linux', 'AppImage,deb', '--config.compression=maximum']);
+      log.success('Linux build complete (AppImage + .deb)');
+      return true;
+    } catch (err) {
+      log.error(`Linux build failed: ${err.message}`);
+      return false;
+    }
+  } else {
+    log.step(`Running: ${builderPath} --linux AppImage,deb --config.compression=${compression}`);
+    try {
+      await runCommand(builderPath, ['--linux', 'AppImage,deb', `--config.compression=${compression}`]);
+      log.success('Linux build complete (AppImage + .deb)');
+      return true;
+    } catch (err) {
+      log.error(`Linux build failed: ${err.message}`);
+      return false;
+    }
+  }
+}
+
 // ===================== BUILD LINUX (WSL) =====================
-async function buildLinux(compression, compressionName) {
+async function buildLinuxWSL(compression, compressionName) {
   log.section('Building Linux AppImage (WSL)');
   
-  if (!hasWSL()) {
+  if (!canBuildLinux()) {
     log.error('WSL not available - skipping Linux build');
     log.info('Install WSL: https://docs.microsoft.com/en-us/windows/wsl/install');
     return false;
@@ -194,19 +240,16 @@ async function buildLinux(compression, compressionName) {
   log.info('Building in WSL Linux filesystem (avoids permission issues)');
   
   try {
-    // Convert Windows path to WSL path
     const wslSourcePath = `/mnt/c${projectRoot.substring(2).replace(/\\/g, '/')}`;
     const timestamp = Date.now();
     const linuxBuildPath = `$HOME/lightning-games-build-${timestamp}`;
     
-    // Create a temporary bash script to avoid escaping issues
     const scriptContent = `#!/bin/bash
 set -e
 
 echo "🐧 Starting Linux build in WSL..."
 export DEBIAN_FRONTEND=noninteractive
 
-# Clean up any previous build
 rm -rf "${linuxBuildPath}"
 mkdir -p "${linuxBuildPath}"
 
@@ -218,30 +261,28 @@ cd "${linuxBuildPath}"
 echo "📥 Installing dependencies..."
 npm install
 
-echo "🔨 Building AppImage..."
-npx electron-builder --linux AppImage --config.compression=${compression}
+echo "🔨 Building AppImage + .deb..."
+npx electron-builder --linux AppImage,deb --config.compression=${compression}
 
 echo "📋 Copying build artifacts back to Windows..."
 mkdir -p "${wslSourcePath}/dist"
 find "${linuxBuildPath}/dist" -name "*.AppImage" -exec cp -v {} "${wslSourcePath}/dist/" \\;
+find "${linuxBuildPath}/dist" -name "*.deb" -exec cp -v {} "${wslSourcePath}/dist/" \\;
 
 echo "🧹 Cleaning up..."
 rm -rf "${linuxBuildPath}"
 
-echo "✅ Linux build complete!"
+echo "✅ Linux build complete (AppImage + .deb)!"
 `;
 
-    // Write script to temp file
     const scriptPath = path.join(projectRoot, 'temp_build_linux.sh');
     fs.writeFileSync(scriptPath, scriptContent);
     
-    // Convert script path to WSL path
     const wslScriptPath = `/mnt/c${scriptPath.substring(2).replace(/\\/g, '/')}`;
     
     log.step(`Running build script in WSL...`);
     await runCommand('wsl', ['bash', wslScriptPath], { shell: false });
     
-    // Clean up script
     fs.unlinkSync(scriptPath);
     
     log.success('Linux build complete');
@@ -257,6 +298,14 @@ echo "✅ Linux build complete!"
   }
 }
 
+// ===================== BUILD LINUX (DISPATCHER) =====================
+async function buildLinux(compression, compressionName) {
+  if (isLinux) {
+    return await buildLinuxNative(compression, compressionName);
+  } else {
+    return await buildLinuxWSL(compression, compressionName);
+  }
+}
 // ===================== VERIFY ARTIFACTS =====================
 function verifyArtifacts() {
   log.section('Build Artifacts');
@@ -266,7 +315,7 @@ function verifyArtifacts() {
 
   if (fs.existsSync(distDir)) {
     for (const file of fs.readdirSync(distDir)) {
-      if (file.endsWith('.exe') || file.endsWith('.AppImage')) {
+      if (file.endsWith('.exe') || file.endsWith('.AppImage') || file.endsWith('.deb')) {
         const filePath = path.join(distDir, file);
         const stat = fs.statSync(filePath);
         artifacts.push({ name: file, size: formatBytes(stat.size) });
@@ -385,11 +434,14 @@ async function main() {
     log.section('Platform Selection');
     console.log();
 
-    const wslAvailable = hasWSL();
+    const linuxAvailable = canBuildLinux();
+    const linuxLabel = isLinux ? 'Native' : 'WSL';
+    const linuxDesc = isLinux ? 'Direct Linux build' : 'Via WSL Linux filesystem';
+    const linuxUnavailableMsg = isLinux ? '[dpkg/fakeroot missing]' : '[WSL not available]';
 
     console.log(`  ${neon.bold}[1]${neon.reset} 🪟  Windows Portable       ${neon.dim}Single .exe file${neon.reset}`);
-    console.log(`  ${neon.bold}[2]${neon.reset} 🐧  Linux AppImage (WSL)   ${!wslAvailable ? neon.red + '[WSL not available]' : neon.dim + 'Via WSL Linux filesystem'}${neon.reset}`);
-    console.log(`  ${neon.bold}[3]${neon.reset} ⚡  Both Platforms         ${!wslAvailable ? neon.red + '[WSL required]' : neon.dim + 'Windows + Linux'}${neon.reset}`);
+    console.log(`  ${neon.bold}[2]${neon.reset} 🐧  Linux AppImage (${linuxLabel})   ${!linuxAvailable ? neon.red + linuxUnavailableMsg : neon.dim + linuxDesc}${neon.reset}`);
+    console.log(`  ${neon.bold}[3]${neon.reset} ⚡  Both Platforms         ${!linuxAvailable ? neon.red + '[' + (isLinux ? 'Linux deps missing' : 'WSL required') + ']' : neon.dim + 'Windows + Linux'}${neon.reset}`);
     console.log();
 
     const platformInput = await question(`  ${neon.cyan}Select platform${neon.reset} [1-3] (default: 1): `);
@@ -402,18 +454,18 @@ async function main() {
         selectedPlatforms = ['windows'];
         break;
       case '2':
-        if (wslAvailable) {
+        if (linuxAvailable) {
           selectedPlatforms = ['linux'];
         } else {
-          log.error('WSL not available - falling back to Windows only');
+          log.error(`Linux build not available - falling back to Windows only`);
           selectedPlatforms = ['windows'];
         }
         break;
       case '3':
-        if (wslAvailable) {
+        if (linuxAvailable) {
           selectedPlatforms = ['windows', 'linux'];
         } else {
-          log.error('WSL not available - falling back to Windows only');
+          log.error(`Linux build not available - falling back to Windows only`);
           selectedPlatforms = ['windows'];
         }
         break;

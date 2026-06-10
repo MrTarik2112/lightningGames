@@ -59,8 +59,7 @@ function collectStats() {
   const rendererFiles = simpleList('renderer', /\.js$/);
   const scriptFiles = simpleList('scripts', /\.js$/);
   const styleFiles = simpleList('styles', /\.css$/);
-  const buildUiFiles = fs.existsSync(path.join(rootDir, 'build-ui', 'src')) ? simpleList(path.join('build-ui', 'src'), /\.(cpp|h|hpp)$/) : [];
-  const totalCodeLines = [...gameFiles, ...rendererFiles, ...scriptFiles, ...styleFiles, ...buildUiFiles].reduce((sum, file) => sum + file.lines, 0);
+  const totalCodeLines = [...gameFiles, ...rendererFiles, ...scriptFiles, ...styleFiles].reduce((sum, file) => sum + file.lines, 0);
   const gamesByCategory = {};
   for (const file of gameFiles) gamesByCategory[file.category] = (gamesByCategory[file.category] || 0) + 1;
   const packageJson = JSON.parse(readText(path.join(rootDir, 'package.json')));
@@ -74,7 +73,6 @@ function makeSections(stats) {
   const largeGameTable = table(['#', 'ID', 'Kategori', 'Satir', 'Boyut'], majorGames.map((g, i) => [String(i + 1), esc(g.id), esc(categoryLabels[g.category] || g.category), String(g.lines), humanBytes(g.size)]));
   const rendererTable = table(['Dosya', 'Satir', 'Boyut'], stats.rendererFiles.map((f) => [esc(f.name), String(f.lines), humanBytes(f.size)]));
   const scriptsTable = table(['Dosya', 'Satir', 'Boyut'], stats.scriptFiles.map((f) => [esc(f.name), String(f.lines), humanBytes(f.size)]));
-  const buildUiTable = table(['Dosya', 'Satir', 'Boyut'], stats.buildUiFiles.map((f) => [esc(f.name), String(f.lines), humanBytes(f.size)]));
   const scriptCmdTable = table(['Komut', 'Deger'], Object.entries(stats.packageJson.scripts || {}).map(([k, v]) => [esc(k), `<code>${esc(v)}</code>`]));
 
   return [
@@ -139,12 +137,7 @@ function makeSections(stats) {
       body: `<p>Repo, build almak icin yalnizca standart package script’lerine yaslanmiyor. Cleanup, lint, validate, release, install, info, package ve stats gibi yardimci araclar, projeyi operasyonel olarak da olgunlastiriyor.</p>${scriptCmdTable}${scriptsTable}`
     },
     {
-      title: '13. Native Build UI',
-      body: `<p><code>build-ui/</code> altindaki C++ tabanli arayuz, Dear ImGui ve GLFW kullanarak build surecini masaustu seviyesinde bir deneyime ceviriyor. Bu kisim, geliştirici ergonomisine verilen onemi gosteren guclu bir isaret.</p>
-      <p>DPI farkliliklari, subprocess yonetimi ve log streaming gibi detaylar, bu aracın basit bir deneme olmaktan oteye gectigini gosteriyor.</p>${buildUiTable}`
-    },
-    {
-      title: '14. Dokumantasyon ve Evrim',
+      title: '13. Dokumantasyon ve Evrim',
       body: `<p>README, context ve AGENTS dokumanlari arasinda oyun sayisi ve bazi ozellik tanimlarinda tarihsel farklar bulunuyor. Bu durum, projenin hizli gelistigini ama dokumantasyonun her zaman ayni anda guncellenmedigini gosteriyor.</p>
       <p>Bu PDF, dogrudan kod tabanina bakarak guncel durumu onceleyen bir referans olarak hazirlandi. Uzun vadede tek kanonik veri kaynagi ve otomatik dokumantasyon uretimi faydali olur.</p>`
     },

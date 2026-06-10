@@ -3,7 +3,9 @@
   "build": {
     "appId": "com.tarik.lightninggames",
     "asar": true,
-    "compression": "store",
+    "asarUnpack": ["**/*.node"],
+    "npmRebuild": false,
+    "compression": "normal",
     "directories": {
       "output": "dist"
     },
@@ -17,7 +19,24 @@
       "renderer/**/*",
       "games/**/*",
       "styles/**/*",
-      "assets/**/*"
+      "assets/*.png",
+      "assets/*.ico",
+      "!**/*.map",
+      "!**/*.log",
+      "!crash_log.txt",
+      "!context.md",
+      "!run-build.js",
+      "!tmp/**/*",
+      "!output/**/*",
+      "!docs-gitbook/**/*",
+      "!Docs/**/*",
+      "!.vscode/**/*",
+      "!.npmrc",
+      "!bun.lock",
+      "!bunfig.toml",
+      "!postcss.config.js",
+      "!tailwind.config.js",
+      "!scripts/**/*"
     ],
     "linux": {
       "category": "Game",
@@ -55,10 +74,7 @@
     "dev": "electron . --dev",
     "dist": "node scripts/build.js",
     "start": "electron .",
-    "tailwind": "tailwindcss -i ./styles/tailwind.css -o ./styles/tailwind-output.css --watch",
-    "ui": "wsl -d Ubuntu bash -c \"export DISPLAY=:0 && cd /mnt/c/Users/tarik/OneDrive/Belgeler/lightninggames/build-ui/build && ./lightning-build-ui\"",
-    "ui:compile-win": "wsl bash -c \"cd /mnt/c/Users/tarik/OneDrive/Belgeler/lightninggames/build-ui && bash setup-win.sh\"",
-    "ui:native": "cmd /c \"build-ui\\build_win\\lightning-build-ui.exe\""
+    "tailwind": "tailwindcss -i ./styles/tailwind.css -o ./styles/tailwind-output.css --watch"
   },
-  "version": "2.4.9"
+  "version": "3.0.0"
 }

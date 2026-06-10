@@ -460,5 +460,11 @@ class TutorialSystem {
     }
 }
 
-// Initialize tutorial system globally
-window.tutorialSystem = new TutorialSystem();
+// Initialize tutorial system lazily on first use
+window.tutorialSystem = null;
+window.initTutorial = function() {
+    if (!window.tutorialSystem) {
+        window.tutorialSystem = new TutorialSystem();
+    }
+    return window.tutorialSystem;
+};

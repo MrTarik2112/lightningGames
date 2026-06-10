@@ -8,12 +8,8 @@
   <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/16x16.png">
   <link rel="shortcut icon" href="assets/icons/icon.ico">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <!-- Non-blocking font load: renders immediately with fallback, swaps when ready -->
-  <link
-    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap"
-    rel="stylesheet" media="print" onload="this.media='all'">
+  <!-- Dynamic font loading: 3s timeout, non-blocking, system-ui fallback if offline -->
+  <script>(function(){var d=document,l=d.createElement('link');l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap';l.media='print';var t=setTimeout(function(){l.remove()},3000);l.onload=function(){clearTimeout(t);l.media='all'};l.onerror=function(){clearTimeout(t)};d.head.appendChild(l)})();</script>
   <link rel="stylesheet" href="styles/main.css">
 </head>
 
@@ -38,7 +34,7 @@
           <div class="logo-ring"></div>
         </div>
         <span class="title-text">Lightning Games</span>
-        <span class="title-version">v2.4.9</span>
+        <span class="title-version">v3.0.0</span>
       </div>
       <div class="title-right" style="-webkit-app-region: no-drag;">
         <!-- Ultra Upgrade: Volume & Settings -->
@@ -754,75 +750,75 @@
   <div id="import-success-toast" class="import-success">✅ Data imported!</div>
 
   <!-- Game Manager -->
-  <script src="renderer/gameManager.js"></script>
-  <script src="renderer/soundManager.js"></script>
+  <script defer src="renderer/gameManager.js"></script>
+  <script defer src="renderer/soundManager.js"></script>
 
   <!-- All Games - loaded at startup for compatibility -->
-  <script src="games/snake.js"></script>
-  <script src="games/tetris.js"></script>
-  <script src="games/game2048.js"></script>
-  <script src="games/flappy.js"></script>
-  <script src="games/minesweeper.js"></script>
-  <script src="games/pong.js"></script>
-  <script src="games/breakout.js"></script>
-  <script src="games/space.js"></script>
-  <script src="games/asteroids.js"></script>
-  <script src="games/frogger.js"></script>
-  <script src="games/memory.js"></script>
-  <script src="games/tictactoe.js"></script>
-  <script src="games/whackamole.js"></script>
-  <script src="games/doodlejump.js"></script>
-  <script src="games/simon.js"></script>
-  <script src="games/runner.js"></script>
-  <script src="games/orbcollector.js"></script>
-  <script src="games/skyfall.js"></script>
-  <script src="games/lasergrid.js"></script>
-  <script src="games/orbit.js"></script>
-  <script src="games/stacker.js"></script>
-  <script src="games/colorrush.js"></script>
-  <script src="games/cyberdash.js"></script>
-  <script src="games/neonduel.js"></script>
-  <script src="games/blaster.js"></script>
-  <script src="games/pixelquest.js"></script>
-  <script src="games/wordquest.js"></script>
-  <script src="games/bouncy.js"></script>
-  <script src="games/rhythmtap.js"></script>
-  <script src="games/jewels.js"></script>
-  <script src="games/ninja.js"></script>
-  <script src="games/piano.js"></script>
-  <script src="games/neondraw.js"></script>
-  <script src="games/colorswitch.js"></script>
-  <script src="games/orbitdefense.js"></script>
-  <script src="games/gravityflip.js"></script>
-  <script src="games/tapdash.js"></script>
-  <script src="games/towerdefense.js"></script>
-  <script src="games/hexpuzzle.js"></script>
-  <script src="games/shapeshifter.js"></script>
-  <script src="games/zigzag.js"></script>
-  <script src="games/lightcycle.js"></script>
-  <script src="games/pinball.js"></script>
-  <script src="games/reaction.js"></script>
-  <script src="games/rushhour.js"></script>
-  <script src="games/skydefender.js"></script>
-  <script src="games/snakevsblock.js"></script>
-  <script src="games/tunnelrush.js"></script>
-  <script src="games/typingrush.js"></script>
-  <script src="games/wordchain.js"></script>
-  <script src="games/ballblast.js"></script>
-  <script src="games/blockdash.js"></script>
-  <script src="games/bouncer.js"></script>
-  <script src="games/bubbleshooter.js"></script>
-  <script src="games/colormatcher.js"></script>
-  <script src="games/cubefall.js"></script>
-  <script src="games/pacman.js"></script>
-  <script src="games/neonbrawl.js"></script>
-  <script src="games/gardenempire.js"></script>
-  <script src="games/battlecards.js"></script>
+  <script defer src="games/snake.js"></script>
+  <script defer src="games/tetris.js"></script>
+  <script defer src="games/game2048.js"></script>
+  <script defer src="games/flappy.js"></script>
+  <script defer src="games/minesweeper.js"></script>
+  <script defer src="games/pong.js"></script>
+  <script defer src="games/breakout.js"></script>
+  <script defer src="games/space.js"></script>
+  <script defer src="games/asteroids.js"></script>
+  <script defer src="games/frogger.js"></script>
+  <script defer src="games/memory.js"></script>
+  <script defer src="games/tictactoe.js"></script>
+  <script defer src="games/whackamole.js"></script>
+  <script defer src="games/doodlejump.js"></script>
+  <script defer src="games/simon.js"></script>
+  <script defer src="games/runner.js"></script>
+  <script defer src="games/orbcollector.js"></script>
+  <script defer src="games/skyfall.js"></script>
+  <script defer src="games/lasergrid.js"></script>
+  <script defer src="games/orbit.js"></script>
+  <script defer src="games/stacker.js"></script>
+  <script defer src="games/colorrush.js"></script>
+  <script defer src="games/cyberdash.js"></script>
+  <script defer src="games/neonduel.js"></script>
+  <script defer src="games/blaster.js"></script>
+  <script defer src="games/pixelquest.js"></script>
+  <script defer src="games/wordquest.js"></script>
+  <script defer src="games/bouncy.js"></script>
+  <script defer src="games/rhythmtap.js"></script>
+  <script defer src="games/jewels.js"></script>
+  <script defer src="games/ninja.js"></script>
+  <script defer src="games/piano.js"></script>
+  <script defer src="games/neondraw.js"></script>
+  <script defer src="games/colorswitch.js"></script>
+  <script defer src="games/orbitdefense.js"></script>
+  <script defer src="games/gravityflip.js"></script>
+  <script defer src="games/tapdash.js"></script>
+  <script defer src="games/towerdefense.js"></script>
+  <script defer src="games/hexpuzzle.js"></script>
+  <script defer src="games/shapeshifter.js"></script>
+  <script defer src="games/zigzag.js"></script>
+  <script defer src="games/lightcycle.js"></script>
+  <script defer src="games/pinball.js"></script>
+  <script defer src="games/reaction.js"></script>
+  <script defer src="games/rushhour.js"></script>
+  <script defer src="games/skydefender.js"></script>
+  <script defer src="games/snakevsblock.js"></script>
+  <script defer src="games/tunnelrush.js"></script>
+  <script defer src="games/typingrush.js"></script>
+  <script defer src="games/wordchain.js"></script>
+  <script defer src="games/ballblast.js"></script>
+  <script defer src="games/blockdash.js"></script>
+  <script defer src="games/bouncer.js"></script>
+  <script defer src="games/bubbleshooter.js"></script>
+  <script defer src="games/colormatcher.js"></script>
+  <script defer src="games/cubefall.js"></script>
+  <script defer src="games/pacman.js"></script>
+  <script defer src="games/neonbrawl.js"></script>
+  <script defer src="games/gardenempire.js"></script>
+  <script defer src="games/battlecards.js"></script>
 
   <!-- Renderer scripts -->
-  <script src="renderer/particles.js"></script>
-  <script src="renderer/tutorial.js"></script>
-  <script src="renderer/launcher.js"></script>
+  <script defer src="renderer/particles.js"></script>
+  <script defer src="renderer/tutorial.js"></script>
+  <script defer src="renderer/launcher.js"></script>
 </body>
 
 </html>

@@ -2474,8 +2474,8 @@
     if (btnTutorial) {
         btnTutorial.addEventListener('click', () => {
             settingsModal.classList.add('hidden');
-            if (window.tutorialSystem) {
-                window.tutorialSystem.start();
+            if (window.initTutorial) {
+                window.initTutorial().start();
             }
         });
     }

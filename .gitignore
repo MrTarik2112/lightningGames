@@ -26,8 +26,6 @@ temp_extracted/
 
 # Temporary build directories
 lightning-games-build-*/
-build-ui/build/
-build-ui/build_win/
 
 # Binary executables and libraries
 *.exe

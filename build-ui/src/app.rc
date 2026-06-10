@@ -1,4 +1,0 @@
-// app.rc - Windows Resource File
-// Embeds the DPI manifest into the .exe so Windows knows this app is Per-Monitor DPI Aware
-
-1 24 "dpi.manifest"
