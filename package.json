@@ -44,6 +44,18 @@
       "maintainer": "Tarik",
       "target": "AppImage"
     },
+    "mac": {
+      "target": ["dmg", "dir"],
+      "icon": "assets/icons/icon.icns",
+      "category": "public.app-category.games",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "entitlements.mac.plist",
+      "entitlementsInherit": "entitlements.mac.inherit.plist",
+      "extendInfo": {
+        "LSUIElement": true
+      }
+    },
     "productName": "Lightning Games",
     "win": {
       "icon": "assets/icon.ico",
