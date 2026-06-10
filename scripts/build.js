@@ -17,6 +17,7 @@ const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
 
 const isWindows = process.platform === 'win32';
 const isLinux = process.platform === 'linux';
+const isMac = process.platform === 'darwin';
 const pmDetector = new PackageManagerDetector();
 
 const rl = readline.createInterface({
@@ -85,6 +86,10 @@ function canBuildLinux() {
     }
   }
   return false;
+}
+
+function canBuildMac() {
+  return isMac;
 }
 
 function validateVersion(version) {
@@ -306,6 +311,49 @@ async function buildLinux(compression, compressionName) {
     return await buildLinuxWSL(compression, compressionName);
   }
 }
+
+// ===================== BUILD macOS =====================
+async function buildMac(compression, compressionName) {
+  log.section('Building macOS DMG');
+  
+  if (!canBuildMac()) {
+    log.error('macOS build requires macOS - cannot build on this platform');
+    log.info('Use GitHub Actions with macos-latest runner for CI builds');
+    return false;
+  }
+
+  const pm = pmDetector.getPreferred();
+  const builderPath = pmDetector.getBuilderPath();
+  const icon = pm === 'bun' ? '⚡' : '📦';
+  
+  log.info(`Using ${icon} ${neon.yellow}${pm}${neon.reset} for build`);
+  
+  if (compressionName === 'ULTRA MEGA') {
+    log.info(`${neon.magenta}💎 ULTRA MEGA MODE ACTIVATED${neon.reset}`);
+    log.step(`Running: ${builderPath} --mac dmg --config.compression=maximum`);
+    
+    try {
+      await runCommand(builderPath, ['--mac', 'dmg', '--config.compression=maximum']);
+      log.success('macOS build complete');
+      return true;
+    } catch (err) {
+      log.error(`macOS build failed: ${err.message}`);
+      return false;
+    }
+  } else {
+    log.step(`Running: ${builderPath} --mac dmg --config.compression=${compression}`);
+    
+    try {
+      await runCommand(builderPath, ['--mac', 'dmg', `--config.compression=${compression}`]);
+      log.success('macOS build complete');
+      return true;
+    } catch (err) {
+      log.error(`macOS build failed: ${err.message}`);
+      return false;
+    }
+  }
+}
+
 // ===================== VERIFY ARTIFACTS =====================
 function verifyArtifacts() {
   log.section('Build Artifacts');
@@ -315,7 +363,7 @@ function verifyArtifacts() {
 
   if (fs.existsSync(distDir)) {
     for (const file of fs.readdirSync(distDir)) {
-      if (file.endsWith('.exe') || file.endsWith('.AppImage') || file.endsWith('.deb')) {
+      if (file.endsWith('.exe') || file.endsWith('.AppImage') || file.endsWith('.deb') || file.endsWith('.dmg')) {
         const filePath = path.join(distDir, file);
         const stat = fs.statSync(filePath);
         artifacts.push({ name: file, size: formatBytes(stat.size) });
@@ -435,16 +483,18 @@ async function main() {
     console.log();
 
     const linuxAvailable = canBuildLinux();
+    const macAvailable = canBuildMac();
     const linuxLabel = isLinux ? 'Native' : 'WSL';
     const linuxDesc = isLinux ? 'Direct Linux build' : 'Via WSL Linux filesystem';
     const linuxUnavailableMsg = isLinux ? '[dpkg/fakeroot missing]' : '[WSL not available]';
 
     console.log(`  ${neon.bold}[1]${neon.reset} 🪟  Windows Portable       ${neon.dim}Single .exe file${neon.reset}`);
     console.log(`  ${neon.bold}[2]${neon.reset} 🐧  Linux AppImage (${linuxLabel})   ${!linuxAvailable ? neon.red + linuxUnavailableMsg : neon.dim + linuxDesc}${neon.reset}`);
-    console.log(`  ${neon.bold}[3]${neon.reset} ⚡  Both Platforms         ${!linuxAvailable ? neon.red + '[' + (isLinux ? 'Linux deps missing' : 'WSL required') + ']' : neon.dim + 'Windows + Linux'}${neon.reset}`);
+    console.log(`  ${neon.bold}[3]${neon.reset} 🍎  macOS DMG              ${!macAvailable ? neon.red + '[Requires macOS]' : neon.dim + 'DMG + .app bundle'}${neon.reset}`);
+    console.log(`  ${neon.bold}[4]${neon.reset} ⚡  All Platforms           ${neon.dim}Windows + Linux + macOS${neon.reset}`);
     console.log();
 
-    const platformInput = await question(`  ${neon.cyan}Select platform${neon.reset} [1-3] (default: 1): `);
+    const platformInput = await question(`  ${neon.cyan}Select platform${neon.reset} [1-4] (default: 1): `);
     const platformChoice = platformInput.trim() || '1';
 
     let selectedPlatforms = [];
@@ -462,12 +512,17 @@ async function main() {
         }
         break;
       case '3':
-        if (linuxAvailable) {
-          selectedPlatforms = ['windows', 'linux'];
+        if (macAvailable) {
+          selectedPlatforms = ['mac'];
         } else {
-          log.error(`Linux build not available - falling back to Windows only`);
+          log.error(`macOS build requires macOS - falling back to Windows only`);
           selectedPlatforms = ['windows'];
         }
+        break;
+      case '4':
+        selectedPlatforms = ['windows'];
+        if (linuxAvailable) selectedPlatforms.push('linux');
+        if (macAvailable) selectedPlatforms.push('mac');
         break;
       default:
         log.warning(`Invalid choice: ${platformChoice} - using Windows`);
@@ -535,7 +590,8 @@ async function main() {
     // ===================== BUILD EXECUTION =====================
     const results = {
       windows: false,
-      linux: false
+      linux: false,
+      mac: false
     };
 
     if (selectedPlatforms.includes('windows')) {
@@ -544,6 +600,10 @@ async function main() {
 
     if (selectedPlatforms.includes('linux')) {
       results.linux = await buildLinux(compressionLevel, compressionName);
+    }
+
+    if (selectedPlatforms.includes('mac')) {
+      results.mac = await buildMac(compressionLevel, compressionName);
     }
 
     // ===================== VERIFICATION =====================
@@ -556,8 +616,9 @@ async function main() {
     console.log();
     console.log(`  ${neon.dim}Version:${neon.reset}     ${neon.yellow}${newVersion}${neon.reset}`);
     console.log(`  ${neon.dim}Compression:${neon.reset} ${neon.yellow}${compressionName}${neon.reset}`);
-    console.log(`  ${neon.dim}Windows:${neon.reset}     ${results.windows ? neon.green + '✓ Success' : neon.red + '✗ Failed'}${neon.reset}`);
+    console.log(`  ${neon.dim}Windows:${neon.reset}     ${selectedPlatforms.includes('windows') ? (results.windows ? neon.green + '✓ Success' : neon.red + '✗ Failed') : neon.dim + '- Skipped'}${neon.reset}`);
     console.log(`  ${neon.dim}Linux:${neon.reset}       ${selectedPlatforms.includes('linux') ? (results.linux ? neon.green + '✓ Success' : neon.red + '✗ Failed') : neon.dim + '- Skipped'}${neon.reset}`);
+    console.log(`  ${neon.dim}macOS:${neon.reset}       ${selectedPlatforms.includes('mac') ? (results.mac ? neon.green + '✓ Success' : neon.red + '✗ Failed') : neon.dim + '- Skipped'}${neon.reset}`);
     console.log(`  ${neon.dim}Duration:${neon.reset}    ${neon.cyan}${formatDuration(Date.now() - startTime)}${neon.reset}`);
     console.log();
 
