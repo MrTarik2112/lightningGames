@@ -187,8 +187,11 @@ async function buildWindows(compression, compressionName) {
 }
 
 // ===================== BUILD LINUX (NATIVE) =====================
-async function buildLinuxNative(compression, compressionName) {
-  log.section('Building Linux AppImage + .deb');
+async function buildLinuxNative(compression, compressionName, buildDebPackage) {
+  const targets = buildDebPackage ? ['AppImage', 'deb'] : ['AppImage'];
+  const targetStr = targets.join(' + ');
+  
+  log.section(`Building Linux ${targetStr}`);
   
   const pm = pmDetector.getPreferred();
   const builderPath = pmDetector.getBuilderPath();
@@ -196,21 +199,26 @@ async function buildLinuxNative(compression, compressionName) {
   
   log.info(`Using ${icon} ${neon.yellow}${pm}${neon.reset} for build`);
   
+  const args = ['--linux'];
+  targets.forEach(t => args.push(t));
+  
   if (compressionName === 'ULTRA MEGA') {
-    log.step(`Running: ${builderPath} --linux AppImage,deb --config.compression=maximum`);
+    args.push('--config.compression=maximum');
+    log.step(`Running: ${builderPath} ${args.join(' ')}`);
     try {
-      await runCommand(builderPath, ['--linux', 'AppImage,deb', '--config.compression=maximum']);
-      log.success('Linux build complete (AppImage + .deb)');
+      await runCommand(builderPath, args);
+      log.success(`Linux build complete (${targetStr})`);
       return true;
     } catch (err) {
       log.error(`Linux build failed: ${err.message}`);
       return false;
     }
   } else {
-    log.step(`Running: ${builderPath} --linux AppImage,deb --config.compression=${compression}`);
+    args.push(`--config.compression=${compression}`);
+    log.step(`Running: ${builderPath} ${args.join(' ')}`);
     try {
-      await runCommand(builderPath, ['--linux', 'AppImage,deb', `--config.compression=${compression}`]);
-      log.success('Linux build complete (AppImage + .deb)');
+      await runCommand(builderPath, args);
+      log.success(`Linux build complete (${targetStr})`);
       return true;
     } catch (err) {
       log.error(`Linux build failed: ${err.message}`);
@@ -220,8 +228,11 @@ async function buildLinuxNative(compression, compressionName) {
 }
 
 // ===================== BUILD LINUX (WSL) =====================
-async function buildLinuxWSL(compression, compressionName) {
-  log.section('Building Linux AppImage (WSL)');
+async function buildLinuxWSL(compression, compressionName, buildDebPackage) {
+  const targets = buildDebPackage ? ['AppImage', 'deb'] : ['AppImage'];
+  const targetStr = targets.join(' + ');
+  
+  log.section(`Building Linux ${targetStr} (WSL)`);
   
   if (!canBuildLinux()) {
     log.error('WSL not available - skipping Linux build');
@@ -249,6 +260,9 @@ async function buildLinuxWSL(compression, compressionName) {
     const timestamp = Date.now();
     const linuxBuildPath = `$HOME/lightning-games-build-${timestamp}`;
     
+    const targetArgs = targets.map(t => `--linux ${t}`).join(' ');
+    const debCopyCmd = buildDebPackage ? 'find "' + linuxBuildPath + '/dist" -name "*.deb" -exec cp -v {} "' + wslSourcePath + '/dist/" \\;' : '';
+    
     const scriptContent = `#!/bin/bash
 set -e
 
@@ -266,18 +280,18 @@ cd "${linuxBuildPath}"
 echo "📥 Installing dependencies..."
 npm install
 
-echo "🔨 Building AppImage + .deb..."
-npx electron-builder --linux AppImage,deb --config.compression=${compression}
+echo "🔨 Building ${targetStr}..."
+npx electron-builder ${targetArgs} --config.compression=${compression}
 
 echo "📋 Copying build artifacts back to Windows..."
 mkdir -p "${wslSourcePath}/dist"
 find "${linuxBuildPath}/dist" -name "*.AppImage" -exec cp -v {} "${wslSourcePath}/dist/" \\;
-find "${linuxBuildPath}/dist" -name "*.deb" -exec cp -v {} "${wslSourcePath}/dist/" \\;
+${debCopyCmd}
 
 echo "🧹 Cleaning up..."
 rm -rf "${linuxBuildPath}"
 
-echo "✅ Linux build complete (AppImage + .deb)!"
+echo "✅ Linux build complete (${targetStr})!"
 `;
 
     const scriptPath = path.join(projectRoot, 'temp_build_linux.sh');
@@ -304,11 +318,11 @@ echo "✅ Linux build complete (AppImage + .deb)!"
 }
 
 // ===================== BUILD LINUX (DISPATCHER) =====================
-async function buildLinux(compression, compressionName) {
+async function buildLinux(compression, compressionName, buildDebPackage) {
   if (isLinux) {
-    return await buildLinuxNative(compression, compressionName);
+    return await buildLinuxNative(compression, compressionName, buildDebPackage);
   } else {
-    return await buildLinuxWSL(compression, compressionName);
+    return await buildLinuxWSL(compression, compressionName, buildDebPackage);
   }
 }
 
@@ -532,6 +546,14 @@ async function main() {
     console.log();
     log.info(`Building for: ${neon.yellow}${selectedPlatforms.join(', ')}${neon.reset}`);
 
+    // ===================== LINUX DEB OPTION =====================
+    let buildDebPackage = false;
+    if (selectedPlatforms.includes('linux')) {
+      const debInput = await question(`  ${neon.cyan}Also build .deb package?${neon.reset} [y/N]: `);
+      buildDebPackage = debInput.toLowerCase() === 'y';
+      console.log();
+    }
+
     // ===================== COMPRESSION SELECTION =====================
     log.section('Compression Level');
     console.log();
@@ -599,7 +621,7 @@ async function main() {
     }
 
     if (selectedPlatforms.includes('linux')) {
-      results.linux = await buildLinux(compressionLevel, compressionName);
+      results.linux = await buildLinux(compressionLevel, compressionName, buildDebPackage);
     }
 
     if (selectedPlatforms.includes('mac')) {

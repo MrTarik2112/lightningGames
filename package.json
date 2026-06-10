@@ -62,6 +62,7 @@
       "target": "portable"
     }
   },
+  "homepage": "https://discord.gg/hbNRTQFbjT",
   "description": "⚡ Lightning Games - Quick game launcher that lives in your system tray",
   "devDependencies": {
     "autoprefixer": "^10.4.16",
