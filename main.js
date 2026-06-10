@@ -107,7 +107,7 @@ function updateTrayMenu() {
   const menuTemplate = [
     { label: '⚡ Lightning Games', enabled: false },
     { type: 'separator' },
-    { label: '🎮 Open (Ctrl+Alt+G)', click: () => toggleWindow() }
+    { label: `🎮 Open (${process.platform === 'darwin' ? 'Cmd' : 'Ctrl'}+Alt+G)`, click: () => toggleWindow() }
   ];
 
   // Recent games
@@ -288,7 +288,8 @@ if (!gotTheLock) {
   app.whenReady().then(() => {
     createWindow();
     createTray();
-    globalShortcut.register('Ctrl+Alt+G', toggleWindow);
+    const shortcut = process.platform === 'darwin' ? 'Command+Alt+G' : 'Ctrl+Alt+G';
+    globalShortcut.register(shortcut, toggleWindow);
     if (process.platform === 'darwin') app.dock.hide();
   });
 }
