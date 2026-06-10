@@ -2606,6 +2606,15 @@ dist/
 - 🐛 Fixed missing renderer/, games/, styles/ in builds
 - 🐛 Fixed assets/ not being included in ASAR
 
+### macOS Support Implementation (v3.0.0 Update)
+
+- ✨ **macOS DMG & App Bundles**: Added support to build `.dmg` installers and `.app` bundles via Electron Builder.
+- ✨ **Interactive Wizard Integration**: Extended `scripts/build.js` wizard with Option 3 (macOS DMG) and Option 4 (All Platforms), dynamically showing compatibility states.
+- ⚙️ **Platform-Specific Shortcut Key**: Switched the default global hotkey to `Command+Alt+G` on macOS, while retaining `Ctrl+Alt+G` on Windows/Linux.
+- 🎨 **Dynamic Tray Labels**: Updated tray context menu dynamically to show `Cmd+Alt+G` on macOS and `Ctrl+Alt+G` elsewhere.
+- 🔒 **Hardened Runtime & Sandbox Entitlements**: Added `entitlements.mac.plist` and `entitlements.mac.inherit.plist` for Gatekeeper/App Store pre-notarization safety.
+- 📂 **Implementation Document**: Detailed in [MACOS_SUPPORT_IMPLEMENTATION.md](file:///home/trk/Documents/code/lightningGames/Docs/MACOS_SUPPORT_IMPLEMENTATION.md).
+
 ---
 
 **Built with ⚡ by Tarik**
