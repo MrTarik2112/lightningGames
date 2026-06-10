@@ -57,7 +57,8 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/platform-Windows%2010%2F11-0078D6?style=flat-square&logo=windows&logoColor=white" alt="Platform" />
+  <img src="https://img.shields.io/badge/platform-Windows%2010%2F11-0078D6?style=flat-square&logo=windows&logoColor=white" alt="Windows" />
+  <img src="https://img.shields.io/badge/platform-macOS-000000?style=flat-square&logo=apple&logoColor=white" alt="macOS" />
   <img src="https://img.shields.io/badge/electron-28.0-47848F?style=flat-square&logo=electron&logoColor=white" alt="Electron" />
   <img src="https://img.shields.io/badge/package%20manager-Bun%20%2B%20npm-F471B6?style=flat-square&logo=bun&logoColor=white" alt="Bun + npm" />
   <img src="https://img.shields.io/badge/runtime%20deps-0-brightgreen?style=flat-square" alt="Zero Runtime Deps" />
@@ -353,7 +354,57 @@ Lightning Games lives in your system tray (bottom-right corner of Windows taskba
 
 ---
 
-### Option B: Build from Source 🛠️
+### Option B: macOS DMG 🍎
+
+**Download `Lightning Games.dmg` from the latest release.**
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+#### Installation
+
+1. Download `Lightning Games.dmg`
+2. Double-click to mount the disk image
+3. Drag **Lightning Games.app** to your **Applications** folder
+4. Launch from Applications or Spotlight
+5. Lightning bolt icon appears in the menu bar
+6. Press <kbd>Cmd</kbd>+<kbd>Alt</kbd>+<kbd>G</kbd> from anywhere
+
+</td>
+<td width="50%" valign="top">
+
+#### Technical Details
+
+- **Format**: DMG disk image + .app bundle
+- **Architecture**: x64 (64-bit)
+- **Platform**: macOS 10.15+ (Catalina or later)
+- **Runtime**: Electron 28.0 (bundled)
+- **Category**: Games
+- **Dock**: Hidden (tray-only app)
+
+</td>
+</tr>
+</table>
+
+**Gatekeeper bypass (unsigned builds):**
+
+If macOS blocks the app with _"cannot be opened because it is from an unidentified developer"_:
+
+```bash
+# Remove quarantine attribute
+xattr -d com.apple.quarantine /Applications/Lightning\ Games.app
+```
+
+Or: **System Preferences → Security & Privacy → Open Anyway**
+
+**Uninstall:**
+- Drag `Lightning Games.app` from Applications to Trash
+- Optionally remove data: `rm -rf ~/Library/Application\ Support/lightning-games`
+
+---
+
+### Option C: Build from Source 🛠️
 
 **For developers who want to customize or contribute.**
 
