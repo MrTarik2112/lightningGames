@@ -855,6 +855,32 @@
 
         updateFooterStats();
         renderRecentlyPlayed();
+        updateTabCounts();
+    }
+
+    function updateTabCounts() {
+        const counts = {};
+        GAME_CARDS_CONFIG.forEach(g => {
+            if (!counts[g.category]) counts[g.category] = 0;
+            counts[g.category]++;
+        });
+
+        document.querySelectorAll('.category-tab').forEach(tab => {
+            const cat = tab.dataset.category;
+            const countEl = tab.querySelector('.tab-count');
+            if (!countEl) return;
+
+            if (cat === 'all') {
+                countEl.textContent = `(${GAME_CARDS_CONFIG.length})`;
+            } else if (cat === 'favorites') {
+                const favCount = (gm.favorites || []).filter(id =>
+                    GAME_CARDS_CONFIG.some(g => g.id === id)
+                ).length;
+                countEl.textContent = favCount > 0 ? `(${favCount})` : '';
+            } else {
+                countEl.textContent = counts[cat] ? `(${counts[cat]})` : '';
+            }
+        });
     }
 
     function renderStats() {
