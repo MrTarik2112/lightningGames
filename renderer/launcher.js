@@ -651,17 +651,17 @@
     const currentTheme = localStorage.getItem('lg_theme') || 'default';
     if (currentTheme !== 'default') {
         document.body.className = `theme-${currentTheme}`;
+        themeButtons.forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.theme === currentTheme);
+        });
+    }
+
     // Init Heroicons for static data-hi elements + emoji support test
     if (window.HeroIcons) {
         HeroIcons.init();
         if (!HeroIcons.testEmojiSupport()) {
             document.body.dataset.emojiFail = 'true';
         }
-    }
-
-    themeButtons.forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.theme === currentTheme);
-        });
     }
 
     themeButtons.forEach(btn => {
