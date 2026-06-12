@@ -345,7 +345,7 @@ body.theme-fire {
 }
 
 .title-text {
-  font-family: var(--font);
+  font-family: var(--font-display);
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.3px;
@@ -574,7 +574,7 @@ body.theme-fire {
 }
 
 .launcher-title {
-  font-family: var(--font);
+  font-family: var(--font-display);
   font-size: 24px;
   font-weight: 900;
   color: var(--text-primary);
@@ -1255,7 +1255,7 @@ body.theme-fire {
 }
 
 .game-title-bar {
-  font-family: var(--font);
+  font-family: var(--font-display);
   font-size: 15px;
   font-weight: 800;
   color: var(--text-primary);
