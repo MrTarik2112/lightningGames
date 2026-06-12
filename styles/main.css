@@ -59,6 +59,8 @@ body {
   user-select: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-kerning: normal;
 }
 
 /* ===== THEME: RETRO ===== */
