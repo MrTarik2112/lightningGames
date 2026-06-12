@@ -30,7 +30,7 @@
     <div class="title-bar" style="-webkit-app-region: drag;">
       <div class="title-left">
         <div class="title-logo-wrap">
-          <span class="title-icon">⚡</span>
+          <span class="title-icon" data-hi="bolt"></span>
           <div class="logo-ring"></div>
         </div>
         <span class="title-text">Lightning Games</span>
@@ -39,11 +39,11 @@
       <div class="title-right" style="-webkit-app-region: no-drag;">
         <!-- Ultra Upgrade: Volume & Settings -->
         <div class="volume-control">
-          <span class="volume-icon">🔊</span>
+          <span class="volume-icon" data-hi="speakerWave"></span>
           <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="0.5" aria-label="Master volume">
         </div>
         <button id="btn-settings" class="btn-settings" title="Settings">
-          <span class="settings-icon">⚙️</span>
+          <span class="settings-icon" data-hi="cog6tooth"></span>
         </button>
         <div class="shortcut-badge">
           <kbd>Ctrl</kbd><span class="kbd-plus">+</span><kbd>Alt</kbd><span class="kbd-plus">+</span><kbd>G</kbd>
@@ -63,7 +63,7 @@
     <div id="launcher-view" class="launcher-view">
       <div class="launcher-header">
         <h1 class="launcher-title">
-          <span class="title-emoji">🎮</span> Quick Game Select
+          <span class="title-emoji" data-hi="controller"></span> Quick Game Select
         </h1>
         <p class="launcher-subtitle">Click a game to start playing</p>
       </div>
@@ -71,11 +71,11 @@
       <!-- Category & Search Bar -->
       <div class="launcher-controls">
         <div class="category-tabs">
-          <button class="category-tab active" data-category="all"><span class="tab-icon">&#127918;</span> All</button>
-          <button class="category-tab" data-category="favorites"><span class="tab-icon">&#11088;</span> Favorites</button>
-          <button class="category-tab" data-category="arcade"><span class="tab-icon">&#9889;</span> Arcade</button>
-          <button class="category-tab" data-category="puzzle"><span class="tab-icon">&#129504;</span> Puzzle</button>
-          <button class="category-tab" data-category="classic"><span class="tab-icon">&#127955;</span> Classic</button>
+          <button class="category-tab active" data-category="all"><span class="tab-icon" data-hi="controller"></span> All</button>
+          <button class="category-tab" data-category="favorites"><span class="tab-icon" data-hi="star"></span> Favorites</button>
+          <button class="category-tab" data-category="arcade"><span class="tab-icon" data-hi="bolt"></span> Arcade</button>
+          <button class="category-tab" data-category="puzzle"><span class="tab-icon" data-hi="sparkles"></span> Puzzle</button>
+          <button class="category-tab" data-category="classic"><span class="tab-icon" data-hi="controller"></span> Classic</button>
         </div>
 
         <div class="search-wrap">
@@ -84,10 +84,10 @@
             <input type="text" id="game-search" placeholder="Search game..." spellcheck="false" aria-label="Search games">
             <button id="search-clear" class="search-clear hidden">✕</button>
           </div>
-            <span class="search-icon">🔍</span>
+            <span class="search-icon" data-hi="magnifyingGlass"></span>
           </div>
           <button id="btn-random" class="btn-random" title="Random Game">
-            🎲
+            <span data-hi="cube"></span>
           </button>
           <select id="sort-select" class="sort-select" title="Sort games" aria-label="Sort games">
             <option value="default">Default</option>
@@ -101,7 +101,7 @@
 
       <!-- Ultra Upgrade: Recently Played -->
       <div id="recently-played-section" class="recently-played-section hidden">
-        <h2 class="section-title">🕒 Recently Played</h2>
+        <h2 class="section-title"><span data-hi="clock"></span> Recently Played</h2>
         <div id="recently-played-list" class="recently-played-list">
           <!-- Recent games injected here -->
         </div>
@@ -113,12 +113,12 @@
 
       <!-- Ultra Upgrade: Stats View -->
       <div id="stats-view" class="stats-view hidden">
-        <h2 class="section-title">📊 Your Stats</h2>
+        <h2 class="section-title"><span data-hi="chartBar"></span> Your Stats</h2>
         
         <!-- Hero Stats Section -->
         <div class="stats-hero-section">
           <div class="stats-hero-card">
-            <div class="stats-hero-icon">🎮</div>
+            <div class="stats-hero-icon" data-hi="controller"></div>
             <div class="stats-hero-content">
               <div class="stats-hero-label">Total Games Played</div>
               <div class="stats-hero-value" id="hero-total-games">0</div>
@@ -126,7 +126,7 @@
             </div>
           </div>
           <div class="stats-hero-card">
-            <div class="stats-hero-icon">🏆</div>
+            <div class="stats-hero-icon" data-hi="trophy"></div>
             <div class="stats-hero-content">
               <div class="stats-hero-label">Achievements Unlocked</div>
               <div class="stats-hero-value" id="hero-achievements">0</div>
@@ -134,7 +134,7 @@
             </div>
           </div>
           <div class="stats-hero-card">
-            <div class="stats-hero-icon">⏱️</div>
+            <div class="stats-hero-icon" data-hi="clock"></div>
             <div class="stats-hero-content">
               <div class="stats-hero-label">Total Play Time</div>
               <div class="stats-hero-value" id="hero-playtime">0h 0m</div>
@@ -142,7 +142,7 @@
             </div>
           </div>
           <div class="stats-hero-card">
-            <div class="stats-hero-icon">🔥</div>
+            <div class="stats-hero-icon" data-hi="fire"></div>
             <div class="stats-hero-content">
               <div class="stats-hero-label">Best Streak</div>
               <div class="stats-hero-value" id="hero-streak">0</div>
@@ -154,7 +154,7 @@
         <!-- Overview Cards -->
         <div class="stats-cards">
           <div class="stat-card">
-            <span class="stat-icon">🎮</span>
+            <span class="stat-icon" data-hi="controller"></span>
             <span class="stat-value" id="stat-total-played">0</span>
             <span class="stat-label">Total Games</span>
             <div class="stat-progress-bar">
@@ -162,7 +162,7 @@
             </div>
           </div>
           <div class="stat-card">
-            <span class="stat-icon">🏆</span>
+            <span class="stat-icon" data-hi="trophy"></span>
             <span class="stat-value" id="stat-achievements">0/10</span>
             <span class="stat-label">Achievements</span>
             <div class="stat-progress-bar">
@@ -170,7 +170,7 @@
             </div>
           </div>
           <div class="stat-card">
-            <span class="stat-icon">⭐</span>
+            <span class="stat-icon" data-hi="star"></span>
             <span class="stat-value" id="stat-favorites">0</span>
             <span class="stat-label">Favorites</span>
             <div class="stat-progress-bar">
@@ -178,7 +178,7 @@
             </div>
           </div>
           <div class="stat-card">
-            <span class="stat-icon">🎯</span>
+            <span class="stat-icon" data-hi="questionMarkCircle"></span>
             <span class="stat-value" id="stat-unique-games">0</span>
             <span class="stat-label">Unique Games</span>
             <div class="stat-progress-bar">
@@ -186,7 +186,7 @@
             </div>
           </div>
           <div class="stat-card">
-            <span class="stat-icon">📈</span>
+            <span class="stat-icon" data-hi="chartBar"></span>
             <span class="stat-value" id="stat-total-score">0</span>
             <span class="stat-label">Total Score</span>
             <div class="stat-progress-bar">
@@ -194,7 +194,7 @@
             </div>
           </div>
           <div class="stat-card">
-            <span class="stat-icon">💯</span>
+            <span class="stat-icon" data-hi="checkBadge"></span>
             <span class="stat-value" id="stat-avg-score">0</span>
             <span class="stat-label">Avg Score</span>
             <div class="stat-progress-bar">
@@ -202,7 +202,7 @@
             </div>
           </div>
           <div class="stat-card">
-            <span class="stat-icon">⚡</span>
+            <span class="stat-icon" data-hi="bolt"></span>
             <span class="stat-value" id="stat-games-hour">0</span>
             <span class="stat-label">Games/Hour</span>
             <div class="stat-progress-bar">
@@ -210,7 +210,7 @@
             </div>
           </div>
           <div class="stat-card">
-            <span class="stat-icon">📅</span>
+            <span class="stat-icon" data-hi="calendar"></span>
             <span class="stat-value" id="stat-days-active">0</span>
             <span class="stat-label">Active Days</span>
             <div class="stat-progress-bar">
@@ -221,31 +221,31 @@
 
         <!-- Quick Stats Summary -->
         <div class="stats-section">
-          <h3 class="stats-section-title">⚡ Quick Summary</h3>
+          <h3 class="stats-section-title"><span data-hi="bolt"></span> Quick Summary</h3>
           <div class="quick-stats-grid">
             <div class="quick-stat-item">
-              <span class="quick-stat-icon">🎲</span>
+              <span class="quick-stat-icon" data-hi="cube"></span>
               <div class="quick-stat-info">
                 <span class="quick-stat-value" id="quick-most-played-game">-</span>
                 <span class="quick-stat-label">Most Played</span>
               </div>
             </div>
             <div class="quick-stat-item">
-              <span class="quick-stat-icon">👑</span>
+              <span class="quick-stat-icon" data-hi="crown"></span>
               <div class="quick-stat-info">
                 <span class="quick-stat-value" id="quick-best-game">-</span>
                 <span class="quick-stat-label">Best Game</span>
               </div>
             </div>
             <div class="quick-stat-item">
-              <span class="quick-stat-icon">🏆</span>
+              <span class="quick-stat-icon" data-hi="trophy"></span>
               <div class="quick-stat-info">
                 <span class="quick-stat-value" id="quick-best-score">0</span>
                 <span class="quick-stat-label">Best Score</span>
               </div>
             </div>
             <div class="quick-stat-item">
-              <span class="quick-stat-icon">⏳</span>
+              <span class="quick-stat-icon" data-hi="clock"></span>
               <div class="quick-stat-info">
                 <span class="quick-stat-value" id="quick-last-played">-</span>
                 <span class="quick-stat-label">Last Played</span>
@@ -256,7 +256,7 @@
 
         <!-- Top Games Section -->
         <div class="stats-section">
-          <h3 class="stats-section-title">🏅 Top Games by Score</h3>
+          <h3 class="stats-section-title"><span data-hi="trophy"></span> Top Games by Score</h3>
           <div class="top-games-list" id="top-games-list">
             <!-- Top games will be listed here -->
           </div>
@@ -264,7 +264,7 @@
 
         <!-- Recent Activity -->
         <div class="stats-section">
-          <h3 class="stats-section-title">🕐 Recent Activity</h3>
+          <h3 class="stats-section-title"><span data-hi="clock"></span> Recent Activity</h3>
           <div class="recent-activity-list" id="recent-activity-list">
             <!-- Recent activity will be shown here -->
           </div>
@@ -272,7 +272,7 @@
 
         <!-- Category Breakdown -->
         <div class="stats-section">
-          <h3 class="stats-section-title">📊 Games by Category</h3>
+          <h3 class="stats-section-title"><span data-hi="chartBar"></span> Games by Category</h3>
           <div class="category-stats" id="category-stats">
             <!-- Category breakdown will be shown here -->
           </div>
@@ -280,7 +280,7 @@
 
         <!-- Play Time Chart -->
         <div class="stats-section">
-          <h3 class="stats-section-title">⏱️ Play Time Distribution</h3>
+          <h3 class="stats-section-title"><span data-hi="clock"></span> Play Time Distribution</h3>
           <div class="playtime-chart" id="playtime-chart">
             <!-- Play time chart will be shown here -->
           </div>
@@ -288,7 +288,7 @@
 
         <!-- Achievement Progress -->
         <div class="stats-section">
-          <h3 class="stats-section-title">🏆 Achievement Progress</h3>
+          <h3 class="stats-section-title"><span data-hi="trophy"></span> Achievement Progress</h3>
           <div class="achievement-progress-grid">
             <div class="achievement-progress-card">
               <span class="achievement-progress-label">Normal</span>
@@ -316,7 +316,7 @@
 
         <!-- Milestones -->
         <div class="stats-section">
-          <h3 class="stats-section-title">🎯 Milestones</h3>
+          <h3 class="stats-section-title"><span data-hi="target"></span> Milestones</h3>
           <div class="milestones-grid" id="milestones-grid">
             <!-- Milestones will be shown here -->
           </div>
@@ -324,7 +324,7 @@
 
         <!-- Achievements List -->
         <div class="stats-section">
-          <h3 class="stats-section-title">🏆 All Achievements</h3>
+          <h3 class="stats-section-title"><span data-hi="trophy"></span> All Achievements</h3>
           <div class="achievements-filter">
             <button class="achievement-filter-btn active" data-filter="all">All</button>
             <button class="achievement-filter-btn" data-filter="unlocked">Unlocked</button>
@@ -339,7 +339,7 @@
       </div>
       <div class="launcher-footer">
         <div class="footer-left">
-          <span class="footer-stat" id="total-playtime">🕐 Total: 0 games</span>
+          <span class="footer-stat" id="total-playtime"><span data-hi="clock"></span> Total: 0 games</span>
         </div>
         <div class="footer-center">
           <!-- Ultra Upgrade: Tab Controls -->
@@ -350,7 +350,7 @@
         </div>
         <div class="footer-right">
           <span class="footer-stat" id="favorite-count">★ 0</span>
-          <span class="footer-stat" id="best-score-display">🏆 Best: --</span>
+          <span class="footer-stat" id="best-score-display"><span data-hi="trophy"></span> Best: --</span>
         </div>
       </div>
     </div>
@@ -413,7 +413,7 @@
       <div class="settings-backdrop"></div>
       <div class="settings-panel">
         <div class="settings-header">
-          <h2 class="settings-title">⚙️ Settings</h2>
+          <h2 class="settings-title"><span data-hi="cog6tooth"></span> Settings</h2>
           <button id="settings-close" class="settings-close" title="Close">✕</button>
         </div>
         
@@ -643,31 +643,31 @@
           <div class="settings-section">
             <h3 class="settings-section-title">Help</h3>
             <div class="settings-field">
-              <button id="btn-tutorial" class="settings-btn">📚 Tutorial</button>
+              <button id="btn-tutorial" class="settings-btn"><span data-hi="bookOpen"></span> Tutorial</button>
             </div>
           </div>
 
           <div class="settings-section">
             <h3 class="settings-section-title">Data</h3>
             <div class="settings-field">
-              <button id="btn-export-data" class="settings-btn">💾 Export</button>
+              <button id="btn-export-data" class="settings-btn"><span data-hi="arrowDownTray"></span> Export</button>
             </div>
             <div class="settings-field">
-              <button id="btn-import-data" class="settings-btn">📂 Import</button>
+              <button id="btn-import-data" class="settings-btn"><span data-hi="folderOpen"></span> Import</button>
               <input type="file" id="import-file-input" accept=".json" style="display: none;">
             </div>
             <div class="settings-field">
-              <button id="btn-screenshot-highscore" class="settings-btn">📸 Screenshot</button>
+              <button id="btn-screenshot-highscore" class="settings-btn"><span data-hi="camera"></span> Screenshot</button>
             </div>
             <div class="settings-field">
-              <button id="btn-share-achievements" class="settings-btn">🏆 Share</button>
+              <button id="btn-share-achievements" class="settings-btn"><span data-hi="shareSocial"></span> Share</button>
             </div>
           </div>
 
           <div class="settings-section" style="border-color: var(--accent-red);">
-            <h3 class="settings-section-title" style="color: var(--accent-red);">⚠️ Danger</h3>
+            <h3 class="settings-section-title" style="color: var(--accent-red);"><span data-hi="exclamationTriangle"></span> Danger</h3>
             <div class="settings-field">
-              <button id="btn-hard-reset" class="settings-btn" style="background: linear-gradient(135deg, #ff4466, #ff6b35);">🔥 Hard Reset</button>
+              <button id="btn-hard-reset" class="settings-btn" style="background: linear-gradient(135deg, #ff4466, #ff6b35);"><span data-hi="exclamationTriangle"></span> Hard Reset</button>
             </div>
           </div>
         </div>
@@ -678,7 +678,7 @@
   <!-- Data Export Modal -->
   <div id="data-export-modal" class="data-modal">
     <div class="data-content">
-      <div class="data-icon">💾</div>
+      <div class="data-icon" data-hi="arrowDownTray"></div>
       <h2 class="data-title">Export Data</h2>
       <p class="data-description">Your data will be saved as JSON.</p>
       <div class="data-info" id="export-data-info"></div>
@@ -692,7 +692,7 @@
   <!-- Data Import Modal -->
   <div id="data-import-modal" class="data-modal">
     <div class="data-content">
-      <div class="data-icon">📂</div>
+      <div class="data-icon" data-hi="folderOpen"></div>
       <h2 class="data-title">Import Data</h2>
       <p class="data-description">Select a JSON file to restore your data.</p>
       <div class="data-info" id="import-data-preview">
@@ -711,7 +711,7 @@
   <!-- Keyboard Shortcuts Help Overlay -->
   <div id="shortcuts-help" class="shortcuts-help hidden">
     <div class="shortcuts-help-content">
-      <h2 class="shortcuts-help-title">⌨️ Keyboard Shortcuts</h2>
+      <h2 class="shortcuts-help-title"><span data-hi="keyboard"></span> Keyboard Shortcuts</h2>
       <div class="shortcuts-help-grid">
         <div class="shortcuts-help-group">
           <h3>Navigation</h3>
@@ -747,7 +747,7 @@
   </div>
 
   <!-- Import Success Toast -->
-  <div id="import-success-toast" class="import-success">✅ Data imported!</div>
+  <div id="import-success-toast" class="import-success"><span data-hi="checkCircle"></span> Data imported!</div>
 
   <!-- Game Manager -->
   <script defer src="renderer/gameManager.js"></script>
@@ -814,6 +814,9 @@
   <script defer src="games/neonbrawl.js"></script>
   <script defer src="games/gardenempire.js"></script>
   <script defer src="games/battlecards.js"></script>
+
+  <!-- Heroicons SVG library -->
+  <script defer src="renderer/heroicons.js"></script>
 
   <!-- Renderer scripts -->
   <script defer src="renderer/particles.js"></script>

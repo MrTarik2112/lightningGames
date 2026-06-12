@@ -14,6 +14,7 @@
     }
 
     const gm = window.gameManager;
+    const hi = window.HeroIcons ? window.HeroIcons.hi.bind(window.HeroIcons) : (() => '');
 
     const GAME_CARDS_CONFIG = [
         {
@@ -650,7 +651,10 @@
     const currentTheme = localStorage.getItem('lg_theme') || 'default';
     if (currentTheme !== 'default') {
         document.body.className = `theme-${currentTheme}`;
-        themeButtons.forEach(btn => {
+    // Init Heroicons for static data-hi elements
+    if (window.HeroIcons) HeroIcons.init();
+
+    themeButtons.forEach(btn => {
             btn.classList.toggle('active', btn.dataset.theme === currentTheme);
         });
     }
@@ -762,7 +766,7 @@
             const isFavorites = currentCategory === 'favorites';
             const isCategory = currentCategory !== 'all';
             noResults.innerHTML = `
-                <span class="no-results-icon">${hasFilter ? '🔍' : isFavorites ? '⭐' : '🎮'}</span>
+                <span class="no-results-icon">${hasFilter ? HeroIcons.hi('magnifyingGlass') : isFavorites ? HeroIcons.hi('star') : HeroIcons.hi('controller')}</span>
                 <span class="no-results-text">${hasFilter ? `No games found matching "${filter}".` : isFavorites ? 'No favorite games yet.' : isCategory ? `No ${currentCategory} games found.` : 'No games available.'}</span>
                 <span class="no-results-hint">${hasFilter ? 'Try a different search term or ' : ''}${isFavorites && hasFilter ? 'Try a different search or ' : ''}<button class="no-results-clear btn-link">clear all filters</button></span>
             `;
@@ -798,7 +802,7 @@
 
             let highScoreHTML = '';
             if (highScore > 0) {
-                highScoreHTML = `<span class="game-card-highscore">🏆 ${highScore}</span>`;
+                highScoreHTML = `<span class="game-card-highscore">${hi('trophy')} ${highScore}</span>`;
             }
 
             const cardContent = document.createElement('div');
@@ -813,8 +817,8 @@
             const lastPlayed = config.lastPlayed ? timeAgo(config.lastPlayed) : '';
             const playCount = config.playCount || 0;
             const metaParts = [];
-            if (lastPlayed) metaParts.push(`<span class="game-card-meta-item">🕐 ${lastPlayed}</span>`);
-            if (playCount > 0) metaParts.push(`<span class="game-card-meta-item">🎮 ${playCount}x</span>`);
+            if (lastPlayed) metaParts.push(`<span class="game-card-meta-item">${hi('clock')} ${lastPlayed}</span>`);
+            if (playCount > 0) metaParts.push(`<span class="game-card-meta-item">${hi('controller')} ${playCount}x</span>`);
 
             cardContent.innerHTML = `
                 <span class="game-card-category">${config.category}</span>
@@ -1370,18 +1374,18 @@
         if (!milestonesGrid) return;
         
         const milestones = [
-            { icon: '🎮', title: 'First Steps', desc: 'Play 10 games', current: gm.totalGamesPlayed, target: 10 },
-            { icon: '🏆', title: 'Achievement Hunter', desc: 'Unlock 10 achievements', current: (gm.achievements || []).length, target: 10 },
-            { icon: '⭐', title: 'Favorite Collector', desc: 'Add 5 favorites', current: (gm.favorites || []).length, target: 5 },
-            { icon: '⏱️', title: 'Time Traveler', desc: 'Play for 1 hour', current: Math.floor((gm.totalPlayTime || 0) / 60), target: 60 },
-            { icon: '🎯', title: 'Explorer', desc: 'Try 20 different games', current: (gm.uniqueGamesPlayed || []).length, target: 20 },
-            { icon: '🔥', title: 'Streak Master', desc: 'Reach 5 game streak', current: gm.consecutiveGames || 0, target: 5 },
-            { icon: '💯', title: 'Century Club', desc: 'Play 100 games', current: gm.totalGamesPlayed, target: 100 },
-            { icon: '👑', title: 'Champion', desc: 'Score 10,000 total points', current: GAME_CARDS_CONFIG.reduce((sum, g) => sum + (gm.getHighScore(g.id) || 0), 0), target: 10000 },
-            { icon: '⚡', title: 'Speedster', desc: 'Play 500 games', current: gm.totalGamesPlayed, target: 500 },
-            { icon: '🌟', title: 'Master', desc: 'Unlock 50 achievements', current: (gm.achievements || []).length, target: 50 },
-            { icon: '💎', title: 'Diamond', desc: 'Play for 10 hours', current: Math.floor((gm.totalPlayTime || 0) / 60), target: 600 },
-            { icon: '🚀', title: 'Rocket', desc: 'Score 50,000 total points', current: GAME_CARDS_CONFIG.reduce((sum, g) => sum + (gm.getHighScore(g.id) || 0), 0), target: 50000 }
+            { icon: hi('controller'), title: 'First Steps', desc: 'Play 10 games', current: gm.totalGamesPlayed, target: 10 },
+            { icon: hi('trophy'), title: 'Achievement Hunter', desc: 'Unlock 10 achievements', current: (gm.achievements || []).length, target: 10 },
+            { icon: hi('star'), title: 'Favorite Collector', desc: 'Add 5 favorites', current: (gm.favorites || []).length, target: 5 },
+            { icon: hi('clock'), title: 'Time Traveler', desc: 'Play for 1 hour', current: Math.floor((gm.totalPlayTime || 0) / 60), target: 60 },
+            { icon: hi('questionMarkCircle'), title: 'Explorer', desc: 'Try 20 different games', current: (gm.uniqueGamesPlayed || []).length, target: 20 },
+            { icon: hi('fire'), title: 'Streak Master', desc: 'Reach 5 game streak', current: gm.consecutiveGames || 0, target: 5 },
+            { icon: hi('checkBadge'), title: 'Century Club', desc: 'Play 100 games', current: gm.totalGamesPlayed, target: 100 },
+            { icon: hi('crown'), title: 'Champion', desc: 'Score 10,000 total points', current: GAME_CARDS_CONFIG.reduce((sum, g) => sum + (gm.getHighScore(g.id) || 0), 0), target: 10000 },
+            { icon: hi('bolt'), title: 'Speedster', desc: 'Play 500 games', current: gm.totalGamesPlayed, target: 500 },
+            { icon: hi('sparkles'), title: 'Master', desc: 'Unlock 50 achievements', current: (gm.achievements || []).length, target: 50 },
+            { icon: hi('sparkles'), title: 'Diamond', desc: 'Play for 10 hours', current: Math.floor((gm.totalPlayTime || 0) / 60), target: 600 },
+            { icon: hi('rocket'), title: 'Rocket', desc: 'Score 50,000 total points', current: GAME_CARDS_CONFIG.reduce((sum, g) => sum + (gm.getHighScore(g.id) || 0), 0), target: 50000 }
         ];
         
         milestonesGrid.innerHTML = '';
@@ -1452,7 +1456,7 @@
     function updateFooterStats() {
         if (totalPlaytime) {
             const total = gm.getTotalGamesPlayed();
-            totalPlaytime.textContent = `🕐 Toplam: ${total} oyun`;
+            totalPlaytime.innerHTML = `${hi('clock')} Toplam: ${total} oyun`;
         }
 
         if (favoriteCountDisplay) {
@@ -1472,9 +1476,9 @@
                     bestGame = config.name;
                 }
             });
-            bestScoreDisplay.textContent = (bestGame && bestScore > 0)
-                ? `🏆 ${bestGame}: ${bestScore}`
-                : '🏆 Best: --';
+            bestScoreDisplay.innerHTML = (bestGame && bestScore > 0)
+                ? `${hi('trophy')} ${bestGame}: ${bestScore}`
+                : `${hi('trophy')} Best: --`;
         }
     }
 
@@ -2548,8 +2552,8 @@
             </div>
             <div class="tooltip-desc">${config.desc}</div>
             <div class="tooltip-stats">
-                ${highScore > 0 ? `<span class="tooltip-stat">🏆 ${highScore}</span>` : ''}
-                ${lastPlayedStr ? `<span class="tooltip-stat">🕐 ${lastPlayedStr}</span>` : ''}
+                ${highScore > 0 ? `<span class="tooltip-stat">${hi('trophy')} ${highScore}</span>` : ''}
+                ${lastPlayedStr ? `<span class="tooltip-stat">${hi('clock')} ${lastPlayedStr}</span>` : ''}
                 ${achievementCount > 0 ? `<span class="tooltip-stat">🏅 ${achievementCount}</span>` : ''}
             </div>
         `;

@@ -3553,7 +3553,9 @@ body .hidden {
 }
 
 .category-tab .tab-icon {
-  font-size: 12px;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
   transition: transform var(--transition-fast);
 }
 
@@ -3783,11 +3785,82 @@ input,
   font-weight: 500;
   cursor: pointer;
   transition: var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .settings-btn:hover {
   background: var(--border-glass);
   border-color: var(--text-secondary);
+}
+
+/* Heroicons SVG Styles */
+.hi-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  line-height: 1;
+}
+
+.hi-icon svg {
+  width: 1em;
+  height: 1em;
+  display: block;
+}
+
+/* Size variants */
+.hi-sm svg { width: 14px; height: 14px; }
+.hi-md svg { width: 20px; height: 20px; }
+.hi-lg svg { width: 28px; height: 28px; }
+.hi-xl svg { width: 36px; height: 36px; }
+
+/* Specific positioning overrides */
+.title-icon.hi-icon svg,
+.volume-icon.hi-icon svg,
+.settings-icon.hi-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.game-card-icon.hi-icon svg {
+  width: 38px;
+  height: 38px;
+}
+
+.no-results-icon .hi-icon svg,
+.search-icon.hi-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.tooltip-stat .hi-icon svg {
+  width: 12px;
+  height: 12px;
+}
+
+.stat-icon .hi-icon svg,
+.stats-hero-icon .hi-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.milestone-icon .hi-icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.settings-btn .hi-icon svg {
+  width: 16px;
+  height: 16px;
+  margin-right: 6px;
+}
+
+/* Achievement toast icon */
+.achievement-icon .hi-icon svg {
+  width: 32px;
+  height: 32px;
 }
 
 /* Dark Mode Override */

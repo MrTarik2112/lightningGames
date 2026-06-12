@@ -269,4 +269,20 @@
         const name = HeroIcons.emojiMap[emoji] || 'controller';
         return HeroIcons[name] ? HeroIcons[name]() : HeroIcons.controller();
     };
+
+    // Helper: returns a styled span wrapping a Heroicon SVG
+    HeroIcons.hi = function(name, className = '') {
+        const svg = HeroIcons[name] ? HeroIcons[name]() : '';
+        return `<span class="hi-icon ${className}" data-hi="${name}">${svg}</span>`;
+    };
+
+    // Init: scan DOM for [data-hi] placeholders and inject SVGs
+    HeroIcons.init = function(root) {
+        (root || document).querySelectorAll('[data-hi]').forEach(el => {
+            const name = el.getAttribute('data-hi');
+            const svg = HeroIcons[name] ? HeroIcons[name]() : '';
+            el.innerHTML = svg;
+            el.classList.add('hi-icon');
+        });
+    };
 })();
