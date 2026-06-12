@@ -716,6 +716,18 @@ body.theme-fire {
   color: var(--accent-cyan);
 }
 
+.search-result-count {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  padding: 4px 4px 8px;
+  letter-spacing: 0.3px;
+}
+
+.search-result-count.hidden {
+  display: none;
+}
+
 .search-wrap {
   display: flex;
   gap: 12px;

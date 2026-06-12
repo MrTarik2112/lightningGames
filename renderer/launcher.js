@@ -628,6 +628,7 @@
     // Ultra Upgrade Elements
     const gameSearch = document.getElementById('game-search');
     const searchClear = document.getElementById('search-clear');
+    const searchResultCount = document.getElementById('search-result-count');
     const recentlyPlayedSection = document.getElementById('recently-played-section');
     const recentlyPlayedList = document.getElementById('recently-played-list');
     const volumeSlider = document.getElementById('volume-slider');
@@ -762,6 +763,16 @@
             case 'playCount':
                 filtered.sort((a, b) => (b.playCount || 0) - (a.playCount || 0));
                 break;
+        }
+
+        // Show search result count
+        if (searchResultCount) {
+            if (filter.length > 0 || currentCategory !== 'all') {
+                searchResultCount.textContent = `${filtered.length} game${filtered.length !== 1 ? 's' : ''} found`;
+                searchResultCount.classList.remove('hidden');
+            } else {
+                searchResultCount.classList.add('hidden');
+            }
         }
 
         if (filtered.length === 0) {
