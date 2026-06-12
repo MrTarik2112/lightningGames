@@ -626,6 +626,48 @@ body.theme-fire {
   transform: translateY(0) scale(0.98);
 }
 
+/* Scroll to Top FAB */
+.scroll-top-btn {
+  position: sticky;
+  bottom: 16px;
+  align-self: flex-end;
+  margin-top: -40px;
+  z-index: 10;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--border-glow);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-normal);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.scroll-top-btn:hover {
+  background: var(--bg-card-hover);
+  color: var(--accent-cyan);
+  border-color: var(--accent-cyan);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(0, 220, 255, 0.2);
+}
+
+.scroll-top-btn:active {
+  transform: translateY(0) scale(0.92);
+}
+
+.scroll-top-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.scroll-top-btn.hidden {
+  display: none;
+}
+
 .resume-badge-icon {
   font-size: 18px;
   display: flex;

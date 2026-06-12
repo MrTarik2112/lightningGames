@@ -631,6 +631,7 @@
     const searchResultCount = document.getElementById('search-result-count');
     const resumeBadge = document.getElementById('resume-badge');
     const resumeBadgeScore = resumeBadge ? resumeBadge.querySelector('.resume-badge-score') : null;
+    const scrollTopBtn = document.getElementById('scroll-top-btn');
     const recentlyPlayedSection = document.getElementById('recently-played-section');
     const recentlyPlayedList = document.getElementById('recently-played-list');
     const volumeSlider = document.getElementById('volume-slider');
@@ -1727,6 +1728,16 @@
                 gm.resumePausedGame();
                 resumeBadge.classList.add('hidden');
             }
+        });
+    }
+
+    // Scroll to Top Button
+    if (scrollTopBtn && launcherView) {
+        launcherView.addEventListener('scroll', () => {
+            scrollTopBtn.classList.toggle('hidden', launcherView.scrollTop < 300);
+        });
+        scrollTopBtn.addEventListener('click', () => {
+            launcherView.scrollTo({ top: 0, behavior: 'smooth' });
         });
     }
 
