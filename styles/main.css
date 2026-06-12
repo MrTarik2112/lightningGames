@@ -797,23 +797,6 @@ body.theme-fire {
   color: var(--accent-cyan);
 }
 
-.tab-count {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 600;
-  color: var(--text-muted);
-  margin-left: 2px;
-  transition: color var(--transition-fast);
-}
-
-.category-tab:hover .tab-count {
-  color: var(--text-secondary);
-}
-
-.category-tab.active .tab-count {
-  color: var(--accent-cyan);
-}
-
 .search-result-count {
   font-family: var(--font-mono);
   font-size: 11px;
