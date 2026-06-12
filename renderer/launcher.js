@@ -1386,7 +1386,7 @@
             { icon: hi('trophy'), title: 'Achievement Hunter', desc: 'Unlock 10 achievements', current: (gm.achievements || []).length, target: 10 },
             { icon: hi('star'), title: 'Favorite Collector', desc: 'Add 5 favorites', current: (gm.favorites || []).length, target: 5 },
             { icon: hi('clock'), title: 'Time Traveler', desc: 'Play for 1 hour', current: Math.floor((gm.totalPlayTime || 0) / 60), target: 60 },
-            { icon: hi('questionMarkCircle'), title: 'Explorer', desc: 'Try 20 different games', current: (gm.uniqueGamesPlayed || []).length, target: 20 },
+            { icon: hi('target'), title: 'Explorer', desc: 'Try 20 different games', current: (gm.uniqueGamesPlayed || []).length, target: 20 },
             { icon: hi('fire'), title: 'Streak Master', desc: 'Reach 5 game streak', current: gm.consecutiveGames || 0, target: 5 },
             { icon: hi('checkBadge'), title: 'Century Club', desc: 'Play 100 games', current: gm.totalGamesPlayed, target: 100 },
             { icon: hi('crown'), title: 'Champion', desc: 'Score 10,000 total points', current: GAME_CARDS_CONFIG.reduce((sum, g) => sum + (gm.getHighScore(g.id) || 0), 0), target: 10000 },

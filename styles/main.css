@@ -3829,11 +3829,6 @@ input,
   height: 18px;
 }
 
-.game-card-icon.hi-icon svg {
-  width: 38px;
-  height: 38px;
-}
-
 .no-results-icon .hi-icon svg,
 .search-icon.hi-icon svg {
   width: 20px;
@@ -3889,6 +3884,7 @@ input,
 .game-card-fallback .hi-icon svg {
   width: 38px;
   height: 38px;
+  transition: transform var(--transition-fast);
 }
 
 [data-emoji-fail="true"] .game-card-emoji {
@@ -3899,11 +3895,6 @@ input,
   display: inline-flex;
   align-items: center;
   justify-content: center;
-}
-
-/* Ensure fallback SVG inherits transition for hover effects */
-.game-card-fallback .hi-icon svg {
-  transition: transform var(--transition-fast);
 }
 
 /* Dark Mode Override */
