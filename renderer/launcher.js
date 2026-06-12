@@ -2591,7 +2591,8 @@
 
         if (e.target.classList.contains('btn-favorite')) {
             e.stopPropagation();
-            gm.toggleFavorite(gameId);
+            const isFav = gm.toggleFavorite(gameId);
+            showToast(isFav ? `⭐ ${config.name} favorilere eklendi` : `${config.name} favorilerden çıkarıldı`, isFav ? 'success' : 'info');
             sfx.play('select');
             renderGameCards(gameSearch.value);
         } else {
@@ -2606,7 +2607,9 @@
 
         e.preventDefault();
         const gameId = gameCard.dataset.gameId;
-        gm.toggleFavorite(gameId);
+        const config = GAME_CARDS_CONFIG.find(g => g.id === gameId);
+        const isFav = gm.toggleFavorite(gameId);
+        showToast(isFav ? `⭐ ${config ? config.name : gameId} favorilere eklendi` : `${config ? config.name : gameId} favorilerden çıkarıldı`, isFav ? 'success' : 'info');
         sfx.play('select');
         renderGameCards(gameSearch.value);
     });
