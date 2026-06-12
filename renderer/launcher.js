@@ -766,6 +766,13 @@
             case 'playCount':
                 filtered.sort((a, b) => (b.playCount || 0) - (a.playCount || 0));
                 break;
+            case 'favorites':
+                filtered.sort((a, b) => {
+                    if (a.isFavorite && !b.isFavorite) return -1;
+                    if (!a.isFavorite && b.isFavorite) return 1;
+                    return a.name.localeCompare(b.name);
+                });
+                break;
         }
 
         // Show search result count
