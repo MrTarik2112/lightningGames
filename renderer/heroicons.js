@@ -276,6 +276,26 @@
         return `<span class="hi-icon ${className}" data-hi="${name}">${svg}</span>`;
     };
 
+    // Test emoji rendering support via canvas
+    HeroIcons.testEmojiSupport = function() {
+        try {
+            const c = document.createElement('canvas');
+            c.width = 32; c.height = 32;
+            const ctx = c.getContext('2d');
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(0, 0, 32, 32);
+            ctx.fillStyle = '#000';
+            ctx.font = '28px sans-serif';
+            ctx.textBaseline = 'top';
+            ctx.fillText('⚡', 0, 0);
+            const d = ctx.getImageData(0, 0, 32, 32).data;
+            for (let i = 0; i < d.length; i += 4) {
+                if (d[i] < 255 || d[i + 1] < 255 || d[i + 2] < 255) return true;
+            }
+            return false;
+        } catch(e) { return false; }
+    };
+
     // Init: scan DOM for [data-hi] placeholders and inject SVGs
     HeroIcons.init = function(root) {
         (root || document).querySelectorAll('[data-hi]').forEach(el => {

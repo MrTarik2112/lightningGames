@@ -2969,6 +2969,11 @@ body.theme-fire {
   font-size: 32px;
 }
 
+.games-grid.compact-mode .game-card-fallback .hi-icon svg {
+  width: 32px;
+  height: 32px;
+}
+
 .games-grid.compact-mode .game-card-name {
   font-family: var(--font);
   font-size: 13px;
@@ -3861,6 +3866,44 @@ input,
 .achievement-icon .hi-icon svg {
   width: 32px;
   height: 32px;
+}
+
+/* Game card emoji fallback */
+.game-card-icon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.game-card-emoji {
+  display: inline;
+  line-height: 1;
+}
+
+.game-card-fallback {
+  display: none;
+  line-height: 1;
+}
+
+.game-card-fallback .hi-icon svg {
+  width: 38px;
+  height: 38px;
+}
+
+[data-emoji-fail="true"] .game-card-emoji {
+  display: none;
+}
+
+[data-emoji-fail="true"] .game-card-fallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ensure fallback SVG inherits transition for hover effects */
+.game-card-fallback .hi-icon svg {
+  transition: transform var(--transition-fast);
 }
 
 /* Dark Mode Override */

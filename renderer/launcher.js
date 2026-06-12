@@ -651,8 +651,13 @@
     const currentTheme = localStorage.getItem('lg_theme') || 'default';
     if (currentTheme !== 'default') {
         document.body.className = `theme-${currentTheme}`;
-    // Init Heroicons for static data-hi elements
-    if (window.HeroIcons) HeroIcons.init();
+    // Init Heroicons for static data-hi elements + emoji support test
+    if (window.HeroIcons) {
+        HeroIcons.init();
+        if (!HeroIcons.testEmojiSupport()) {
+            document.body.dataset.emojiFail = 'true';
+        }
+    }
 
     themeButtons.forEach(btn => {
             btn.classList.toggle('active', btn.dataset.theme === currentTheme);
@@ -823,7 +828,10 @@
             cardContent.innerHTML = `
                 <span class="game-card-category">${config.category}</span>
                 <div class="game-card-status ${config.hasState ? 'active' : ''}"></div>
-                <span class="game-card-icon">${config.icon}</span>
+                <span class="game-card-icon" data-emoji="${config.icon}">
+                    <span class="game-card-emoji">${config.icon}</span>
+                    <span class="game-card-fallback">${window.HeroIcons ? window.HeroIcons.getFallback(config.icon) : config.icon}</span>
+                </span>
                 <span class="game-card-name">${config.name}</span>
                 <span class="game-card-desc">${config.desc}</span>
                 ${scoreHTML}
