@@ -629,6 +629,8 @@
     const gameSearch = document.getElementById('game-search');
     const searchClear = document.getElementById('search-clear');
     const searchResultCount = document.getElementById('search-result-count');
+    const resumeBadge = document.getElementById('resume-badge');
+    const resumeBadgeScore = resumeBadge ? resumeBadge.querySelector('.resume-badge-score') : null;
     const recentlyPlayedSection = document.getElementById('recently-played-section');
     const recentlyPlayedList = document.getElementById('recently-played-list');
     const volumeSlider = document.getElementById('volume-slider');
@@ -892,6 +894,23 @@
                 countEl.textContent = counts[cat] ? `(${counts[cat]})` : '';
             }
         });
+    }
+
+    function updateResumeBadge() {
+        if (!resumeBadge) return;
+        const paused = gm.getPausedGame ? gm.getPausedGame() : null;
+        if (paused && paused.instance && paused.instance.isGameOver && !paused.instance.isGameOver()) {
+            const config = GAME_CARDS_CONFIG.find(g => g.id === paused.id);
+            const score = paused.instance.getScore ? paused.instance.getScore() : 0;
+            resumeBadge.querySelector('.resume-badge-text').textContent =
+                `Resume ${config ? config.name : paused.id}`;
+            if (resumeBadgeScore) {
+                resumeBadgeScore.textContent = score > 0 ? `Score: ${score}` : '';
+            }
+            resumeBadge.classList.remove('hidden');
+        } else {
+            resumeBadge.classList.add('hidden');
+        }
     }
 
     function renderStats() {
@@ -1532,7 +1551,7 @@
         if (isOpening) return;
         isOpening = true;
 
-        
+        if (resumeBadge) resumeBadge.classList.add('hidden');
 
         sfx.play('select');
         launcherView.classList.add('hidden');
@@ -1657,6 +1676,7 @@
         launcherView.classList.add('fade-in');
         gameSearch.value = ''; // Clear search on return
         renderGameCards();
+        updateResumeBadge();
         sfx.play('hide');
 
         // Hide ESC hint
@@ -1693,6 +1713,19 @@
             if (games.length > 0) {
                 const randomGame = games[Math.floor(Math.random() * games.length)];
                 openGame(randomGame.id, randomGame.name, randomGame.icon);
+            }
+        });
+    }
+
+    // Resume Badge
+    if (resumeBadge) {
+        resumeBadge.addEventListener('click', () => {
+            if (gm.getPausedGame && gm.getPausedGame()) {
+                const paused = gm.getPausedGame();
+                gameView.classList.remove('hidden');
+                launcherView.classList.add('hidden');
+                gm.resumePausedGame();
+                resumeBadge.classList.add('hidden');
             }
         });
     }

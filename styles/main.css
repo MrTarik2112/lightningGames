@@ -601,6 +601,62 @@ body.theme-fire {
   margin-bottom: 20px;
 }
 
+/* Resume Badge */
+.resume-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  margin: 8px 0 0;
+  background: var(--bg-card);
+  border: 1px solid var(--accent-green);
+  border-radius: var(--radius-xl);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.15);
+}
+
+.resume-badge:hover {
+  background: var(--bg-card-hover);
+  box-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+  transform: translateY(-2px);
+}
+
+.resume-badge:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.resume-badge-icon {
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  color: var(--accent-green);
+}
+
+.resume-badge-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.resume-badge-text {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent-green);
+  letter-spacing: 0.3px;
+}
+
+.resume-badge-score {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-left: auto;
+}
+
+.resume-badge.hidden {
+  display: none;
+}
+
 /* Search Container */
 .search-container {
   position: relative;

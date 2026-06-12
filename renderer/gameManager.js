@@ -6,6 +6,7 @@ class GameManager {
     constructor() {
         this.games = {};
         this.activeGame = null;
+        this.pausedGame = null;
         this.animFrameId = null;
         this.isPaused = false;
         this.canvas = null;
@@ -983,6 +984,14 @@ class GameManager {
         const pauseOverlay = document.getElementById('pause-overlay');
         if (pauseOverlay) pauseOverlay.classList.add('hidden');
 
+        // Save non-over game for resume badge
+        if (this.activeGame && this.activeGame.instance &&
+            this.activeGame.instance.isGameOver && !this.activeGame.instance.isGameOver()) {
+            this.pausedGame = this.activeGame;
+        } else {
+            this.pausedGame = null;
+        }
+
         this.activeGame = null;
 
         // Stop music when going back
@@ -991,6 +1000,17 @@ class GameManager {
 
     getActiveGameId() {
         return this.activeGame ? this.activeGame.id : null;
+    }
+
+    getPausedGame() {
+        return this.pausedGame;
+    }
+
+    resumePausedGame() {
+        if (!this.pausedGame) return;
+        this.activeGame = this.pausedGame;
+        this.pausedGame = null;
+        this.resumeCurrentGame();
     }
 
     getGamePlayCount(gameId) {
