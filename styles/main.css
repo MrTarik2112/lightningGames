@@ -382,7 +382,7 @@ body.theme-fire {
 }
 
 .no-results-text {
-  font-family: var(--font);
+  font-family: var(--font-display);
   font-size: 16px;
   font-weight: 500;
   letter-spacing: 0.5px;
@@ -799,7 +799,7 @@ body.theme-fire {
 }
 
 .recent-name {
-  font-family: var(--font);
+  font-family: var(--font-display);
   font-size: 11px;
   font-weight: 700;
   color: var(--text-primary);
@@ -874,7 +874,7 @@ body.theme-fire {
 }
 
 .game-card-name {
-  font-family: var(--font);
+  font-family: var(--font-display);
   font-size: 13px;
   font-weight: 700;
   color: var(--text-primary);
@@ -1090,7 +1090,7 @@ body.theme-fire {
 }
 
 .achievement-toast-title {
-  font-family: var(--font);
+  font-family: var(--font-display);
   font-size: 14px;
   font-weight: 800;
   color: var(--accent-yellow);
@@ -1098,7 +1098,7 @@ body.theme-fire {
 }
 
 .achievement-title {
-  font-family: var(--font);
+  font-family: var(--font-display);
   font-size: 12px;
   font-weight: 800;
   color: var(--accent-yellow);
@@ -1380,7 +1380,7 @@ body.theme-fire {
 }
 
 .stat-label {
-  font-family: var(--font);
+  font-family: var(--font-display);
   font-size: 11px;
   font-weight: 700;
   color: var(--text-muted);
@@ -2976,7 +2976,7 @@ body.theme-fire {
 }
 
 .games-grid.compact-mode .game-card-name {
-  font-family: var(--font);
+  font-family: var(--font-display);
   font-size: 13px;
 }
 
