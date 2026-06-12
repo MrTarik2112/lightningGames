@@ -567,11 +567,11 @@ class SoundManager {
     }
 
     // ==================== SFX LIBRARY ====================
-    playClick() { this._playTone(440, 'triangle', 0.05, 0.4); }
-    playHover() { this._playTone(880, 'sine', 0.02, 0.1); }
-    playSelect() { this._playTone(660, 'square', 0.1, 0.2); }
-    playShow() { this._playSweep(440, 880, 'sine', 0.2, 0.3); }
-    playHide() { this._playSweep(880, 440, 'sine', 0.2, 0.3); }
+    playClick() { this._playTone(440, 'triangle', 0.05, 0.15); }
+    playHover() { this._playTone(880, 'sine', 0.02, 0.06); }
+    playSelect() { this._playTone(660, 'square', 0.1, 0.08); }
+    playShow() { this._playSweep(440, 880, 'sine', 0.2, 0.12); }
+    playHide() { this._playSweep(880, 440, 'sine', 0.2, 0.12); }
 
     playAchievement() {
         if (!this.ctx) return;
